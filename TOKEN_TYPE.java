@@ -1,6 +1,5 @@
 public enum TOKEN_TYPE {
     ID,
-    NUM,
     EQ,
     PLUS,
     TIMES,
@@ -9,4 +8,8 @@ public enum TOKEN_TYPE {
     FP, // )
     PRINT, 
     WHILE,
+    TYPE,
+    INT,
+    FLOAT,
+    CHAR
 }

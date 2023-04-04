@@ -42,8 +42,11 @@
   /* Agora vamos definir algumas macros */
   FimDeLinha  = \r|\n|\r\n
   Brancos     = {FimDeLinha} | [ \t\f]
-  numero      = [:digit:] [:digit:]*
-  identificador = [:lowercase:]
+  type        = [:uppercase:] [[:letter:]|[:digit:]|_]*
+  identificador = [:lowercase:] [[:letter:]|[:digit:]|_]*
+  int      = [:digit:] [:digit:]*
+  float    = [:digit:][:digit:]*\.[:digit:][:digit:]* | \.[:digit:][:digit:]*
+  char     = '[:letter:]' | '[:digit:]' | '\\r' | '\\n' | '\\t' | '\\\\' | '\\''
   LineComment = "//" (.)* {FimDeLinha}
   
 %state COMMENT
@@ -52,7 +55,10 @@
 
 <YYINITIAL>{
     {identificador} { return symbol(TOKEN_TYPE.ID);   }
-    {numero}        { return symbol(TOKEN_TYPE.NUM, Integer.parseInt(yytext()) );  }
+    {int}           { return symbol(TOKEN_TYPE.INT, Integer.parseInt(yytext()) );  }
+    {float}         { return symbol(TOKEN_TYPE.FLOAT, Float.parseFloat(yytext()) );  }
+    {type}          { return symbol(TOKEN_TYPE.TYPE);}
+    {char}          {return symbol(TOKEN_TYPE.CHAR);}
     "="             { return symbol(TOKEN_TYPE.EQ);   }
     ";"             { return symbol(TOKEN_TYPE.SEMI); }
     "*"             { return symbol(TOKEN_TYPE.TIMES); }
