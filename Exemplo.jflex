@@ -9,7 +9,7 @@
 %unicode
 %line
 %column
-%class LextTest
+%class Lexer
 %function nextToken
 %type Token
 
