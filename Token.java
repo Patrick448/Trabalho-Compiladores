@@ -29,6 +29,14 @@ public class Token {
           this.c = c;
     }
     
+    public Token(TOKEN_TYPE t ,int l, int c){
+          this.t = t;
+          lexeme = "";
+          info =  null;
+          this.l = l;
+          this.c = c;
+    }
+
     @Override
     public String toString(){
        return "["+t+"("+l+","+ c+ ") \"" + lexeme + "\" : <" + (info == null ? "" : info.toString()) + ">]";
