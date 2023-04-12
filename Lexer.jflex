@@ -65,8 +65,7 @@
     "true"          { return symbol(TOKEN_TYPE.TRUE);}
     "false"         { return symbol(TOKEN_TYPE.FALSE);}
     "null"          { return symbol(TOKEN_TYPE.NULL);}
-    "ID"            { return symbol(TOKEN_TYPE.ID);}
-    "DATA"          { return symbol(TOKEN_TYPE.DATA);}
+    "data"          { return symbol(TOKEN_TYPE.DATA);}
     "Int"           { return symbol(TOKEN_TYPE.INT);}
     "Char"          { return symbol(TOKEN_TYPE.CHAR);}
     "Bool"          { return symbol(TOKEN_TYPE.BOOL);}
