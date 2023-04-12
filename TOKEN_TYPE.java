@@ -27,7 +27,7 @@ public enum TOKEN_TYPE {
     DIFFERENT,
     SUBTRACTION,
     DIVISION,
-    REST,
+    MOD,
     AND,
     NEGATION,
     DATA,

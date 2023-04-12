@@ -102,7 +102,7 @@
     "!="            { return symbol(TOKEN_TYPE.DIFFERENT);}
     "-"             { return symbol(TOKEN_TYPE.SUBTRACTION);}
     "/"             { return symbol(TOKEN_TYPE.DIVISION);}
-    "%"             { return symbol(TOKEN_TYPE.REST);}
+    "%"             { return symbol(TOKEN_TYPE.MOD);}
     "&&"            { return symbol(TOKEN_TYPE.AND);}
     "!"             { return symbol(TOKEN_TYPE.NEGATION);}
     {Brancos}       { }
