@@ -1,5 +1,14 @@
+/* 
+* Autores: 
+*	Lívia Pereira Ozório 		-  	201835011 
+*	Patrick Canto de Carvalho 	- 	201935026
+*
+*/
 
- /*  Esta seção é copiada antes da declaração da classe do analisador léxico.
+
+ /*  
+ 
+ Esta seção é copiada antes da declaração da classe do analisador léxico.
   *  É nesta seção que se deve incluir imports e declaração de pacotes.
   *  Neste exemplo não temos nada a incluir nesta seção.
   */
@@ -62,48 +71,48 @@
 %%
 
 <YYINITIAL>{
-    "true"          { return symbol(TOKEN_TYPE.TRUE);}
-    "false"         { return symbol(TOKEN_TYPE.FALSE);}
-    "null"          { return symbol(TOKEN_TYPE.NULL);}
-    "data"          { return symbol(TOKEN_TYPE.DATA);}
-    "Int"           { return symbol(TOKEN_TYPE.INT);}
-    "Char"          { return symbol(TOKEN_TYPE.CHAR);}
-    "Bool"          { return symbol(TOKEN_TYPE.BOOL);}
-    "Float"         { return symbol(TOKEN_TYPE.FLOAT);}
-    "if"            { return symbol(TOKEN_TYPE.IF);}
-    "else"          { return symbol(TOKEN_TYPE.ELSE);}
-    "iterate"       { return symbol(TOKEN_TYPE.ITERATE);}
-    "read"          { return symbol(TOKEN_TYPE.READ);}
-    "print"         { return symbol(TOKEN_TYPE.PRINT);}
-    "new"           { return symbol(TOKEN_TYPE.NEW);}
+    "true"          { return symbol(TOKEN_TYPE.TRUE, yytext());}
+    "false"         { return symbol(TOKEN_TYPE.FALSE, yytext());}
+    "null"          { return symbol(TOKEN_TYPE.NULL, yytext());}
+    "data"          { return symbol(TOKEN_TYPE.DATA, yytext());}
+    "Int"           { return symbol(TOKEN_TYPE.INT, yytext());}
+    "Char"          { return symbol(TOKEN_TYPE.CHAR, yytext());}
+    "Bool"          { return symbol(TOKEN_TYPE.BOOL, yytext());}
+    "Float"         { return symbol(TOKEN_TYPE.FLOAT, yytext());}
+    "if"            { return symbol(TOKEN_TYPE.IF, yytext());}
+    "else"          { return symbol(TOKEN_TYPE.ELSE, yytext());}
+    "iterate"       { return symbol(TOKEN_TYPE.ITERATE, yytext());}
+    "read"          { return symbol(TOKEN_TYPE.READ, yytext());}
+    "print"         { return symbol(TOKEN_TYPE.PRINT, yytext());}
+    "new"           { return symbol(TOKEN_TYPE.NEW, yytext());}
     {identificador} { return symbol(TOKEN_TYPE.ID_VALUE, yytext());   }
     {int}           { return symbol(TOKEN_TYPE.INT_VALUE, Integer.parseInt(yytext()) );  }
     {float}         { return symbol(TOKEN_TYPE.FLOAT_VALUE, Float.parseFloat(yytext()) );  }
     {type}          { return symbol(TOKEN_TYPE.TYPE, yytext());}
     {char}          { return symbol(TOKEN_TYPE.CHAR_VALUE, yytext());}
-    "="             { return symbol(TOKEN_TYPE.EQ);  }
-    ";"             { return symbol(TOKEN_TYPE.SEMI); }
-    "*"             { return symbol(TOKEN_TYPE.TIMES); }
-    "+"             { return symbol(TOKEN_TYPE.PLUS); }
-    "{"             { return symbol(TOKEN_TYPE.BRACES_OPEN);}
-    "}"             { return symbol(TOKEN_TYPE.BRACES_CLOSE);}
-    "("             { return symbol(TOKEN_TYPE.PARENTHESES_OPEN);}
-    ")"             { return symbol(TOKEN_TYPE.PARENTHESES_CLOSE);}
-    "["             { return symbol(TOKEN_TYPE.BRACKETS_OPEN);}
-    "]"             { return symbol(TOKEN_TYPE.BRACKETS_CLOSE);}
-    ">"             { return symbol(TOKEN_TYPE.MORE_THAN);}
-    ":"             { return symbol(TOKEN_TYPE.COLON);}
-    "::"            { return symbol(TOKEN_TYPE.TWO_COLON);}
-    "."             { return symbol(TOKEN_TYPE.PERIOD);}
-    ","             { return symbol(TOKEN_TYPE.COMMA);}
-    "<"             { return symbol(TOKEN_TYPE.LESS_THAN);}
-    "=="            { return symbol(TOKEN_TYPE.EQ_LOGIC);}
-    "!="            { return symbol(TOKEN_TYPE.DIFFERENT);}
-    "-"             { return symbol(TOKEN_TYPE.SUBTRACTION);}
-    "/"             { return symbol(TOKEN_TYPE.DIVISION);}
-    "%"             { return symbol(TOKEN_TYPE.MOD);}
-    "&&"            { return symbol(TOKEN_TYPE.AND);}
-    "!"             { return symbol(TOKEN_TYPE.NEGATION);}
+    "="             { return symbol(TOKEN_TYPE.EQ, yytext());  }
+    ";"             { return symbol(TOKEN_TYPE.SEMI, yytext()); }
+    "*"             { return symbol(TOKEN_TYPE.TIMES, yytext()); }
+    "+"             { return symbol(TOKEN_TYPE.PLUS, yytext()); }
+    "{"             { return symbol(TOKEN_TYPE.BRACES_OPEN, yytext());}
+    "}"             { return symbol(TOKEN_TYPE.BRACES_CLOSE, yytext());}
+    "("             { return symbol(TOKEN_TYPE.PARENTHESES_OPEN, yytext());}
+    ")"             { return symbol(TOKEN_TYPE.PARENTHESES_CLOSE, yytext());}
+    "["             { return symbol(TOKEN_TYPE.BRACKETS_OPEN, yytext());}
+    "]"             { return symbol(TOKEN_TYPE.BRACKETS_CLOSE, yytext());}
+    ">"             { return symbol(TOKEN_TYPE.MORE_THAN, yytext());}
+    ":"             { return symbol(TOKEN_TYPE.COLON, yytext());}
+    "::"            { return symbol(TOKEN_TYPE.TWO_COLON, yytext());}
+    "."             { return symbol(TOKEN_TYPE.PERIOD, yytext());}
+    ","             { return symbol(TOKEN_TYPE.COMMA, yytext());}
+    "<"             { return symbol(TOKEN_TYPE.LESS_THAN, yytext());}
+    "=="            { return symbol(TOKEN_TYPE.EQ_LOGIC, yytext());}
+    "!="            { return symbol(TOKEN_TYPE.DIFFERENT, yytext());}
+    "-"             { return symbol(TOKEN_TYPE.SUBTRACTION, yytext());}
+    "/"             { return symbol(TOKEN_TYPE.DIVISION, yytext());}
+    "%"             { return symbol(TOKEN_TYPE.MOD, yytext());}
+    "&&"            { return symbol(TOKEN_TYPE.AND, yytext());}
+    "!"             { return symbol(TOKEN_TYPE.NEGATION, yytext());}
     {Brancos}       { }
     {LineComment}   { }
     {Comment}       { }

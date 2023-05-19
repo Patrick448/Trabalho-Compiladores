@@ -1,3 +1,10 @@
+/* 
+* Autores: 
+*	Lívia Pereira Ozório 		-  	201835011 
+*	Patrick Canto de Carvalho 	- 	201935026
+*
+*/
+
 public enum TOKEN_TYPE {
     ID_VALUE,
     INT_VALUE,

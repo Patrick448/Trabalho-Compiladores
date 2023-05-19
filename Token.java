@@ -1,4 +1,9 @@
-
+/* 
+* Autores: 
+*	Lívia Pereira Ozório 		-  	201835011 
+*	Patrick Canto de Carvalho 	- 	201935026
+*
+*/
 public class Token {
     public int l, c;
     public TOKEN_TYPE t;
