@@ -1,4 +1,0 @@
-a  = true
-b = {- Isso nao vai ser reportado -} 456;
-c = a  + b + 789 * 0;
-c; 

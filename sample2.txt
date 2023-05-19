@@ -1,8 +1,0 @@
-abc  = 123
-b = /* Isso nao vai ser reportado */ 456;
-c = a  + b + 789 * 0;
-c;
-b9;
-a_9;
-aA_;
-Aaa;
