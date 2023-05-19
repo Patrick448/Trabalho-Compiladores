@@ -49,11 +49,23 @@ factor returns [Expr ast]:
 
 /* Regras léxicas */
 
-ID : [a-z]+;
+//ID : [a-z]+;
+//INT : [0-9]+;
+
+//NEWLINE: '\r'? '\n' -> skip;
+//WS : [ \t]+ -> skip;
+//LINE_COMMENT : '//' ~('\r' | '\n')* NEWLINE -> skip;
+//COMMENT: '/*' .*?  '*/' -> skip;
+
+
+///---------------------------------------
+
+ID : [a-z][a-z | A-Z | 0-9 | _]*;
 INT : [0-9]+;
-
+FLOAT : [0-9]+ '.' [0-9]+ | '.' [0-9];
+CHAR : '\''[^'\''\\]'\'' | '\'''\\r''\'' | '\'''\\n''\'' | '\'''\\t''\'' | '\'''\\\\''\'' | '\'''\\\'''\'';
+TYPE: [A-Z][a-z | A-Z | 0-9 | _];
 NEWLINE: '\r'? '\n' -> skip;
-WS : [ \t]+ -> skip;
-LINE_COMMENT : '//' ~('\r' | '\n')* NEWLINE -> skip;
-COMMENT: '/*' .*?  '*/' -> skip;
-
+LINE_COMMENT: '--' ~('\r' | '\n')* NEWLINE -> skip;
+COMMENT: '{-' (.)* '-}' -> skip;
+BLANK: NEWLINE | ' \t\f' -> skip;
