@@ -1,12 +1,10 @@
 package ast;
 
-import java.util.ArrayList;
 /*
  * Esta classe representa um comando de .
  * Expr
  */
 import java.util.HashMap;
-import java.util.List;
  
 public class Prog extends Node {
     Node dataList;
