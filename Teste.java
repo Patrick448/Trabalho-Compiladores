@@ -22,6 +22,9 @@ public class Teste {
 	parser.setBuildParseTree(false);
 
 	Node ast = parser.prog().ast;
+	System.out.println(ast);
+	//System.out.println(ast.dotString());
+
 	HashMap<String,Integer> m = new HashMap<String,Integer>();
 	ast.interpret(m);
     }

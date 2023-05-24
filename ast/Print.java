@@ -19,7 +19,7 @@ public class Print extends Node {
       
       //@Override
       public String toString(){
-         return   "" + e.toString(); 
+         return   "print " + e.toString(); 
       }
       
       public int interpret(HashMap<String,Integer> m){

@@ -1,0 +1,36 @@
+package ast;
+
+/*
+ * 
+ * 
+ */
+ 
+import java.util.HashMap; 
+public class Iterate extends Node {
+      
+      private Expr condition;
+      private Node cmd;
+      
+      public Iterate(int lin, int col, Expr condition, Node cmd){
+           super(lin,col);
+           this.condition = condition;
+           this.cmd = cmd;
+      }
+      
+      
+      public String toString(){
+         String condStr = condition.toString();
+         String cmdStr =  cmd.toString();
+
+         s += "iterate (" + condStr +") " + cmdStr ;
+         return  s; 
+      }
+      
+      public int interpret(HashMap<String,Integer> m){
+          while(condition.intepret(m)){
+          	cmd.interpret(m);
+          }
+          return 0;
+      }
+      
+}

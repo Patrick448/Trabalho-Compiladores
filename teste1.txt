@@ -1,0 +1,9 @@
+data object{}
+data string{numerador :: Int;}
+data integer{numerador :: Int;}
+
+main () {
+    print 10;
+    print 5;
+    print 200;
+}
