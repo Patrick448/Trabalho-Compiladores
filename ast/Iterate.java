@@ -21,6 +21,7 @@ public class Iterate extends Node {
       public String toString(){
          String condStr = condition.toString();
          String cmdStr =  cmd.toString();
+         String s = "";
 
          s += "iterate (" + condStr +") " + cmdStr ;
          return  s; 
