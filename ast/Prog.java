@@ -44,10 +44,10 @@ public class Prog extends Node {
         
         s+="}";
 
-        return "Prog:\n "+s+"\n";
+        return s+"\n";
     }
       
-    public int interpret(HashMap<String,Integer> m){
+    public Object interpret(HashMap<String,Integer> m){
 
         if (dataList != null) dataList.interpret(m);
         if (funcList != null) funcList.interpret(m);

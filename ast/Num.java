@@ -21,8 +21,14 @@ public class Num extends Expr {
       public String toString(){
          return   "" + l ; 
       }
+
+      public String dotString(){
+            String s = getUid() + " [label=\"Num<"+l+">\"]\n";
+            
+            return s;
+        }
       
-      public int interpret(HashMap<String,Integer> m){
+      public Object interpret(HashMap<String,Integer> m){
             return l;
       }
 }

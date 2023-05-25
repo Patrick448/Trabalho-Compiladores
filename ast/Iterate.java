@@ -27,8 +27,8 @@ public class Iterate extends Node {
          return  s; 
       }
       
-      public int interpret(HashMap<String,Integer> m){
-          while(condition.intepret(m)){
+      public Object interpret(HashMap<String,Integer> m){
+          while((Boolean)condition.intepret(m)){
           	cmd.interpret(m);
           }
           return 0;

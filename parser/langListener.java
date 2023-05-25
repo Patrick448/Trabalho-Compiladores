@@ -112,16 +112,6 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitFunc(langParser.FuncContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link langParser#params}.
-	 * @param ctx the parse tree
-	 */
-	void enterParams(langParser.ParamsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link langParser#params}.
-	 * @param ctx the parse tree
-	 */
-	void exitParams(langParser.ParamsContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link langParser#exp}.
 	 * @param ctx the parse tree
 	 */
@@ -131,4 +121,74 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExp(langParser.ExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#rexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterRexp(langParser.RexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#rexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitRexp(langParser.RexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#aexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterAexp(langParser.AexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#aexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitAexp(langParser.AexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#mexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterMexp(langParser.MexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#mexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitMexp(langParser.MexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#sexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterSexp(langParser.SexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#sexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitSexp(langParser.SexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#pexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterPexp(langParser.PexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#pexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitPexp(langParser.PexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#lvalue}.
+	 * @param ctx the parse tree
+	 */
+	void enterLvalue(langParser.LvalueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#lvalue}.
+	 * @param ctx the parse tree
+	 */
+	void exitLvalue(langParser.LvalueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#params}.
+	 * @param ctx the parse tree
+	 */
+	void enterParams(langParser.ParamsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#params}.
+	 * @param ctx the parse tree
+	 */
+	void exitParams(langParser.ParamsContext ctx);
 }

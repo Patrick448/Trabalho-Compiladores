@@ -13,12 +13,15 @@ public abstract class Node {
       }
 
       public String dotString(){
-            return "";
+            String s = getUid() + " [label=\""+this.getClass().getSimpleName()+"\"]\n";
+            return s;
         }
+
+        
       
       public int getLine(){ return line;}
       public int getCol(){ return col;}  
       public int getUid(){ return uid;}
-      public abstract int interpret(HashMap<String,Integer> m);
+      public abstract Object interpret(HashMap<String,Integer> m);
       
 }

@@ -22,8 +22,17 @@ public class ID extends Expr {
       public String toString(){
          return   l; 
       }
-      
-      public int interpret(HashMap<String,Integer> m){
+
+            
+      public String dotString(){
+        String s = getUid() + " [label=\"ID<"+l+">\"]\n";
+        
+        return s;
+    }
+
+
+    
+      public Object interpret(HashMap<String,Integer> m){
           return m.get(l);
       }
 }

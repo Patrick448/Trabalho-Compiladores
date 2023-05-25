@@ -6,37 +6,34 @@ package ast;
  */
 import java.util.HashMap; 
  
-public class Print extends Node {
+public class LValue extends Expr {
       
-      private Expr e; 
+      private ID lval; 
       
-      public Print(int l, int c, Expr e){
+      public LValue(int l, int c, ID lval){
            super(l,c);
-           this.e  = e;
+           this.lval  = lval;
       }
       
-      public Expr getExpr(){ return e;}
+      public ID getID(){ return lval;}
       
       //@Override
       public String toString(){
-         return   "print " + e.toString(); 
+         return   "print " + lval.toString(); 
       }
 
       public String dotString(){
         String s = getUid() + " [label=\""+this.getClass().getSimpleName()+"\"]\n";
      
-        if(e != null){
-           s+= getUid() +"--"+e.getUid()+"\n"; 
-           s+= e.dotString();  
+        if(lval != null){
+           s+= getUid() +"--"+lval.getUid()+"\n"; 
+           s+= lval.dotString();  
         }
         
         return s;
     }
       public Object interpret(HashMap<String,Integer> m){
         
-
-          //int n = (Integer)e.interpret(m);
-          System.out.println("" + e.interpret(m));
-          return 0;
+        return lval.interpret(m);
       }
 }

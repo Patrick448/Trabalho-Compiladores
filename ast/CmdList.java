@@ -12,7 +12,8 @@ public class CmdList extends Node {
     public CmdList(int l, int c,Node data) {
           super(l, c);
           list = new ArrayList<Node>();
-          list.add(data);
+          if(data != null)
+            list.add(data);
     }
 
     
@@ -21,11 +22,22 @@ public class CmdList extends Node {
     }
 
     @Override
-    public int interpret(HashMap<String, Integer> m) {
+    public Object interpret(HashMap<String, Integer> m) {
           for(Node n : list) {
               n.interpret(m);
           }
           return 0;
+    }
+
+    public String dotString(){
+        String s = getUid() + " [label=CmdList]\n";
+
+        for(Node n : list) {
+            s+= getUid() +"--"+n.getUid()+"\n";
+            s+= n.dotString();
+        }
+
+        return s;
     }
 
     public String toString() {
