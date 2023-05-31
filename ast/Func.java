@@ -13,12 +13,14 @@ public class Func extends Node {
       Node returns;
       Node cmdList;
 
-      public Func(int l, int c, ID id, Node params, Node returns, Node cmdList) {
+      public Func(int l, int c, ID id, ParamsList params, Node returns, Node cmdList) {
             super(l, c);
             this.id = id;
             this.params = params;
             this.returns = returns;
             this.cmdList = cmdList;
+            
+            //System.out.println("alo \n" +params.toString());
       }
 
       @Override
@@ -38,6 +40,12 @@ public class Func extends Node {
                s+= getUid() +"--"+cmdList.getUid()+"\n"; 
                s+= cmdList.dotString();  
             }
+
+            if(params != null){
+               s+= getUid() +"--"+params.getUid()+"\n"; 
+               s+= params.dotString();  
+            }
+            
             
             return s;
         }
