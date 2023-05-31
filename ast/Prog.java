@@ -15,7 +15,7 @@ public class Prog extends Node {
         super(l, c);
         this.dataList = dataList;
         this.funcList = funcList;
-
+       
     }
 
     public String toString(){

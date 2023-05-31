@@ -6,6 +6,8 @@ main () {
     var = -50 + 5.7;
     j = !false;
     x = var + 10;
+    i = 'a';
+    print i;
     print 200;
     print j;
     print x;

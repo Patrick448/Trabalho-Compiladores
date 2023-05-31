@@ -17,7 +17,18 @@ grammar lang;
 
 
 prog returns [Prog ast]:
-  d=dataList f=funcList {$ast = new Prog($d.ast.getLine(), $d.ast.getCol(), $d.ast, $f.ast);}
+  d=dataList f=funcList {
+
+  if($d.ast != null){
+     $ast = new Prog($d.ast.getLine(), $d.ast.getCol(), $d.ast, $f.ast);
+    }
+  else if($f.ast != null){
+    $ast = new Prog($f.ast.getLine(), $f.ast.getCol(), $d.ast, $f.ast);
+    }
+  else{
+    $ast = new Prog(0, 0, $d.ast, $f.ast);
+  }
+  }
 ;
 
 dataList returns [DataList ast]:
@@ -49,6 +60,11 @@ decl returns [Node ast]:
   ID '::' type ';' {$ast = new Decl($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
   ;
 
+func returns [Func ast]:
+  ID '(' params? ')'(':'type)?'{'cmdList'}'{
+    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), null, null, $cmdList.ast);}
+;
+
 type returns [Node ast]:
   type '['']'
   |
@@ -72,10 +88,7 @@ cmdList returns [CmdList ast]:
   })*
 ;
 
-func returns [Func ast]:
-  ID '(' params? ')'(':'type)?'{'cmdList'}'{
-    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), null, null, $cmdList.ast);}
-;
+
 
 exp returns [Expr ast]:
   a1=exp '&''&' a2=exp {$ast = new And($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);} 
