@@ -1,0 +1,3 @@
+- testes/sintaxe/certo/attrAND.lan
+- testes/sintaxe/certo/data.lan
+- testes/sintaxe/certo/function_call_expr.lan

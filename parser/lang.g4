@@ -46,7 +46,7 @@ funcList returns [FuncList ast]:
 ;
 
 data returns [Node ast]:
-  kw='data' ID '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new ID($ID.line, $ID.pos, $ID.text), $declList.ast);}
+  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), $declList.ast);}
   ;
 
 declList returns [DeclList ast]:
@@ -78,6 +78,10 @@ cmd returns [Node ast]:
  '{' cmdList '}' { $ast = $cmdList.ast;}
  |
  lvalue '=' exp ';' {$ast = new Attr($lvalue.ast.getLine(), $lvalue.ast.getCol(), $lvalue.ast, $exp.ast);}
+ |
+ f='if' '(' exp ')' cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $cmd.ast, null);} 
+ |
+ f='if' '(' exp ')' c1=cmd 'else' c2=cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $c1.ast, $c2.ast);} 
 ;
 
 cmdList returns [CmdList ast]:
@@ -139,6 +143,8 @@ sexp returns [Expr ast]:
   | 
   (b='true' | b='false'){$ast = new Bool($b.line, $b.pos, Boolean.parseBoolean($b.text));}
   |
+  n='null'{$ast = new Null($n.line, $n.pos);}
+  |
   INT {$ast = new Int($INT.line, $INT.pos, Integer.parseInt($INT.text));}
   |
   FLOAT {$ast = new FloatAst($FLOAT.line, $FLOAT.pos, Float.parseFloat($FLOAT.text));}
@@ -150,6 +156,8 @@ sexp returns [Expr ast]:
 
 pexp returns [Expr ast]:
   lvalue{$ast=$lvalue.ast;}
+  | 
+  '(' exp ')'{$ast=$exp.ast;}
 ;
 
 

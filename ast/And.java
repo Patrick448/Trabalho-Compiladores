@@ -20,9 +20,18 @@ public class And extends BinOP {
          return   s + " && " + getRight().toString();
       }
 
+      public String dotString(){
+         String s = getUid() + " [label= \"&&\"]\n";
+         s+= getUid() +"--"+getLeft().getUid()+"\n";
+         s+=getLeft().dotString();
+         s+= getUid() +"--"+getRight().getUid()+"\n";
+         s+=getRight().dotString();
+         
+         return s;
+      }
+
       public Object interpret(HashMap<String,Object> m){
-         System.out.println("" + getLeft().interpret(m).getClass().getSimpleName());
-         if(getLeft().interpret(m).getClass().getSimpleName().equals("Boolean"))
+         if(getLeft().interpret(m).getClass().getSimpleName().equals("Boolean") && getRight().interpret(m).getClass().getSimpleName().equals("Boolean"))
          {
             return (boolean)getLeft().interpret(m) && (boolean)getRight().interpret(m);
          }

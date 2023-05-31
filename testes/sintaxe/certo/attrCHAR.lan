@@ -1,4 +1,3 @@
-data object{}
 main(){
   x = 'a';
 }

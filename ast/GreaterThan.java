@@ -23,6 +23,16 @@ public class GreaterThan extends BinOP {
          }
          return   s + " < " + ss;
       }
+
+      public String dotString(){
+         String s = getUid() + " [label= \">\"]\n";
+         s+= getUid() +"--"+getLeft().getUid()+"\n";
+         s+=getLeft().dotString();
+         s+= getUid() +"--"+getRight().getUid()+"\n";
+         s+=getRight().dotString();
+         
+         return s;
+      }
       
       public Object interpret(HashMap<String,Object> m){
          if(getLeft().interpret(m).getClass().getSimpleName().equals("Integer") && getRight().interpret(m).getClass().getSimpleName().equals("Integer"))

@@ -42,13 +42,14 @@ public class If extends Node {
       }
       
       public Object interpret(HashMap<String,Object> m){
-          int n = (Integer)teste.interpret(m);
-          if(n != 0){
+        boolean n = (boolean)teste.interpret(m);  
+        if(n){
               return thn.interpret(m);
-          }else if(els !=null){
-              return els.interpret(m);
-          }
-          return n;
+        }
+        else if(els !=null){
+            return els.interpret(m);
+        }
+        return n;
       }
       
 }

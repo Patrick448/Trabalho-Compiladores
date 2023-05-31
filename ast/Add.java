@@ -22,10 +22,10 @@ public class Add extends BinOP {
 
       public String dotString(){
          String s = getUid() + " [label= \"+\"]\n";
-         s+= getUid() +"--"+getRight().getUid()+"\n";
-         s+=getRight().dotString();
          s+= getUid() +"--"+getLeft().getUid()+"\n";
          s+=getLeft().dotString();
+         s+= getUid() +"--"+getRight().getUid()+"\n";
+         s+=getRight().dotString();
          
          return s;
      }

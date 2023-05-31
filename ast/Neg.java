@@ -15,6 +15,14 @@ public class Neg extends Expr {
       
       public Expr getExpr(){ return this.e;}
 
+      public String toString(){
+         String s = e.toString();
+         if(e instanceof And || e instanceof Neg || e instanceof LessThan || e instanceof GreaterThan || e instanceof Eq || e instanceof Diff){
+            s = "(" + s + ")";
+         }
+         return   "! " + s;
+      }
+
       public String dotString(){
         String s = getUid() + " [label= \"!\"]\n";
         s+= getUid() +"--"+e.getUid()+"\n";

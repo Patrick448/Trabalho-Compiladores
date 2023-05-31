@@ -25,6 +25,17 @@ public class DeclList extends Node {
           return 0;
     }
 
+    public String dotString(){
+        String s = getUid() + " [label=DeclList]\n";
+
+        for(Node n : list) {
+            s+= getUid() +"--"+n.getUid()+"\n";
+            s+= n.dotString();
+        }
+
+        return s;
+    }
+
     public String toString() {
         String s = "";
 
