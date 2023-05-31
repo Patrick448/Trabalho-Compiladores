@@ -21,7 +21,7 @@ public class Type extends Expr {
          return   l; 
       }
       
-      public Object interpret(HashMap<String,Integer> m){
+      public Object interpret(HashMap<String,Object> m){
           return m.get(l);
       }
 }

@@ -34,7 +34,7 @@ public class StmtList extends Node {
          return  cmd1.toString() + ";\n" + (cmd2 != null ? cmd2.toString()  : "") ;
       }
       
-      public Object interpret(HashMap<String,Integer> m){
+      public Object interpret(HashMap<String,Object> m){
            int result = (Integer)cmd1.interpret(m);
 	   if(cmd2 == null)
 	       return result;

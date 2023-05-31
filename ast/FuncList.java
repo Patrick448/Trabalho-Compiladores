@@ -21,7 +21,7 @@ public class FuncList extends Node {
     }
 
     @Override
-    public Object interpret(HashMap<String, Integer> m) {
+    public Object interpret(HashMap<String, Object> m) {
 
           for(Func n : list) {
               if(n.id.getName().equals("main")) {

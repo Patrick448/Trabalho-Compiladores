@@ -14,7 +14,7 @@ public class Add extends BinOP {
       
       public String toString(){
          String s = getLeft().toString();
-         if(getLeft() instanceof Add){
+         if(getLeft() instanceof Add || getLeft() instanceof Sub ){
             s = "(" + s + ")";
          }
          return   s + " + " + getRight().toString();
@@ -30,8 +30,24 @@ public class Add extends BinOP {
          return s;
      }
       
-      public Object interpret(HashMap<String,Integer> m){
-          return (Integer)getLeft().interpret(m) + (Integer)getRight().interpret(m);
+      public Object interpret(HashMap<String,Object> m){
+         if(getLeft().interpret(m).getClass().getSimpleName().equals("Integer") && getRight().interpret(m).getClass().getSimpleName().equals("Integer"))
+         {
+            return (Integer)getLeft().interpret(m) + (Integer)getRight().interpret(m);
+         }
+         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Float") && getRight().interpret(m).getClass().getSimpleName().equals("Float"))
+         {
+            return (Float)getLeft().interpret(m) + (Float)getRight().interpret(m);
+         }
+         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Integer") && getRight().interpret(m).getClass().getSimpleName().equals("Float"))
+         {
+            return (Integer)getLeft().interpret(m) + (Float)getRight().interpret(m);
+         }
+         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Float") && getRight().interpret(m).getClass().getSimpleName().equals("Integer"))
+         {
+            return (Float)getLeft().interpret(m) + (Integer)getRight().interpret(m);
+         }
+         return null;
       }
       
 }

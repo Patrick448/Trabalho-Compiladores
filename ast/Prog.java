@@ -47,7 +47,7 @@ public class Prog extends Node {
         return s+"\n";
     }
       
-    public Object interpret(HashMap<String,Integer> m){
+    public Object interpret(HashMap<String,Object> m){
 
         if (dataList != null) dataList.interpret(m);
         if (funcList != null) funcList.interpret(m);

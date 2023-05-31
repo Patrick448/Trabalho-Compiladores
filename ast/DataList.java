@@ -22,7 +22,7 @@ public class DataList extends Node {
     }
 
     @Override
-    public Object interpret(HashMap<String, Integer> m) {
+    public Object interpret(HashMap<String, Object> m) {
           return 0;
     }
 

@@ -78,7 +78,11 @@ func returns [Func ast]:
 ;
 
 exp returns [Expr ast]:
-  INT {$ast = new Num($INT.line, $INT.pos, Integer.parseInt($INT.text));}
+  a1=exp '&''&' a2=exp {$ast = new And($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);} 
+  |
+  INT {$ast = new Int($INT.line, $INT.pos, Integer.parseInt($INT.text));}
+  |
+  CHAR {$ast = new Char($CHAR.line, $CHAR.pos, $CHAR.text);}
   |
   lvalue {$ast = $lvalue.ast;}
   |
@@ -86,11 +90,27 @@ exp returns [Expr ast]:
 ;
 
 rexp returns [Expr ast]:
+  ll=aexp o='<' rl=aexp {$ast = new LessThan($o.line, $o.pos, $ll.ast, $rl.ast);} 
+  |
+  lg=aexp o='>' rg=aexp {$ast = new GreaterThan($o.line, $o.pos, $lg.ast, $rg.ast);} 
+  |
+  le=rexp o='=''=' re=aexp {$ast = new Eq($o.line, $o.pos, $le.ast, $re.ast);} 
+  | 
+  ld=rexp o='!''=' rd=aexp {$ast = new Diff($o.line, $o.pos, $ld.ast, $rd.ast);} 
+  |
   aexp{$ast=$aexp.ast;}
 ;
 
 aexp returns [Expr ast]:
   a1=aexp '+' a2=aexp{$ast = new Add($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
+  a1=aexp '-' a2=aexp{$ast = new Sub($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
+  a1=aexp '*' a2=aexp{$ast = new Mul($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
+  a1=aexp '/' a2=aexp{$ast = new Div($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
+  a1=aexp '%' a2=aexp{$ast = new Rest($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
   mexp{$ast=$mexp.ast;}  
 ;
@@ -100,19 +120,17 @@ mexp returns [Expr ast]:
 ;
 
 sexp returns [Expr ast]:
-  '!' sexp {}
+  n='!' sexp {$ast = new Neg($n.line, $n.pos, $sexp.ast);}
   |
-  '-' sexp {}
+  su='-' sexp {$ast = new SubUni($su.line, $su.pos, $sexp.ast);}
   | 
-  ('true' | 'false'){}
+  (b='true' | b='false'){$ast = new Bool($b.line, $b.pos, Boolean.parseBoolean($b.text));}
   |
-  INT {$ast = new Num($INT.line, $INT.pos, Integer.parseInt($INT.text));}
+  INT {$ast = new Int($INT.line, $INT.pos, Integer.parseInt($INT.text));}
   |
-  FLOAT {}
-  /*
+  FLOAT {$ast = new FloatAst($FLOAT.line, $FLOAT.pos, Float.parseFloat($FLOAT.text));}
   |
-  CHAR {}*/
-
+  CHAR {$ast = new Char($CHAR.line, $CHAR.pos, $CHAR.text);}
   | 
   pexp {$ast=$pexp.ast;}
 ;
@@ -136,42 +154,18 @@ ID '::' TYPE (',' ID '::' TYPE)* {}
 
 
 
-/* 
-stmt returns [Node ast]:
- ID '=' expr {$ast = new Attr($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $expr.ast);}
-|
- expr op='?' '[' s1=stmt ']' ':' '[' s2=stmt ']' {$ast = new If($op.line, $op.pos, $expr.ast, $s1.ast, $s2.ast);}
-|
- expr op='?' '[' s1=stmt ']' {$ast = new If($op.line, $op.pos, $expr.ast, $s1.ast);}
-|
- expr {$ast = new Print($expr.ast.getLine(), $expr.ast.getCol(), $expr.ast);}
-;
-
-expr returns [Expr ast]:
- term op='+' e=expr {$ast = new Add($op.line, $op.pos, $term.ast, $e.ast);}
-|
- term {$ast = $term.ast;}
-;
-
-term returns [Expr ast]:
- factor op='*' e=term {$ast = new Mul($op.line, $op.pos, $factor.ast, $e.ast);}
-|
- factor {$ast = $factor.ast;}
-;
-
-factor returns [Expr ast]:
- ID {$ast = new ID($ID.line, $ID.pos, $ID.text);}
-|
- INT {$ast = new Num($INT.line, $INT.pos, Integer.parseInt($INT.text));}
-;
-*/
-
-///---------------------------------------
 
 ID : [a-z] ([a-z]|[A-Z]|[0-9]|'_')*;
 INT : [0-9]+;
 FLOAT : [0-9]+ '.' [0-9]+ | '.' [0-9];
-//CHAR : '\''[^'\''\\]'\'' | '\'''\\r''\'' | '\'''\\n''\'' | '\'''\\t''\'' | '\'''\\\\''\'' | '\'''\\\'''\'';
+CHAR : ('\'' '\\n' '\'') 
+    | ('\'' '\\t' '\'') 
+    | ('\'' '\\b' '\'') 
+    | ('\'' '\\r' '\'') 
+    | ('\'' '\\\\' '\'') 
+    | ('\'' '\\' '\'') 
+    | ('\'' [\u0000-\uFFFE] '\'')
+    ;
 TYPE: [A-Z]([a-z]|[A-Z]|[0-9]|'_')*;
 NEWLINE: '\r'? '\n' -> skip;
 LINE_COMMENT: '--' ~('\r' | '\n')* NEWLINE -> skip;

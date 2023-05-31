@@ -4,8 +4,6 @@ package ast;
  * Esta classe representa uma Operção binária.
  * Expr [opreação] Expr
  */
-import java.util.HashMap; 
-
 public abstract class BinOP extends Expr {
       
       private Expr l;

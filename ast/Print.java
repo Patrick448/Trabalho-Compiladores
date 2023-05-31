@@ -32,11 +32,51 @@ public class Print extends Node {
         
         return s;
     }
-      public Object interpret(HashMap<String,Integer> m){
-        
-
-          //int n = (Integer)e.interpret(m);
-          System.out.println("" + e.interpret(m));
-          return 0;
+      public Object interpret(HashMap<String,Object> m){
+         if(e.interpret(m).getClass().getSimpleName().equals("Integer"))
+         {
+            System.out.println("" + e.interpret(m));
+         }
+         else if(e.interpret(m).getClass().getSimpleName().equals("Float"))
+         {
+            System.out.println("" + e.interpret(m));
+         }
+         else if(e.interpret(m).getClass().getSimpleName().equals("Boolean"))
+         {
+            System.out.println("" + e.interpret(m));
+         }
+         else if(e.interpret(m).getClass().getSimpleName().equals("String"))
+         {
+            if(e.interpret(m).equals("'\\n'"))
+            {
+               System.out.println("\n");
+            }
+            else if(e.interpret(m).equals("'\\t'"))
+            {
+               System.out.println("\t");
+            }
+            else if(e.interpret(m).equals("'\\b'"))
+            {
+               System.out.println("\b");
+            }
+            else if(e.interpret(m).equals("'\\r'"))
+            {
+               System.out.println("\r");
+            }
+            else if(e.interpret(m).equals("'\\\\'"))
+            {
+               System.out.println("\\");
+            }
+            else if(e.interpret(m).equals("'\\''"))
+            {
+               System.out.println("'");
+            }
+            else
+            {
+               String s = (String)e.interpret(m);
+               System.out.println("" + s.charAt(1));
+            }
+         }
+         return 0;
       }
 }

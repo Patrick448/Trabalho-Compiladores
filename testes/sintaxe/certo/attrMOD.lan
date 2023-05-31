@@ -1,0 +1,4 @@
+data object{}
+main(){
+  x= 1%2;
+}

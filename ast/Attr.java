@@ -35,9 +35,31 @@ public class Attr extends Node {
         return s;
     }
       
-      public Object interpret(HashMap<String,Integer> m){
-           int x = (Integer)e.interpret(m);
-           m.put((String)lValue.getID().getName(), x);
-           return x;
+      public Object interpret(HashMap<String,Object> m){
+          if(e.interpret(m).getClass().getSimpleName().equals("Integer"))
+          {
+               int x = (Integer)e.interpret(m);
+               m.put((String)lValue.getID().getName(), x);
+               return x;
+          }
+          else if(e.interpret(m).getClass().getSimpleName().equals("Float"))
+          {
+               float y = (Float)e.interpret(m);
+               m.put((String)lValue.getID().getName(), y);
+               return y;
+          }
+          else if(e.interpret(m).getClass().getSimpleName().equals("String"))
+          {
+               String k = (String)e.interpret(m);
+               m.put((String)lValue.getID().getName(), k);
+               return k;
+          }
+          else if(e.interpret(m).getClass().getSimpleName().equals("Boolean"))
+          {
+               boolean b = (boolean)e.interpret(m);
+               m.put((String)lValue.getID().getName(), b);
+               return b;
+          }
+          return null;
       }   
 }

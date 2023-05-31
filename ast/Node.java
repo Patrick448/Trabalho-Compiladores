@@ -22,6 +22,6 @@ public abstract class Node {
       public int getLine(){ return line;}
       public int getCol(){ return col;}  
       public int getUid(){ return uid;}
-      public abstract Object interpret(HashMap<String,Integer> m);
+      public abstract Object interpret(HashMap<String,Object> m);
       
 }

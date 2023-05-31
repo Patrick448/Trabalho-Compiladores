@@ -32,7 +32,7 @@ public class LValue extends Expr {
         
         return s;
     }
-      public Object interpret(HashMap<String,Integer> m){
+      public Object interpret(HashMap<String,Object> m){
         
         return lval.interpret(m);
       }

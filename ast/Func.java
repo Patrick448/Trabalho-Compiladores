@@ -22,7 +22,7 @@ public class Func extends Node {
       }
 
       @Override
-      public Object interpret(HashMap<String, Integer> m) {
+      public Object interpret(HashMap<String, Object> m) {
             if(cmdList != null) cmdList.interpret(m);
             
             return 0;

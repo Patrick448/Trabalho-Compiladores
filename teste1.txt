@@ -2,12 +2,11 @@ data object{}
 data string{numerador :: Int;}
 data integer{numerador :: Int;}
 
-main () {{
-    print 10;
-    var = 55+5;
-    print 5;
+main () {
+    var = -50 + 5.7;
+    j = !false;
     x = var + 10;
     print 200;
-    print var;
+    print j;
     print x;
-}}
+}

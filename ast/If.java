@@ -41,7 +41,7 @@ public class If extends Node {
          return  s; 
       }
       
-      public Object interpret(HashMap<String,Integer> m){
+      public Object interpret(HashMap<String,Object> m){
           int n = (Integer)teste.interpret(m);
           if(n != 0){
               return thn.interpret(m);
