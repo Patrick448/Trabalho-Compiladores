@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // Generated from ./parser/lang.g4 by ANTLR 4.8
-=======
-// Generated from parser/lang.g4 by ANTLR 4.8
->>>>>>> 6ee27e5080320d995b54e797ba7192aa38053917
 
     package parser;
 
@@ -108,8 +104,6 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-<<<<<<< HEAD
-=======
 	@Override public void enterParams(langParser.ParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -134,7 +128,6 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
->>>>>>> 6ee27e5080320d995b54e797ba7192aa38053917
 	@Override public void enterType(langParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -250,21 +243,6 @@ public class langBaseListener implements langListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLvalue(langParser.LvalueContext ctx) { }
-<<<<<<< HEAD
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterParams(langParser.ParamsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitParams(langParser.ParamsContext ctx) { }
-=======
->>>>>>> 6ee27e5080320d995b54e797ba7192aa38053917
 
 	/**
 	 * {@inheritDoc}

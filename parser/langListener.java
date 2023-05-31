@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // Generated from ./parser/lang.g4 by ANTLR 4.8
-=======
-// Generated from parser/lang.g4 by ANTLR 4.8
->>>>>>> 6ee27e5080320d995b54e797ba7192aa38053917
 
     package parser;
 
@@ -86,8 +82,6 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitFunc(langParser.FuncContext ctx);
 	/**
-<<<<<<< HEAD
-=======
 	 * Enter a parse tree produced by {@link langParser#params}.
 	 * @param ctx the parse tree
 	 */
@@ -108,7 +102,6 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitParam(langParser.ParamContext ctx);
 	/**
->>>>>>> 6ee27e5080320d995b54e797ba7192aa38053917
 	 * Enter a parse tree produced by {@link langParser#type}.
 	 * @param ctx the parse tree
 	 */
@@ -208,17 +201,4 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLvalue(langParser.LvalueContext ctx);
-<<<<<<< HEAD
-	/**
-	 * Enter a parse tree produced by {@link langParser#params}.
-	 * @param ctx the parse tree
-	 */
-	void enterParams(langParser.ParamsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link langParser#params}.
-	 * @param ctx the parse tree
-	 */
-	void exitParams(langParser.ParamsContext ctx);
-=======
->>>>>>> 6ee27e5080320d995b54e797ba7192aa38053917
 }
