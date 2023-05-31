@@ -20,6 +20,12 @@ public class Type extends Expr {
       public String toString(){
          return   l; 
       }
+
+        @Override
+        public String dotString(){
+            String s = getUid() + " [label=\""+ this.getClass().getSimpleName()+"<"+ getName() +">"+"\"]\n";
+            return s;
+        }
       
       public Object interpret(HashMap<String,Object> m){
           return m.get(l);

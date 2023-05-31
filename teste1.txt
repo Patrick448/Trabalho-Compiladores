@@ -2,6 +2,10 @@ data object{}
 data string{numerador :: Int;}
 data integer{numerador :: Int;}
 
+myFunc(num :: Int, ch :: Char){
+    b=1;
+}
+
 main () {
     var = -50 + 5.7;
     j = !false;

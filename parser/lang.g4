@@ -61,11 +61,24 @@ decl returns [Node ast]:
   ;
 
 func returns [Func ast]:
-  ID '(' params? ')'(':'type)?'{'cmdList'}'{
-    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), null, null, $cmdList.ast);}
+  ID '(' params ')'(':'type)?'{'cmdList'}'{
+    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, null, $cmdList.ast);}
 ;
 
-type returns [Node ast]:
+params returns[ParamsList ast]:
+  (p=param {
+    if($ast == null){$ast = new ParamsList($p.ast.getLine(), $p.ast.getCol(), $p.ast); }
+    else{$ast.addNode($p.ast);}
+    
+  })*
+;
+
+param returns [Param ast]:
+  ID '::' t=type {
+    $ast = new Param($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
+;
+
+type returns [Type ast]:
   type '['']'
   |
   ( t='Int' | t='Char' | t='Float' | t='Bool' | t=ID) {$ast = new Type($t.line, $t.pos, $t.text);}
@@ -161,9 +174,9 @@ lvalue returns [LValue ast]:
   l=lvalue '.' ID {}
 ;
 
-params returns[Node ast]:
-ID '::' TYPE (',' ID '::' TYPE)* {}
-;
+//params returns[Node ast]:
+//ID '::' TYPE (',' ID '::' TYPE)* {}
+//;
 
 
 
