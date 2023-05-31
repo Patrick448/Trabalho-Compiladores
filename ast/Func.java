@@ -42,7 +42,6 @@ public class Func extends Node {
             }
 
             if(params != null){
-                  System.out.println("params: " + params.dotString());
                s+= getUid() +"--"+params.getUid()+"\n"; 
                s+= params.dotString();  
             }
