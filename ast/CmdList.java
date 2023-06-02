@@ -2,14 +2,14 @@ package ast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.List;
 
 public class CmdList extends Node {
     
-    Node id;
-    List<Node> list;
+    private List<Node> list;
 
-    public CmdList(int l, int c,Node data) {
+    public CmdList(int l, int c, Node data) {
           super(l, c);
           list = new ArrayList<Node>();
           if(data != null)
@@ -21,12 +21,17 @@ public class CmdList extends Node {
         list.add(n);
     }
 
+    public List<Node> getList() {
+        return list;
+    }
+
     @Override
-    public Object interpret(HashMap<String, Object> m) {
-          for(Node n : list) {
-              n.interpret(m);
-          }
-          return 0;
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        Object v = null;
+        for(Node n : list) {
+              v= n.interpret(variables, functions, datas, returns);
+        }
+        return v;
     }
 
     public String dotString(){
@@ -44,8 +49,9 @@ public class CmdList extends Node {
         String s = "CmdList:{";
 
         for(Node n : list) {
-            s+= n.toString() + ", ";
+            s+= n.toString() + "; ";
         }
+
         s+="}";
 
         return s;

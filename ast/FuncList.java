@@ -2,14 +2,14 @@ package ast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.List;
 
 public class FuncList extends Node {
     
-    Node id;
-    List<Func> list;
+    private List<Func> list;
 
-    public FuncList(int l, int c,Func data) {
+    public FuncList(int l, int c, Func data) {
           super(l, c);
           list = new ArrayList<Func>();
           list.add(data);
@@ -20,15 +20,29 @@ public class FuncList extends Node {
         list.add(n);
     }
 
-    @Override
-    public Object interpret(HashMap<String, Object> m) {
+    public List<Func> getList() {
+        return list;
+    }
 
-          for(Func n : list) {
-              if(n.id.getName().equals("main")) {
-                  n.interpret(m);
-              }
-          }
-          return 0;
+    @Override
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        
+        if(functions.size()==0)
+        {
+            for(Func n : list)
+            {
+                functions.add(n);
+            }
+        }
+        for(Func n : functions)
+        {
+            if(n.getId().getName().equals("main") && n.getParams()==null && n.getReturns()==null)
+            {
+                n.interpret(variables, functions, datas, returns);
+                break;
+            }
+        }
+        return 0;
     }
 
     public String dotString(){

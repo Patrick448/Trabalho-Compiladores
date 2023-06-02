@@ -6,13 +6,16 @@ package ast;
  */
  
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
+
 public class If extends Node {
       
-      private Expr teste;
+      private Node teste;
       private Node thn;
       private Node els;
       
-      public If(int lin, int col, Expr teste, Node thn, Node els){
+      public If(int lin, int col, Node teste, Node thn, Node els){
            super(lin,col);
            this.teste = teste;
            this.thn = thn;
@@ -20,7 +23,7 @@ public class If extends Node {
       }
       
             
-      public If(int lin, int col, Expr teste, Node thn){
+      public If(int lin, int col, Node teste, Node thn){
            super(lin,col);
            this.teste = teste;
            this.thn = thn;
@@ -41,13 +44,13 @@ public class If extends Node {
          return  s; 
       }
       
-      public Object interpret(HashMap<String,Object> m){
-        boolean n = (boolean)teste.interpret(m);  
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        boolean n = (boolean)teste.interpret(variables, functions, datas, returns);  
         if(n){
-              return thn.interpret(m);
+              return thn.interpret(variables, functions, datas, returns);
         }
         else if(els !=null){
-            return els.interpret(m);
+            return els.interpret(variables, functions, datas, returns);
         }
         return n;
       }

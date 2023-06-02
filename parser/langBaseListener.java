@@ -44,6 +44,18 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterData(langParser.DataContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitData(langParser.DataContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFuncList(langParser.FuncListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -56,13 +68,13 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterData(langParser.DataContext ctx) { }
+	@Override public void enterFunc(langParser.FuncContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitData(langParser.DataContext ctx) { }
+	@Override public void exitFunc(langParser.FuncContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -92,18 +104,6 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunc(langParser.FuncContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunc(langParser.FuncContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterParams(langParser.ParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -128,6 +128,18 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTypes(langParser.TypesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypes(langParser.TypesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterType(langParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -135,6 +147,18 @@ public class langBaseListener implements langListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType(langParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdList(langParser.CmdListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdList(langParser.CmdListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -152,13 +176,37 @@ public class langBaseListener implements langListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdList(langParser.CmdListContext ctx) { }
+	@Override public void enterReturnsFunction(langParser.ReturnsFunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmdList(langParser.CmdListContext ctx) { }
+	@Override public void exitReturnsFunction(langParser.ReturnsFunctionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReturnElement(langParser.ReturnElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnElement(langParser.ReturnElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExps(langParser.ExpsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExps(langParser.ExpsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -231,6 +279,18 @@ public class langBaseListener implements langListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPexp(langParser.PexpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLvalues(langParser.LvaluesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLvalues(langParser.LvaluesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

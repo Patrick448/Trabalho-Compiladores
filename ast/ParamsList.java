@@ -2,11 +2,12 @@ package ast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.List;
 
 public class ParamsList extends Node {
 
-    List<Param> paramsList;
+    private List<Param> paramsList;
 
     public ParamsList(int l, int c, Param first) {
         super(l, c);
@@ -19,10 +20,13 @@ public class ParamsList extends Node {
         paramsList.add(p);
     }
 
+    public List<Param> getParamsList() {
+        return paramsList;
+    }
+
     @Override
-    public Object interpret(HashMap<String, Object> m) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'interpret'");
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        return 0;
     }
 
     @Override

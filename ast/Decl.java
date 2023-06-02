@@ -5,21 +5,23 @@ package ast;
  * Expr
  */
 import java.util.HashMap;
+import java.util.Stack;
+import java.util.List;
 
 public class Decl extends Node {
 
-      Node id;
-      Node declList;
-      Node type;
+      ID id;
+      DataList declList;
+      Type type;
 
-      public Decl(int l, int c, Node id, Node type) {
+      public Decl(int l, int c, ID id, Type type) {
             super(l, c);
             this.id = id;
             this.type = type;
       }
 
       @Override
-      public Object interpret(HashMap<String, Object> m) {
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
             return 0;
       }
 
@@ -27,4 +29,16 @@ public class Decl extends Node {
           return type.toString() + " " + id.toString();
       }
 
+      public String dotString() {
+            String s = getUid() + " [label=\""+ this.getClass().getSimpleName()+"\"]\n";
+        
+            s+= getUid() +"--"+id.getUid()+"\n";
+            s+=id.dotString();
+
+            s+= getUid() +"--"+type.getUid()+"\n"; 
+            s+= type.dotString();  
+        
+        
+            return s;
+        }
 }

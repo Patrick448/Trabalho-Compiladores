@@ -5,20 +5,30 @@ package ast;
  * 
  */
 import java.util.HashMap;
+import java.util.Stack;
+import java.util.List;
 
 public class Data extends Node {
 
-      Node id;
-      Node declList;
+      private Type id;
+      private DeclList declList;
 
-      public Data(int l, int c, Node id, Node declList) {
+      public Data(int l, int c, Type id, DeclList declList) {
             super(l, c);
             this.id = id;
             this.declList = declList;
       }
 
+      public Type getId() {
+          return id;
+      }
+
+      public DeclList getDeclList() {
+          return declList;
+      }
+
       @Override
-      public Object interpret(HashMap<String, Object> m) {
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
             return 0;
       }
 
@@ -26,6 +36,8 @@ public class Data extends Node {
             String s = getUid() + " [label= \""+this.getClass().getSimpleName()+"\"]\n";
             s+= getUid() +"--"+id.getUid()+"\n";
             s+=id.dotString();
+            s+= getUid() +"--"+declList.getUid()+"\n";
+            s+=declList.dotString();
    
             return s;
         }

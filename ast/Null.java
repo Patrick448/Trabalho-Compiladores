@@ -1,6 +1,8 @@
 package ast;
 
 import java.util.HashMap;
+import java.util.Stack;
+import java.util.List;
 
 public class Null extends Expr {
       
@@ -21,7 +23,7 @@ public class Null extends Expr {
             return s;
         }
       
-      public Object interpret(HashMap<String,Object> m){
-            return "null";
+        public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+            return null;
       }
 }

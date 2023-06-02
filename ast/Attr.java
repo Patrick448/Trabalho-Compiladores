@@ -6,6 +6,8 @@ package ast;
  */
  
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
 
 public class Attr extends Node {
       
@@ -35,29 +37,29 @@ public class Attr extends Node {
         return s;
     }
       
-      public Object interpret(HashMap<String,Object> m){
-          if(e.interpret(m).getClass().getSimpleName().equals("Integer"))
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+     if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
           {
-               int x = (Integer)e.interpret(m);
-               m.put((String)lValue.getID().getName(), x);
+               int x = (Integer)e.interpret(variables, functions, datas, returns);
+               variables.put((String)lValue.getID().getName(), x);
                return x;
           }
-          else if(e.interpret(m).getClass().getSimpleName().equals("Float"))
+          else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
           {
-               float y = (Float)e.interpret(m);
-               m.put((String)lValue.getID().getName(), y);
+               float y = (Float)e.interpret(variables, functions, datas, returns);
+               variables.put((String)lValue.getID().getName(), y);
                return y;
           }
-          else if(e.interpret(m).getClass().getSimpleName().equals("String"))
+          else if(e.interpret(variables, functions, datas,returns).getClass().getSimpleName().equals("String"))
           {
-               String k = (String)e.interpret(m);
-               m.put((String)lValue.getID().getName(), k);
+               String k = (String)e.interpret(variables, functions, datas, returns);
+               variables.put((String)lValue.getID().getName(), k);
                return k;
           }
-          else if(e.interpret(m).getClass().getSimpleName().equals("Boolean"))
+          else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
           {
-               boolean b = (boolean)e.interpret(m);
-               m.put((String)lValue.getID().getName(), b);
+               boolean b = (boolean)e.interpret(variables, functions, datas, returns);
+               variables.put((String)lValue.getID().getName(), b);
                return b;
           }
           return null;

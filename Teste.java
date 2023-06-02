@@ -47,8 +47,7 @@ public class Teste {
 		//System.out.println(ast.dotString());
 		writeToFile("ast.dot", ast.dotString());
 
-		HashMap<String, Object> m = new HashMap<String, Object>();
-		ast.interpret(m);
+		ast.interpret(null, null, null, null);
 	}
 
 	

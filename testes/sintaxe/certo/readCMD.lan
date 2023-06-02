@@ -1,3 +1,4 @@
 main(){
   read x;
+  print x;
 }

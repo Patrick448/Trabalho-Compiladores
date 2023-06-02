@@ -5,6 +5,8 @@ package ast;
  * Expr
  */ 
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
 
 public class FloatAst extends Expr {
       
@@ -28,7 +30,7 @@ public class FloatAst extends Expr {
             return s;
         }
       
-      public Object interpret(HashMap<String,Object> m){
+        public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
             return l;
       }
 }

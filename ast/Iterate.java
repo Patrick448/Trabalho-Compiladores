@@ -6,6 +6,9 @@ package ast;
  */
  
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
+
 public class Iterate extends Node {
       
       private Expr condition;
@@ -27,11 +30,11 @@ public class Iterate extends Node {
          return  s; 
       }
       
-      public Object interpret(HashMap<String,Object> m){
-          while((Boolean)condition.interpret(m)){
-          	cmd.interpret(m);
-          }
-          return 0;
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        while((Boolean)condition.interpret(variables, functions, datas, returns)){
+          	cmd.interpret(variables, functions, datas, returns);
+        }
+        return 0;
       }
       
 }

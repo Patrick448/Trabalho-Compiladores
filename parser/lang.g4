@@ -38,6 +38,10 @@ dataList returns [DataList ast]:
   })*
 ;
 
+data returns [Data ast]:
+  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), $declList.ast);}
+  ;
+
 funcList returns [FuncList ast]:
   (f=func {
     if($ast == null){$ast = new FuncList($f.ast.getLine(), $f.ast.getCol(), $f.ast); }
@@ -45,9 +49,10 @@ funcList returns [FuncList ast]:
   })*
 ;
 
-data returns [Node ast]:
-  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), $declList.ast);}
-  ;
+func returns [Func ast]:
+  ID '(' params ')' ':'? types '{'cmdList'}'{
+    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, $types.ast, $cmdList.ast);}
+;
 
 declList returns [DeclList ast]:
    (d=decl {
@@ -56,45 +61,33 @@ declList returns [DeclList ast]:
   })*
   ;
 
-decl returns [Node ast]:
+decl returns [Decl ast]:
   ID '::' type ';' {$ast = new Decl($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
   ;
-
-func returns [Func ast]:
-  ID '(' params ')'(':'type)?'{'cmdList'}'{
-    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, null, $cmdList.ast);}
-;
 
 params returns[ParamsList ast]:
   (p=param {
     if($ast == null){$ast = new ParamsList($p.ast.getLine(), $p.ast.getCol(), $p.ast); }
     else{$ast.addNode($p.ast);}
-    
   })*
 ;
 
 param returns [Param ast]:
-  ID '::' t=type {
+  ID '::' t=type ','? {
     $ast = new Param($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
 ;
 
-type returns [Type ast]:
-  type '['']'
-  |
-  ( t='Int' | t='Char' | t='Float' | t='Bool' | t=ID) {$ast = new Type($t.line, $t.pos, $t.text);}
+types returns [TypeList ast]:
+  (t=type {
+    if($ast == null){$ast = new TypeList($t.ast.getLine(), $t.ast.getCol(), $t.ast); }
+    else{$ast.addNode($t.ast);}
+  })*
 ;
 
-
-cmd returns [Node ast]:
- 'print' exp ';' {$ast = new Print($exp.ast.getLine(), $exp.ast.getCol(), $exp.ast);}
- |
- '{' cmdList '}' { $ast = $cmdList.ast;}
- |
- lvalue '=' exp ';' {$ast = new Attr($lvalue.ast.getLine(), $lvalue.ast.getCol(), $lvalue.ast, $exp.ast);}
- |
- f='if' '(' exp ')' cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $cmd.ast, null);} 
- |
- f='if' '(' exp ')' c1=cmd 'else' c2=cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $c1.ast, $c2.ast);} 
+type returns [Type ast]:
+  //type '['']' ','?
+  //|
+  ( t='Int' ','? | t='Char' ','? | t='Float' ','? | t='Bool' ','? | t=TYPE ','? ) {$ast = new Type($t.line, $t.pos, $t.text);}
 ;
 
 cmdList returns [CmdList ast]:
@@ -106,15 +99,46 @@ cmdList returns [CmdList ast]:
 ;
 
 
+cmd returns [Node ast]:
+ '{' cmdList '}' { $ast = $cmdList.ast;}
+ |
+ 'print' exp ';' {$ast = new Print($exp.ast.getLine(), $exp.ast.getCol(), $exp.ast);}
+ |
+ 'read' lvalue ';' {$ast = new Read($lvalue.ast.getLine(), $lvalue.ast.getCol(), $lvalue.ast);}
+ |
+ 'iterate(' exp ')' cmd {$ast = new Iterate($exp.ast.getLine(), $exp.ast.getCol(), $exp.ast, $cmd.ast);}
+ |
+ lvalue '=' exp ';' {$ast = new Attr($lvalue.ast.getLine(), $lvalue.ast.getCol(), $lvalue.ast, $exp.ast);}
+ |
+ f='if' '(' exp ')' cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $cmd.ast, null);} 
+ |
+ f='if' '(' exp ')' c1=cmd 'else' c2=cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $c1.ast, $c2.ast);} 
+ |
+ 'return' r=returnsFunction ';' {$ast = new ReturnCMD($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
+ |
+ ID '(' exps ')' '<'? lvalues '>'? ';' {$ast = new CallFunction($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $lvalues.ast);}
+;
+
+returnsFunction returns[ReturnList ast]:
+  (r=returnElement {
+    if($ast == null){$ast = new ReturnList($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
+    else{$ast.addNode($r.ast);}
+  })*
+;
+
+returnElement returns [Return ast]:
+  e=exp ','? {$ast = new Return($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
+;
+
+exps returns [ExprList ast]:
+  (
+    e=exp ','? {
+      if($ast == null){$ast = new ExprList($e.ast.getLine(), $e.ast.getCol(), $e.ast); }
+      else{$ast.addNode($e.ast);}}
+  )*;
 
 exp returns [Expr ast]:
-  a1=exp '&''&' a2=exp {$ast = new And($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);} 
-  |
-  INT {$ast = new Int($INT.line, $INT.pos, Integer.parseInt($INT.text));}
-  |
-  CHAR {$ast = new Char($CHAR.line, $CHAR.pos, $CHAR.text);}
-  |
-  lvalue {$ast = $lvalue.ast;}
+  a1=exp '&&' a2=exp {$ast = new And($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);} 
   |
   rexp{$ast=$rexp.ast;}
 ;
@@ -124,9 +148,9 @@ rexp returns [Expr ast]:
   |
   lg=aexp o='>' rg=aexp {$ast = new GreaterThan($o.line, $o.pos, $lg.ast, $rg.ast);} 
   |
-  le=rexp o='=''=' re=aexp {$ast = new Eq($o.line, $o.pos, $le.ast, $re.ast);} 
+  le=rexp o='==' re=aexp {$ast = new Eq($o.line, $o.pos, $le.ast, $re.ast);} 
   | 
-  ld=rexp o='!''=' rd=aexp {$ast = new Diff($o.line, $o.pos, $ld.ast, $rd.ast);} 
+  ld=rexp o='!=' rd=aexp {$ast = new Diff($o.line, $o.pos, $ld.ast, $rd.ast);} 
   |
   aexp{$ast=$aexp.ast;}
 ;
@@ -136,16 +160,16 @@ aexp returns [Expr ast]:
   |
   a1=aexp '-' a2=aexp{$ast = new Sub($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
-  a1=aexp '*' a2=aexp{$ast = new Mul($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
-  |
-  a1=aexp '/' a2=aexp{$ast = new Div($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
-  |
-  a1=aexp '%' a2=aexp{$ast = new Rest($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
-  |
   mexp{$ast=$mexp.ast;}  
 ;
 
 mexp returns [Expr ast]:
+  a1=mexp '*' a2=mexp{$ast = new Mul($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
+  a1=mexp '/' a2=mexp{$ast = new Div($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
+  a1=mexp '%' a2=mexp{$ast = new Rest($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  |
   sexp{$ast=$sexp.ast;}
 ;
 
@@ -171,8 +195,17 @@ pexp returns [Expr ast]:
   lvalue{$ast=$lvalue.ast;}
   | 
   '(' exp ')'{$ast=$exp.ast;}
+  //|
+  //'new' type '[' exp ']'
+  //ID '(' exps ')' '[' exp ']'
 ;
 
+lvalues returns [LValueList ast]:
+  (
+    l=lvalue ','? {
+      if($ast == null){$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); }
+      else{$ast.addNode($l.ast);}}
+  )*;
 
 lvalue returns [LValue ast]:
   ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text));}
@@ -181,12 +214,6 @@ lvalue returns [LValue ast]:
   |
   l=lvalue '.' ID {}
 ;
-
-//params returns[Node ast]:
-//ID '::' TYPE (',' ID '::' TYPE)* {}
-//;
-
-
 
 
 ID : [a-z] ([a-z]|[A-Z]|[0-9]|'_')*;

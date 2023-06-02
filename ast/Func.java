@@ -5,28 +5,56 @@ package ast;
  * Expr
  */
 import java.util.HashMap;
+import java.util.Stack;
+import java.util.List;
 
 public class Func extends Node {
 
-      ID id;
-      Node params;
-      Node returns;
-      Node cmdList;
+      private ID id;
+      private ParamsList params;
+      private TypeList returns;
+      private CmdList cmdList;
+      private HashMap<String, Object> vFunc = new HashMap<String, Object>();
 
-      public Func(int l, int c, ID id, ParamsList params, Node returns, Node cmdList) {
+      public Func(int l, int c, ID id, ParamsList params, TypeList returns, CmdList cmdList) {
             super(l, c);
             this.id = id;
             this.params = params;
             this.returns = returns;
             this.cmdList = cmdList;
-            
-            //System.out.println("alo \n" +params.toString());
+            if(params != null)
+            {
+                for(Param n : params.getParamsList())
+                {
+                      vFunc.put(n.getId().getName(), null);
+                }
+            }
+        }
+
+      public ParamsList getParams() {
+          return params;
+      }
+
+      public TypeList getReturns() {
+          return returns;
+      }
+
+      public ID getId() {
+          return id;
+      }
+
+      public CmdList getCmdList() {
+          return cmdList;
+      }
+      
+      public HashMap<String, Object> getvFunc() {
+          return vFunc;
       }
 
       @Override
-      public Object interpret(HashMap<String, Object> m) {
-            if(cmdList != null) cmdList.interpret(m);
-            
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+            System.out.println((cmdList!=null));
+            if(cmdList != null) {return cmdList.interpret(vFunc, functions, datas, returns);};
             return 0;
       }
 

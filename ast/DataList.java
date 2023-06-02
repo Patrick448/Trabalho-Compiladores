@@ -2,28 +2,33 @@ package ast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.List;
 
 public class DataList extends Node {
     
-    Node id;
-    List<Node> list;
+    ID id;
+    List<Data> list;
     int uid = IdGenerator.getNextId();
 
-    public DataList(int l, int c,Node data) {
+    public DataList(int l, int c, Data data) {
           super(l, c);
-          list = new ArrayList<Node>();
+          list = new ArrayList<Data>();
           list.add(data);
     }
 
     
-    public void addNode(Node n) {
+    public void addNode(Data n) {
         list.add(n);
     }
 
     @Override
-    public Object interpret(HashMap<String, Object> m) {
-          return 0;
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        for(Data n : list)
+        {
+            datas.put(n.getId().getName(), n); 
+        }
+        return 0;
     }
 
     public String dotString(){

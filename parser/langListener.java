@@ -32,6 +32,16 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitDataList(langParser.DataListContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link langParser#data}.
+	 * @param ctx the parse tree
+	 */
+	void enterData(langParser.DataContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#data}.
+	 * @param ctx the parse tree
+	 */
+	void exitData(langParser.DataContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link langParser#funcList}.
 	 * @param ctx the parse tree
 	 */
@@ -42,15 +52,15 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitFuncList(langParser.FuncListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link langParser#data}.
+	 * Enter a parse tree produced by {@link langParser#func}.
 	 * @param ctx the parse tree
 	 */
-	void enterData(langParser.DataContext ctx);
+	void enterFunc(langParser.FuncContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link langParser#data}.
+	 * Exit a parse tree produced by {@link langParser#func}.
 	 * @param ctx the parse tree
 	 */
-	void exitData(langParser.DataContext ctx);
+	void exitFunc(langParser.FuncContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#declList}.
 	 * @param ctx the parse tree
@@ -72,16 +82,6 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitDecl(langParser.DeclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link langParser#func}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunc(langParser.FuncContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link langParser#func}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunc(langParser.FuncContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link langParser#params}.
 	 * @param ctx the parse tree
 	 */
@@ -102,6 +102,16 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitParam(langParser.ParamContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link langParser#types}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypes(langParser.TypesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#types}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypes(langParser.TypesContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link langParser#type}.
 	 * @param ctx the parse tree
 	 */
@@ -111,6 +121,16 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitType(langParser.TypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#cmdList}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdList(langParser.CmdListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#cmdList}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdList(langParser.CmdListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#cmd}.
 	 * @param ctx the parse tree
@@ -122,15 +142,35 @@ public interface langListener extends ParseTreeListener {
 	 */
 	void exitCmd(langParser.CmdContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link langParser#cmdList}.
+	 * Enter a parse tree produced by {@link langParser#returnsFunction}.
 	 * @param ctx the parse tree
 	 */
-	void enterCmdList(langParser.CmdListContext ctx);
+	void enterReturnsFunction(langParser.ReturnsFunctionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link langParser#cmdList}.
+	 * Exit a parse tree produced by {@link langParser#returnsFunction}.
 	 * @param ctx the parse tree
 	 */
-	void exitCmdList(langParser.CmdListContext ctx);
+	void exitReturnsFunction(langParser.ReturnsFunctionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#returnElement}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnElement(langParser.ReturnElementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#returnElement}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnElement(langParser.ReturnElementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#exps}.
+	 * @param ctx the parse tree
+	 */
+	void enterExps(langParser.ExpsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#exps}.
+	 * @param ctx the parse tree
+	 */
+	void exitExps(langParser.ExpsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#exp}.
 	 * @param ctx the parse tree
@@ -191,6 +231,16 @@ public interface langListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPexp(langParser.PexpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link langParser#lvalues}.
+	 * @param ctx the parse tree
+	 */
+	void enterLvalues(langParser.LvaluesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link langParser#lvalues}.
+	 * @param ctx the parse tree
+	 */
+	void exitLvalues(langParser.LvaluesContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link langParser#lvalue}.
 	 * @param ctx the parse tree

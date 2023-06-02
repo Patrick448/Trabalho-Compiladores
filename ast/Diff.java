@@ -5,6 +5,8 @@ package ast;
  * Expr * Expr
  */
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
 
 public class Diff extends BinOP {
       public Diff(int lin, int col, Expr l, Expr r){
@@ -34,22 +36,22 @@ public class Diff extends BinOP {
          return s;
       }
       
-      public Object interpret(HashMap<String,Object> m){
-         if(getLeft().interpret(m).getClass().getSimpleName().equals("Integer"))
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+         if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
          {
-            return (Integer)getLeft().interpret(m) != (Integer)getRight().interpret(m);
+            return (Integer)getLeft().interpret(variables, functions, datas, returns) != (Integer)getRight().interpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Float"))
+         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
          {
-            return (Float)getLeft().interpret(m) != (Float)getRight().interpret(m);
+            return (Float)getLeft().interpret(variables, functions, datas, returns) != (Float)getRight().interpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(m).getClass().getSimpleName().equals("String"))
+         else if(getLeft().interpret(variables, functions, datas,returns).getClass().getSimpleName().equals("String"))
          {
-            return (String)getLeft().interpret(m) != (String)getRight().interpret(m);
+            return (String)getLeft().interpret(variables, functions, datas, returns) != (String)getRight().interpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(m).getClass().getSimpleName().equals("boolean"))
+         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("boolean"))
          {
-            return (boolean)getLeft().interpret(m) != (boolean)getRight().interpret(m);
+            return (boolean)getLeft().interpret(variables, functions, datas, returns) != (boolean)getRight().interpret(variables, functions, datas, returns);
          }
          return null;
       }

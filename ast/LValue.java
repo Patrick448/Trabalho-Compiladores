@@ -5,6 +5,8 @@ package ast;
  * Expr
  */
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
  
 public class LValue extends Expr {
       
@@ -19,7 +21,7 @@ public class LValue extends Expr {
       
       //@Override
       public String toString(){
-         return   "print " + lval.toString(); 
+         return  lval.toString(); 
       }
 
       public String dotString(){
@@ -32,8 +34,8 @@ public class LValue extends Expr {
         
         return s;
     }
-      public Object interpret(HashMap<String,Object> m){
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
         
-        return lval.interpret(m);
+        return lval.interpret(variables, functions, datas, returns);
       }
 }

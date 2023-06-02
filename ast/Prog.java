@@ -5,17 +5,38 @@ package ast;
  * Expr
  */
 import java.util.HashMap;
- 
-public class Prog extends Node {
-    Node dataList;
-    Node funcList;
+import java.util.Stack;
+import java.util.List;
 
+public class Prog extends Node {
+    
+	private HashMap<String, Data> hashDatas;
+    private Stack<ReturnList> stackReturns;
+
+    private DataList dataList;
+    private FuncList funcList;
             
-    public Prog(int l, int c, Node dataList, Node funcList) {
+    public Prog(int l, int c, DataList dataList, FuncList funcList) {
         super(l, c);
         this.dataList = dataList;
         this.funcList = funcList;
-       
+        this.hashDatas = new HashMap<String, Data>();
+    }
+
+    public HashMap<String, Data> getHashDatas() {
+        return hashDatas;
+    }
+
+    public Stack<ReturnList> getStackReturns() {
+        return stackReturns;
+    }
+
+    public DataList getDataList() {
+        return dataList;
+    }
+
+    public FuncList getFuncList() {
+        return funcList;
     }
 
     public String toString(){
@@ -47,10 +68,9 @@ public class Prog extends Node {
         return s+"\n";
     }
       
-    public Object interpret(HashMap<String,Object> m){
-
-        if (dataList != null) dataList.interpret(m);
-        if (funcList != null) funcList.interpret(m);
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        if (dataList != null) dataList.interpret(variables, funcList.getList(), hashDatas, returns);
+        if (funcList != null) funcList.interpret(variables, funcList.getList() , hashDatas, returns);
 
         return 0;
     }

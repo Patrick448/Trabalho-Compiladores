@@ -1,6 +1,8 @@
 package ast;
 
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
 
 public class Neg extends Expr {
    
@@ -31,10 +33,10 @@ public class Neg extends Expr {
         return s;
     }
 
-     public Object interpret(HashMap<String,Object> m){
-        if(e.interpret(m).getClass().getSimpleName().equals("Boolean"))
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+      if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
         {
-           return !(Boolean)e.interpret(m);
+           return !(Boolean)e.interpret(variables, functions, datas, returns);
         }
         return null;
      }

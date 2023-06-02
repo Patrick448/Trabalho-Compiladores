@@ -6,6 +6,8 @@ package ast;
  */
  
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
 
 public class ID extends Expr {
       
@@ -30,9 +32,7 @@ public class ID extends Expr {
         return s;
     }
 
-
-    
-      public Object interpret(HashMap<String,Object> m){
-          return m.get(l);
-      }
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+      return variables.get(l);
+    }
 }

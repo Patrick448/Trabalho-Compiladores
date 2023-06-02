@@ -4,7 +4,9 @@ package ast;
  * Esta classe representa uma expressão de Multiplicação.
  * Expr * Expr
  */
-import java.util.HashMap; 
+import java.util.HashMap;
+import java.util.Stack;
+import java.util.List;
 
 public class LessThan extends BinOP {
       public LessThan(int lin, int col, Expr l, Expr r){
@@ -34,22 +36,22 @@ public class LessThan extends BinOP {
          return s;
       }
       
-      public Object interpret(HashMap<String,Object> m){
-         if(getLeft().interpret(m).getClass().getSimpleName().equals("Integer") && getRight().interpret(m).getClass().getSimpleName().equals("Integer"))
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+         if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
          {
-            return (Integer)getLeft().interpret(m) < (Integer)getRight().interpret(m);
+            return (Integer)getLeft().interpret(variables, functions, datas, returns) < (Integer)getRight().interpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Float") && getRight().interpret(m).getClass().getSimpleName().equals("Float"))
+         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
          {
-            return (Float)getLeft().interpret(m) < (Float)getRight().interpret(m);
+            return (Float)getLeft().interpret(variables, functions, datas, returns) < (Float)getRight().interpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Integer") && getRight().interpret(m).getClass().getSimpleName().equals("Float"))
+         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
          {
-            return (Integer)getLeft().interpret(m) < (Float)getRight().interpret(m);
+            return (Integer)getLeft().interpret(variables, functions, datas, returns) < (Float)getRight().interpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(m).getClass().getSimpleName().equals("Float") && getRight().interpret(m).getClass().getSimpleName().equals("Integer"))
+         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
          {
-            return (Float)getLeft().interpret(m) < (Integer)getRight().interpret(m);
+            return (Float)getLeft().interpret(variables, functions, datas, returns) < (Integer)getRight().interpret(variables, functions, datas, returns);
          }
          return null;
       }

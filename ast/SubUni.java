@@ -1,6 +1,8 @@
 package ast;
 
 import java.util.HashMap; 
+import java.util.Stack;
+import java.util.List;
 
 public class SubUni extends Expr {
       private Expr e;
@@ -29,14 +31,14 @@ public class SubUni extends Expr {
         return s;
     }
 
-     public Object interpret(HashMap<String,Object> m){
-        if(e.interpret(m).getClass().getSimpleName().equals("Integer"))
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+      if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
         {
-           return -(Integer)e.interpret(m);
+           return -(Integer)e.interpret(variables, functions, datas, returns);
         }
-        if(e.interpret(m).getClass().getSimpleName().equals("Float"))
+        if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
         {
-           return -(Float)e.interpret(m);
+           return -(Float)e.interpret(variables, functions, datas, returns);
         }
         return null;
      }

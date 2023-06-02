@@ -2,27 +2,31 @@ package ast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.List;
 
 public class DeclList extends Node {
     
-    Node id;
-    List<Node> list;
+    private List<Decl> list;
 
-    public DeclList(int l, int c,Node decl) {
+    public DeclList(int l, int c,Decl decl) {
           super(l, c);
-          list = new ArrayList<Node>();
+          list = new ArrayList<Decl>();
           list.add(decl);
     }
 
     
-    public void addNode(Node n) {
+    public void addNode(Decl n) {
         list.add(n);
     }
 
+    public List<Decl> getList() {
+        return list;
+    }
+
     @Override
-    public Object interpret(HashMap<String, Object> m) {
-          return 0;
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        return 0;
     }
 
     public String dotString(){
