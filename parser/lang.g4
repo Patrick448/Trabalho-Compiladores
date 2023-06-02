@@ -197,7 +197,8 @@ pexp returns [Expr ast]:
   '(' exp ')'{$ast=$exp.ast;}
   //|
   //'new' type '[' exp ']'
-  //ID '(' exps ')' '[' exp ']'
+  |
+  ID '(' exps ')' '[' exp ']' {$ast = new CallFunctionVet($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $exp.ast);}
 ;
 
 lvalues returns [LValueList ast]:

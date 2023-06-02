@@ -21,6 +21,7 @@ public class Prog extends Node {
         this.dataList = dataList;
         this.funcList = funcList;
         this.hashDatas = new HashMap<String, Data>();
+        this.stackReturns = new Stack<ReturnList>();
     }
 
     public HashMap<String, Data> getHashDatas() {
@@ -69,8 +70,8 @@ public class Prog extends Node {
     }
       
     public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
-        if (dataList != null) dataList.interpret(variables, funcList.getList(), hashDatas, returns);
-        if (funcList != null) funcList.interpret(variables, funcList.getList() , hashDatas, returns);
+        if (dataList != null) dataList.interpret(variables, funcList.getList(), hashDatas, stackReturns);
+        if (funcList != null) funcList.interpret(variables, funcList.getList() , hashDatas, stackReturns);
 
         return 0;
     }

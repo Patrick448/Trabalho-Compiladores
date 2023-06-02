@@ -5,7 +5,7 @@ import java.util.Stack;
 import java.util.List;
 
 
-public class CallFunction extends Node {
+public class CallFunction extends Expr {
       
       private ID id;
       private ExprList e;
@@ -52,7 +52,6 @@ public class CallFunction extends Node {
 
     private void put_returns_value(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns)
     {
-        System.out.println(returns);
         int i=0;
         for(LValue lv : l.getList())
         {

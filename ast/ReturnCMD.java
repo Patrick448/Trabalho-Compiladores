@@ -36,6 +36,6 @@ public class ReturnCMD extends Node {
     }
     public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
       returns.push(r);
-      return 0;
+      return r;
    }
 }
