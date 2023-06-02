@@ -36,8 +36,12 @@ public class Data extends Node {
             String s = getUid() + " [label= \""+this.getClass().getSimpleName()+"\"]\n";
             s+= getUid() +"--"+id.getUid()+"\n";
             s+=id.dotString();
-            s+= getUid() +"--"+declList.getUid()+"\n";
-            s+=declList.dotString();
+
+            if(declList != null){
+                  s+= getUid() +"--"+declList.getUid()+"\n";
+                  s+=declList.dotString();
+            }
+
    
             return s;
         }

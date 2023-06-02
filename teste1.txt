@@ -1,5 +1,5 @@
 data Object{}
-data String{numerador :: Int;}
+data String{x :: Int; y::Char;}
 data Integer{numerador :: Int;}
 
 myFunc(num :: Int, ch :: Char){
@@ -7,12 +7,14 @@ myFunc(num :: Int, ch :: Char){
 }
 
 main () {
-    var = -50 + 5.7;
-    j = !false;
+    var = -50 + 5;
+    j = new String;
+    k = !false;
     x = var + 10;
     i = 'a';
     print i;
     print 200;
+    print k;
     print j;
     print x;
 }

@@ -38,29 +38,38 @@ public class Attr extends Node {
     }
       
     public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
-     if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
+     
+     Object object = e.interpret(variables, functions, datas, returns);
+     String className = object.getClass().getSimpleName();
+     
+     if(className.equals("Integer"))
           {
-               int x = (Integer)e.interpret(variables, functions, datas, returns);
+               int x = (Integer)object;
                variables.put((String)lValue.getID().getName(), x);
                return x;
           }
-          else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
+          else if(className.equals("Float"))
           {
-               float y = (Float)e.interpret(variables, functions, datas, returns);
+               float y = (Float)object;
                variables.put((String)lValue.getID().getName(), y);
                return y;
           }
-          else if(e.interpret(variables, functions, datas,returns).getClass().getSimpleName().equals("String"))
+          else if(className.equals("String"))
           {
-               String k = (String)e.interpret(variables, functions, datas, returns);
+               String k = (String)object;
                variables.put((String)lValue.getID().getName(), k);
                return k;
           }
-          else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
+          else if(className.equals("Boolean"))
           {
-               boolean b = (boolean)e.interpret(variables, functions, datas, returns);
+               boolean b = (boolean)object;
                variables.put((String)lValue.getID().getName(), b);
                return b;
+          }
+          else if(className.equals("DataInstance")){
+               DataInstance d = (DataInstance)object;
+               variables.put((String)lValue.getID().getName(), d);
+               return d;
           }
           return null;
       }   

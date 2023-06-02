@@ -35,49 +35,57 @@ public class Print extends Node {
         return s;
     }
     public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
-      if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
+      Object object = e.interpret(variables, functions, datas, returns);
+      String className = object.getClass().getSimpleName();
+      
+      if(className.equals("Integer"))
          {
-            System.out.println("" + e.interpret(variables, functions, datas, returns));
+            System.out.println("" + object);
          }
-         else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
+         else if(className.equals("Float"))
          {
-            System.out.println("" + e.interpret(variables, functions, datas, returns));
+            System.out.println("" + object);
          }
-         else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
+         else if(className.equals("Boolean"))
          {
-            System.out.println("" + e.interpret(variables, functions, datas, returns));
+            System.out.println("" + object);
          }
-         else if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("String"))
+         else if(className.equals("String"))
          {
-            if(e.interpret(variables, functions, datas, returns).equals("'\\n'"))
+            if(object.equals("'\\n'"))
             {
                System.out.println("\n");
             }
-            else if(e.interpret(variables, functions, datas, returns).equals("'\\t'"))
+            else if(object.equals("'\\t'"))
             {
                System.out.println("\t");
             }
-            else if(e.interpret(variables, functions, datas, returns).equals("'\\b'"))
+            else if(object.equals("'\\b'"))
             {
                System.out.println("\b");
             }
-            else if(e.interpret(variables, functions, datas, returns).equals("'\\r'"))
+            else if(object.equals("'\\r'"))
             {
                System.out.println("\r");
             }
-            else if(e.interpret(variables, functions, datas, returns).equals("'\\\\'"))
+            else if(object.equals("'\\\\'"))
             {
                System.out.println("\\");
             }
-            else if(e.interpret(variables, functions, datas, returns).equals("'\\''"))
+            else if(object.equals("'\\''"))
             {
                System.out.println("'");
             }
+
             else
             {
-               String s = (String)e.interpret(variables, functions, datas, returns);
+               String s = (String)object;
                System.out.println("" + s.charAt(1));
             }
+         }
+
+         else if(className.equals("DataInstance")){
+            System.out.println(object.toString());
          }
          return 0;
       }

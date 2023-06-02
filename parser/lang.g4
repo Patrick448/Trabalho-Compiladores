@@ -195,8 +195,10 @@ pexp returns [Expr ast]:
   lvalue{$ast=$lvalue.ast;}
   | 
   '(' exp ')'{$ast=$exp.ast;}
-  //|
-  //'new' type '[' exp ']'
+  |
+
+  {boolean hasExp = false;}
+  'new' type ('[' exp ']'{hasExp=true;})? {$ast = new New($type.ast.getLine(), $type.ast.getCol(), $type.ast, hasExp? $exp.ast:null);}
   |
   ID '(' exps ')' '[' exp ']' {$ast = new CallFunctionVet($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $exp.ast);}
 ;

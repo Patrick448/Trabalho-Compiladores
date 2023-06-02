@@ -43,7 +43,7 @@ public class Teste {
 		parser.setBuildParseTree(false);
 
 		Node ast = parser.prog().ast;
-		System.out.println(ast);
+		//System.out.println(ast);
 		//System.out.println(ast.dotString());
 		writeToFile("ast.dot", ast.dotString());
 
