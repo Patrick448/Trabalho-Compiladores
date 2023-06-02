@@ -2200,7 +2200,7 @@ public class langParser extends Parser {
 						match(T__37);
 						setState(415);
 						((LvalueContext)_localctx).ID = match(ID);
-
+						 ((LvalueContext)_localctx).ast =  new LValue(((LvalueContext)_localctx).l.ast.getLine(), ((LvalueContext)_localctx).l.ast.getCol(), ((LvalueContext)_localctx).l.ast);
 						}
 						break;
 					}

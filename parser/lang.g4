@@ -215,7 +215,7 @@ lvalue returns [LValue ast]:
   |
   l=lvalue '[' exp ']' {}
   |
-  l=lvalue '.' ID {}
+  l=lvalue '.' ID { $ast = new LValue($l.ast.getLine(), $l.ast.getCol(), $l.ast);}
 ;
 
 

@@ -10,14 +10,22 @@ import java.util.List;
  
 public class LValue extends Expr {
       
-      private ID lval; 
+      private LValue lval;
+      private ID id;
       
-      public LValue(int l, int c, ID lval){
+      public LValue(int l, int c, ID id){
            super(l,c);
-           this.lval  = lval;
+           this.id  = id;
       }
+
+      public LValue(int l, int c, LValue lval){
+         super(l,c);
+         this.lval  = lval;
+    }
       
-      public ID getID(){ return lval;}
+      public ID getID(){ 
+         return id;
+      }
       
       //@Override
       public String toString(){
@@ -35,7 +43,13 @@ public class LValue extends Expr {
         return s;
     }
     public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+        if(lval != null){
+            DataInstance instance = (DataInstance)variables.get(id.getName());
+            return lval.interpret(instance.getAttributes(), functions, datas, returns);
+        }
+        else{
+            return variables.get(id.getName());
+        }
         
-        return lval.interpret(variables, functions, datas, returns);
       }
 }

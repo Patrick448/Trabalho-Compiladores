@@ -26,7 +26,6 @@ public class New extends Expr {
         }
         
         DataInstance instance = new DataInstance(type, attributes);
-        System.out.println("New: " + instance.toString());
         return instance;
     }
 
