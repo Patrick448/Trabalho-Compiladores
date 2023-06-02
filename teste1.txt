@@ -1,6 +1,6 @@
-data object{}
-data string{numerador :: Int;}
-data integer{numerador :: Int;}
+data Object{}
+data String{numerador :: Int;}
+data Integer{numerador :: Int;}
 
 myFunc(num :: Int, ch :: Char){
     b=1;
