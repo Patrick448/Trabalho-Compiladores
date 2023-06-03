@@ -41,6 +41,6 @@ public class Rest extends BinOP {
          {
             return (Integer)getLeft().interpret(variables, functions, datas, returns) % (Integer)getRight().interpret(variables, functions, datas, returns);
          }
-         return null;
+         return 0;
       }
 }

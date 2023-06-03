@@ -43,7 +43,7 @@ public class Add extends BinOP {
          {
             return (Float)getLeft().interpret(variables, functions, datas, returns) + (Float)getRight().interpret(variables, functions, datas, returns);
          }
-         return null;
+         return 0;
       }
       
 }

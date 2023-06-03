@@ -1,25 +1,75 @@
 graph program {
-32 [label=Prog]
-32--31
-31 [label=FuncList]
-31--30
-30 [label="Func"]
-30--29
-29 [label="ID<main>"]
-30--4
-4 [label=CmdList]
-4--3
-3 [label= "="]
-3--1
-1 [label="LValue"]
+43 [label=Prog]
+43--23
+23 [label=FuncList]
+23--22
+22 [label="Func"]
+22--21
+21 [label="ID<f>"]
+22--15
+15 [label=CmdList]
+15--14
+14 [label= "="]
+14--7
+7 [label="LValue"]
+14--13
+13 [label= "+"]
+13--11
+11 [label= "*"]
+11--8
+8 [label="Int<2>"]
+11--10
+10 [label="LValue"]
+13--12
+12 [label="Int<1>"]
+15--20
+20 [label="ReturnCMD"]
+20--19
+19 [label="ReturnList"]
+19--18
+18 [label="Return"]
+18--17
+17 [label="LValue"]
+22--3
+3 [label="ParamsList"]
 3--2
-2 [label="Int<5>"]
-4--9
-9 [label= "="]
-9--6
-6 [label="LValue"]
-9--8
-8 [label="LValue"]
-4--28
-28 [label="Iterate"]
+2 [label="Param"]
+2--1
+1 [label="ID<x>"]
+2--0
+0 [label="Type<Int>"]
+22--5
+5 [label="TypeList"]
+5--4
+4 [label="Type<Int>"]
+23--42
+42 [label="Func"]
+42--41
+41 [label="ID<main>"]
+42--28
+28 [label=CmdList]
+28--27
+27 [label= "="]
+27--25
+25 [label="LValue"]
+27--26
+26 [label="Int<10>"]
+28--37
+37 [label= "="]
+37--30
+30 [label="LValue"]
+37--36
+36 [label= "CallFunction"]
+36--35
+35 [label="ID<f>"]
+36--33
+33 [label=ExprList]
+33--32
+32 [label="LValue"]
+36--34
+34 [label="Int<0>"]
+28--40
+40 [label="Print"]
+40--39
+39 [label="LValue"]
 }

@@ -40,7 +40,7 @@ public class SubUni extends Expr {
         {
            return -(Float)e.interpret(variables, functions, datas, returns);
         }
-        return null;
+        return 0;
      }
       
 }

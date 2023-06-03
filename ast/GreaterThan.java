@@ -53,6 +53,6 @@ public class GreaterThan extends BinOP {
          {
             return (Float)getLeft().interpret(variables, functions, datas, returns) > (Integer)getRight().interpret(variables, functions, datas, returns);
          }
-         return null;
+         return 0;
       }
 }

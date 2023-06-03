@@ -31,7 +31,7 @@ public class CmdList extends Node {
         for(Node n : list) {
               v= n.interpret(variables, functions, datas, returns);
         }
-        return v;
+        return 0;
     }
 
     public String dotString(){

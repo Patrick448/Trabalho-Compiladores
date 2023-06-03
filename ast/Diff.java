@@ -53,6 +53,6 @@ public class Diff extends BinOP {
          {
             return (boolean)getLeft().interpret(variables, functions, datas, returns) != (boolean)getRight().interpret(variables, functions, datas, returns);
          }
-         return null;
+         return 0;
       }
 }

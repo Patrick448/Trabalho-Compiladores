@@ -39,10 +39,10 @@ public class Attr extends Node {
       
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
      
-     Object object = e.interpret(variables, functions, datas, returns);
-     String className = object.getClass().getSimpleName();
+          Object object = e.interpret(variables, functions, datas, returns);
+          String className = object.getClass().getSimpleName();
      
-     if(className.equals("Integer"))
+          if(className.equals("Integer"))
           {
                int x = (Integer)object;
                variables.peek().put((String)lValue.getID().getName(), x);
@@ -71,6 +71,6 @@ public class Attr extends Node {
                variables.peek().put((String)lValue.getID().getName(), d);
                return d;
           }
-          return null;
+          return 0;
       }   
 }

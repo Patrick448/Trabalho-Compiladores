@@ -38,7 +38,7 @@ public class Neg extends Expr {
         {
            return !(Boolean)e.interpret(variables, functions, datas, returns);
         }
-        return null;
+        return 0;
      }
       
 }

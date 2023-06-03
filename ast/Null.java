@@ -24,6 +24,6 @@ public class Null extends Expr {
         }
       
         public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
-            return null;
+            return 0;
       }
 }

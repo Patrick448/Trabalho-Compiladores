@@ -21,7 +21,7 @@ public class LValue extends Expr {
       public LValue(int l, int c, LValue lval){
          super(l,c);
          this.lval  = lval;
-    }
+      }
       
       public ID getID(){ 
          return id;
@@ -29,7 +29,7 @@ public class LValue extends Expr {
       
       //@Override
       public String toString(){
-         return  lval.toString(); 
+         return  id.toString(); 
       }
 
       public String dotString(){
@@ -53,6 +53,5 @@ public class LValue extends Expr {
         else{
             return variables.peek().get(id.getName());
         }
-        
       }
 }
