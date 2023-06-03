@@ -5,7 +5,6 @@ package ast;
  * Expr
  */
 import java.util.HashMap;
-import java.util.IllegalFormatException;
 import java.util.Stack;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class Func extends Node {
       private ParamsList params;
       private TypeList returns;
       private CmdList cmdList;
-      private HashMap<String, Object> vFunc = new HashMap<String, Object>();
+      private HashMap<String, Object> valuesParams;
 
       public Func(int l, int c, ID id, ParamsList params, TypeList returns, CmdList cmdList) {
             super(l, c);
@@ -23,13 +22,7 @@ public class Func extends Node {
             this.params = params;
             this.returns = returns;
             this.cmdList = cmdList;
-            if(params != null)
-            {
-                for(Param n : params.getParamsList())
-                {
-                      vFunc.put(n.getId().getName(), null);
-                }
-            }
+            this.valuesParams = new HashMap<String, Object>();
         }
 
       public ParamsList getParams() {
@@ -48,13 +41,16 @@ public class Func extends Node {
           return cmdList;
       }
       
-      public HashMap<String, Object> getvFunc() {
-          return vFunc;
+      public HashMap<String, Object> getValuesParams() {
+          return valuesParams;
       }
 
       @Override
-      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-            if(cmdList != null) {return cmdList.interpret(vFunc, functions, datas, returns);};
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+            variables.push(valuesParams);
+            if(cmdList != null) {return cmdList.interpret(variables, functions, datas, returns);};
+            variables.pop();
+            valuesParams.clear();
             return 0;
       }
 

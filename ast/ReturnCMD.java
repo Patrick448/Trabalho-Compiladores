@@ -34,7 +34,7 @@ public class ReturnCMD extends Node {
         
         return s;
     }
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
       returns.push(e);
       return e;
    }

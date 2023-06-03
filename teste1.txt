@@ -15,6 +15,7 @@ main (){
     k = !false;
     x = var + 10;
     i = 'a';
+    j.x = 6;
     print i;
     print 200;
     print k;

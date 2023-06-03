@@ -29,7 +29,7 @@ public class Type extends Expr {
             return s;
         }
       
-        public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-          return variables.get(l);
+        public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+          return variables.peek().get(l);
       }
 }

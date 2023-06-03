@@ -14,7 +14,7 @@ public class Char extends Expr {
      
       public  Char(int l, int c, String v){
            super(l,c);
-           this.l = v;
+           this.l = v.substring(1,v.length()-1);
       }
       
       public String getValue(){ return l;}
@@ -30,7 +30,7 @@ public class Char extends Expr {
             return s;
         }
       
-      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
             return l;
       }
 }
