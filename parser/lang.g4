@@ -50,9 +50,17 @@ funcList returns [FuncList ast]:
 ;
 
 func returns [Func ast]:
-  {boolean hasTypes = false;}
-  ID '(' params ')' (':' types {hasTypes=true;})? '{'cmdList'}'{
-    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, hasTypes? $types.ast : null, $cmdList.ast);}
+  {boolean hasTypes = false;
+  boolean hasParams = false;}
+
+  ID '(' (params{hasParams = true;})? ')' (':' types {hasTypes=true;})? '{'cmdList'}'{
+    $ast = new Func(
+      $ID.line, $ID.pos, 
+      new ID($ID.line, $ID.pos, $ID.text), 
+      hasParams? $params.ast:null, 
+      hasTypes? $types.ast : null, 
+      $cmdList.ast);
+    }
 ;
 
 declList returns [DeclList ast]:
@@ -60,21 +68,24 @@ declList returns [DeclList ast]:
     if($ast == null){$ast = new DeclList($d.ast.getLine(), $d.ast.getCol(), $d.ast); }
     else{$ast.addNode($d.ast);}
   })*
-  ;
+;
 
 decl returns [Decl ast]:
   ID '::' type ';' {$ast = new Decl($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
   ;
 
 params returns[ParamsList ast]:
-  (p=param {
+  p=param {$ast = new ParamsList($p.ast.getLine(), $p.ast.getCol(), $p.ast); } 
+  (','p2=param {$ast.addNode($p2.ast); })* 
+
+  /*(p=param {
     if($ast == null){$ast = new ParamsList($p.ast.getLine(), $p.ast.getCol(), $p.ast); }
     else{$ast.addNode($p.ast);}
-  })*
+  })**/
 ;
 
 param returns [Param ast]:
-  ID '::' t=type ','? {
+  ID '::' t=type {
     $ast = new Param($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
 ;
 
@@ -112,29 +123,24 @@ cmd returns [Node ast]:
  f='if' '(' exp ')' cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $cmd.ast, null);} 
  |
  f='if' '(' exp ')' c1=cmd 'else' c2=cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $c1.ast, $c2.ast);} 
- |
- 'return' r=returnsFunction ';' {$ast = new ReturnCMD($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
+  |
+ 'return' e=exps ';' {$ast = new ReturnCMD($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
  |
  ID '(' exps ')' '<'? lvalues '>'? ';' {$ast = new CallFunction($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $lvalues.ast);}
 ;
 
-returnsFunction returns[ReturnList ast]:
-  (r=returnElement {
-    if($ast == null){$ast = new ReturnList($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
-    else{$ast.addNode($r.ast);}
-  })*
-;
 
-returnElement returns [Return ast]:
+
+/*returnElement returns [Expr ast]:
   e=exp ','? {$ast = new Return($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
-;
+;*/
 
 exps returns [ExprList ast]:
-  (
-    e=exp ','? {
-      if($ast == null){$ast = new ExprList($e.ast.getLine(), $e.ast.getCol(), $e.ast); }
-      else{$ast.addNode($e.ast);}}
-  )*;
+    e=exp{$ast = new ExprList($e.ast.getLine(), $e.ast.getCol(), $e.ast); } 
+  (','e2=exp {$ast.addNode($e2.ast); })* 
+  ;
+
+
 
 exp returns [Expr ast]:
   a1=exp '&&' a2=exp {$ast = new And($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);} 
@@ -203,18 +209,23 @@ pexp returns [Expr ast]:
 ;
 
 lvalues returns [LValueList ast]:
-  (
+
+    l=lvalue{$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); } 
+  (','l2=lvalue {$ast.addNode($l2.ast); })* 
+  ;
+  
+ /* (
     l=lvalue ','? {
       if($ast == null){$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); }
       else{$ast.addNode($l.ast);}}
-  )*;
+  )*;*/
 
 lvalue returns [LValue ast]:
   ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text));}
   |
   l=lvalue '[' exp ']' {}
   |
-  l=lvalue '.' ID { $ast = new LValue($l.ast.getLine(), $l.ast.getCol(), $l.ast);}
+  l=lvalue '.' ID {}
 ;
 
 

@@ -4,6 +4,9 @@ data Integer{numerador :: Int;}
 
 myFunc(num :: Int, ch :: Char): Int, Int{
     b=1;
+    a=3;
+
+   return 0;
 }
 
 main (){
@@ -12,7 +15,7 @@ main (){
     k = !false;
     x = var + 10;
     i = 'a';
-    j.x = 6;
+    --j = 6;
     print i;
     print 200;
     print k;

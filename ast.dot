@@ -1,4 +1,5 @@
 graph program {
+<<<<<<< HEAD
 43 [label=Prog]
 43--23
 23 [label=FuncList]
@@ -72,4 +73,159 @@ graph program {
 40 [label="Print"]
 40--39
 39 [label="LValue"]
+=======
+89 [label=Prog]
+89--2
+2 [label=DataList]
+2--1
+1 [label= "Data"]
+1--0
+0 [label="Type<Object>"]
+2--12
+12 [label= "Data"]
+12--11
+11 [label="Type<String>"]
+12--7
+7 [label=DeclList]
+7--6
+6 [label="Decl"]
+6--5
+5 [label="ID<x>"]
+6--4
+4 [label="Type<Int>"]
+7--10
+10 [label="Decl"]
+10--9
+9 [label="ID<y>"]
+10--8
+8 [label="Type<Char>"]
+2--18
+18 [label= "Data"]
+18--17
+17 [label="Type<Integer>"]
+18--16
+16 [label=DeclList]
+16--15
+15 [label="Decl"]
+15--14
+14 [label="ID<numerador>"]
+15--13
+13 [label="Type<Int>"]
+89--43
+43 [label=FuncList]
+43--42
+42 [label="Func"]
+42--41
+41 [label="ID<myFunc>"]
+42--33
+33 [label=CmdList]
+33--32
+32 [label= "="]
+32--30
+30 [label="LValue"]
+32--31
+31 [label="Int<1>"]
+33--37
+37 [label= "="]
+37--35
+35 [label="LValue"]
+37--36
+36 [label="Int<3>"]
+33--40
+40 [label="ReturnCMD"]
+40--39
+39 [label=ExprList]
+39--38
+38 [label="Int<0>"]
+42--22
+22 [label="ParamsList"]
+22--21
+21 [label="Param"]
+21--20
+20 [label="ID<num>"]
+21--19
+19 [label="Type<Int>"]
+22--25
+25 [label="Param"]
+25--24
+24 [label="ID<ch>"]
+25--23
+23 [label="Type<Char>"]
+42--27
+27 [label="TypeList"]
+27--26
+26 [label="Type<Int>"]
+27--28
+28 [label="Type<Int>"]
+43--88
+88 [label="Func"]
+88--87
+87 [label="ID<main>"]
+88--51
+51 [label=CmdList]
+51--50
+50 [label= "="]
+50--45
+45 [label="LValue"]
+50--49
+49 [label= "+"]
+49--47
+47 [label= "-"]
+47--46
+46 [label="Int<50>"]
+49--48
+48 [label="Int<5>"]
+51--56
+56 [label= "="]
+56--53
+53 [label="LValue"]
+56--55
+55 [label= "New"]
+55--54
+54 [label="Type<String>"]
+51--61
+61 [label= "="]
+61--58
+58 [label="LValue"]
+61--60
+60 [label= "!"]
+60--59
+59 [label="Bool<false>"]
+51--68
+68 [label= "="]
+68--63
+63 [label="LValue"]
+68--67
+67 [label= "+"]
+67--65
+65 [label="LValue"]
+67--66
+66 [label="Int<10>"]
+51--72
+72 [label= "="]
+72--70
+70 [label="LValue"]
+72--71
+71 [label="Char<a>"]
+51--75
+75 [label="Print"]
+75--74
+74 [label="LValue"]
+51--77
+77 [label="Print"]
+77--76
+76 [label="Int<200>"]
+51--80
+80 [label="Print"]
+80--79
+79 [label="LValue"]
+51--83
+83 [label="Print"]
+83--82
+82 [label="LValue"]
+51--86
+86 [label="Print"]
+86--85
+85 [label="LValue"]
+>>>>>>> 3a2853104bfa71533129f93ebc8955fd85cbc044
 }

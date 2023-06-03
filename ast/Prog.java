@@ -11,7 +11,7 @@ import java.util.List;
 public class Prog extends Node {
     
 	private HashMap<String, Data> hashDatas;
-    private Stack<ReturnList> stackReturns;
+    private Stack<ExprList> stackReturns;
     private Stack<HashMap<String,Object>> stackVariables;
 
     private DataList dataList;
@@ -22,7 +22,7 @@ public class Prog extends Node {
         this.dataList = dataList;
         this.funcList = funcList;
         this.hashDatas = new HashMap<String, Data>();
-        this.stackReturns = new Stack<ReturnList>();
+        this.stackReturns = new Stack<ExprList>();
         this.stackVariables = new Stack<HashMap<String,Object>>();
     }
 
@@ -30,7 +30,7 @@ public class Prog extends Node {
         return hashDatas;
     }
 
-    public Stack<ReturnList> getStackReturns() {
+    public Stack<ExprList> getStackReturns() {
         return stackReturns;
     }
 
@@ -75,7 +75,7 @@ public class Prog extends Node {
         return s+"\n";
     }
       
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
         if (dataList != null) dataList.interpret(stackVariables, funcList.getList(), hashDatas, stackReturns);
         if (funcList != null) funcList.interpret(stackVariables, funcList.getList() , hashDatas, stackReturns);
 

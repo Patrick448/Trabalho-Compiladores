@@ -25,7 +25,7 @@ public class FuncList extends Node {
     }
 
     @Override
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
         if(functions.size()==0)
         {
             for(Func n : list)
