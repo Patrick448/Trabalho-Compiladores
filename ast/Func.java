@@ -5,6 +5,7 @@ package ast;
  * Expr
  */
 import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.Stack;
 import java.util.List;
 
@@ -72,7 +73,12 @@ public class Func extends Node {
                s+= getUid() +"--"+params.getUid()+"\n"; 
                s+= params.dotString();  
             }
-            
+
+            if(returns != null){
+               s+= getUid() +"--"+returns.getUid()+"\n"; 
+               s+= returns.dotString();  
+            }
+
             
             return s;
         }

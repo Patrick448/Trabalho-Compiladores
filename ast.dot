@@ -1,6 +1,6 @@
 graph program {
-83 [label=Prog]
-83--2
+82 [label=Prog]
+82--2
 2 [label=DataList]
 2--1
 1 [label= "Data"]
@@ -36,21 +36,21 @@ graph program {
 14 [label="ID<numerador>"]
 15--13
 13 [label="Type<Int>"]
-83--33
-33 [label=FuncList]
+82--36
+36 [label=FuncList]
+36--35
+35 [label="Func"]
+35--34
+34 [label="ID<myFunc>"]
+35--33
+33 [label=CmdList]
 33--32
-32 [label="Func"]
-32--31
-31 [label="ID<myFunc>"]
+32 [label= "="]
 32--30
-30 [label=CmdList]
-30--29
-29 [label= "="]
-29--27
-27 [label="LValue"]
-29--28
-28 [label="Int<1>"]
-32--22
+30 [label="LValue"]
+32--31
+31 [label="Int<1>"]
+35--22
 22 [label="ParamsList"]
 22--21
 21 [label="Param"]
@@ -64,80 +64,80 @@ graph program {
 24 [label="ID<ch>"]
 25--23
 23 [label="Type<Char>"]
-33--82
-82 [label="Func"]
-82--81
-81 [label="ID<main>"]
-82--41
-41 [label=CmdList]
-41--40
-40 [label= "="]
-40--35
-35 [label="LValue"]
+35--27
+27 [label="TypeList"]
+27--26
+26 [label="Type<Int>"]
+27--28
+28 [label="Type<Int>"]
+36--81
+81 [label="Func"]
+81--80
+80 [label="ID<main>"]
+81--44
+44 [label=CmdList]
+44--43
+43 [label= "="]
+43--38
+38 [label="LValue"]
+43--42
+42 [label= "+"]
+42--40
+40 [label= "-"]
 40--39
-39 [label= "+"]
-39--37
-37 [label= "-"]
-37--36
-36 [label="Int<50>"]
-39--38
-38 [label="Int<5>"]
-41--46
-46 [label= "="]
-46--43
-43 [label="LValue"]
-46--45
-45 [label= "New"]
-45--44
-44 [label="Type<String>"]
-41--51
-51 [label= "="]
-51--48
-48 [label="LValue"]
-51--50
-50 [label= "!"]
-50--49
-49 [label="Bool<false>"]
-41--58
-58 [label= "="]
-58--53
-53 [label="LValue"]
-58--57
-57 [label= "+"]
-57--55
-55 [label="LValue"]
-57--56
-56 [label="Int<10>"]
-41--62
-62 [label= "="]
-62--60
-60 [label="LValue"]
-62--61
-61 [label="Char<'a'>"]
-41--65
-65 [label="Print"]
+39 [label="Int<50>"]
+42--41
+41 [label="Int<5>"]
+44--49
+49 [label= "="]
+49--46
+46 [label="LValue"]
+49--48
+48 [label= "New"]
+48--47
+47 [label="Type<String>"]
+44--54
+54 [label= "="]
+54--51
+51 [label="LValue"]
+54--53
+53 [label= "!"]
+53--52
+52 [label="Bool<false>"]
+44--61
+61 [label= "="]
+61--56
+56 [label="LValue"]
+61--60
+60 [label= "+"]
+60--58
+58 [label="LValue"]
+60--59
+59 [label="Int<10>"]
+44--65
+65 [label= "="]
+65--63
+63 [label="LValue"]
 65--64
-64 [label="LValue"]
-41--67
-67 [label="Print"]
-67--66
-66 [label="Int<200>"]
-41--70
+64 [label="Char<'a'>"]
+44--68
+68 [label="Print"]
+68--67
+67 [label="LValue"]
+44--70
 70 [label="Print"]
 70--69
-69 [label="LValue"]
-41--73
+69 [label="Int<200>"]
+44--73
 73 [label="Print"]
 73--72
 72 [label="LValue"]
-41--76
+44--76
 76 [label="Print"]
 76--75
 75 [label="LValue"]
-41--80
-80 [label="Print"]
-80--79
-79 [label="LValue"]
+44--79
+79 [label="Print"]
 79--78
 78 [label="LValue"]
 }

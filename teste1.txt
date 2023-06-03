@@ -2,11 +2,11 @@ data Object{}
 data String{x :: Int; y::Char;}
 data Integer{numerador :: Int;}
 
-myFunc(num :: Int, ch :: Char){
+myFunc(num :: Int, ch :: Char): Int, Int{
     b=1;
 }
 
-main () {
+main (){
     var = -50 + 5;
     j = new String;
     k = !false;
