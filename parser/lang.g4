@@ -209,11 +209,16 @@ pexp returns [Expr ast]:
 ;
 
 lvalues returns [LValueList ast]:
-  (
+
+    l=lvalue{$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); } 
+  (','l2=lvalue {$ast.addNode($l2.ast); })* 
+  ;
+  
+ /* (
     l=lvalue ','? {
       if($ast == null){$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); }
       else{$ast.addNode($l.ast);}}
-  )*;
+  )*;*/
 
 lvalue returns [LValue ast]:
   ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text));}
