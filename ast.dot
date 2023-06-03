@@ -1,6 +1,6 @@
 graph program {
-82 [label=Prog]
-82--2
+89 [label=Prog]
+89--2
 2 [label=DataList]
 2--1
 1 [label= "Data"]
@@ -36,13 +36,13 @@ graph program {
 14 [label="ID<numerador>"]
 15--13
 13 [label="Type<Int>"]
-82--36
-36 [label=FuncList]
-36--35
-35 [label="Func"]
-35--34
-34 [label="ID<myFunc>"]
-35--33
+89--43
+43 [label=FuncList]
+43--42
+42 [label="Func"]
+42--41
+41 [label="ID<myFunc>"]
+42--33
 33 [label=CmdList]
 33--32
 32 [label= "="]
@@ -50,7 +50,19 @@ graph program {
 30 [label="LValue"]
 32--31
 31 [label="Int<1>"]
-35--22
+33--37
+37 [label= "="]
+37--35
+35 [label="LValue"]
+37--36
+36 [label="Int<3>"]
+33--40
+40 [label="ReturnCMD"]
+40--39
+39 [label="ReturnList"]
+39--38
+38 [label="Int<0>"]
+42--22
 22 [label="ParamsList"]
 22--21
 21 [label="Param"]
@@ -64,80 +76,80 @@ graph program {
 24 [label="ID<ch>"]
 25--23
 23 [label="Type<Char>"]
-35--27
+42--27
 27 [label="TypeList"]
 27--26
 26 [label="Type<Int>"]
 27--28
 28 [label="Type<Int>"]
-36--81
-81 [label="Func"]
-81--80
-80 [label="ID<main>"]
-81--44
-44 [label=CmdList]
-44--43
-43 [label= "="]
-43--38
-38 [label="LValue"]
-43--42
-42 [label= "+"]
-42--40
-40 [label= "-"]
-40--39
-39 [label="Int<50>"]
-42--41
-41 [label="Int<5>"]
-44--49
-49 [label= "="]
-49--46
-46 [label="LValue"]
+43--88
+88 [label="Func"]
+88--87
+87 [label="ID<main>"]
+88--51
+51 [label=CmdList]
+51--50
+50 [label= "="]
+50--45
+45 [label="LValue"]
+50--49
+49 [label= "+"]
+49--47
+47 [label= "-"]
+47--46
+46 [label="Int<50>"]
 49--48
-48 [label= "New"]
-48--47
-47 [label="Type<String>"]
-44--54
-54 [label= "="]
-54--51
-51 [label="LValue"]
-54--53
-53 [label= "!"]
-53--52
-52 [label="Bool<false>"]
-44--61
+48 [label="Int<5>"]
+51--56
+56 [label= "="]
+56--53
+53 [label="LValue"]
+56--55
+55 [label= "New"]
+55--54
+54 [label="Type<String>"]
+51--61
 61 [label= "="]
-61--56
-56 [label="LValue"]
-61--60
-60 [label= "+"]
-60--58
+61--58
 58 [label="LValue"]
+61--60
+60 [label= "!"]
 60--59
-59 [label="Int<10>"]
-44--65
-65 [label= "="]
-65--63
+59 [label="Bool<false>"]
+51--68
+68 [label= "="]
+68--63
 63 [label="LValue"]
-65--64
-64 [label="Char<'a'>"]
-44--68
-68 [label="Print"]
 68--67
-67 [label="LValue"]
-44--70
-70 [label="Print"]
-70--69
-69 [label="Int<200>"]
-44--73
-73 [label="Print"]
-73--72
-72 [label="LValue"]
-44--76
-76 [label="Print"]
-76--75
-75 [label="LValue"]
-44--79
-79 [label="Print"]
-79--78
-78 [label="LValue"]
+67 [label= "+"]
+67--65
+65 [label="LValue"]
+67--66
+66 [label="Int<10>"]
+51--72
+72 [label= "="]
+72--70
+70 [label="LValue"]
+72--71
+71 [label="Char<'a'>"]
+51--75
+75 [label="Print"]
+75--74
+74 [label="LValue"]
+51--77
+77 [label="Print"]
+77--76
+76 [label="Int<200>"]
+51--80
+80 [label="Print"]
+80--79
+79 [label="LValue"]
+51--83
+83 [label="Print"]
+83--82
+82 [label="LValue"]
+51--86
+86 [label="Print"]
+86--85
+85 [label="LValue"]
 }

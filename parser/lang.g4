@@ -50,9 +50,17 @@ funcList returns [FuncList ast]:
 ;
 
 func returns [Func ast]:
-  {boolean hasTypes = false;}
-  ID '(' params ')' (':' types {hasTypes=true;})? '{'cmdList'}'{
-    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, hasTypes? $types.ast : null, $cmdList.ast);}
+  {boolean hasTypes = false;
+  boolean hasParams = false;}
+
+  ID '(' (params{hasParams = true;})? ')' (':' types {hasTypes=true;})? '{'cmdList'}'{
+    $ast = new Func(
+      $ID.line, $ID.pos, 
+      new ID($ID.line, $ID.pos, $ID.text), 
+      hasParams? $params.ast:null, 
+      hasTypes? $types.ast : null, 
+      $cmdList.ast);
+    }
 ;
 
 declList returns [DeclList ast]:
@@ -60,21 +68,24 @@ declList returns [DeclList ast]:
     if($ast == null){$ast = new DeclList($d.ast.getLine(), $d.ast.getCol(), $d.ast); }
     else{$ast.addNode($d.ast);}
   })*
-  ;
+;
 
 decl returns [Decl ast]:
   ID '::' type ';' {$ast = new Decl($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
   ;
 
 params returns[ParamsList ast]:
-  (p=param {
+  p=param {$ast = new ParamsList($p.ast.getLine(), $p.ast.getCol(), $p.ast); } 
+  (','p2=param {$ast.addNode($p2.ast); })* 
+
+  /*(p=param {
     if($ast == null){$ast = new ParamsList($p.ast.getLine(), $p.ast.getCol(), $p.ast); }
     else{$ast.addNode($p.ast);}
-  })*
+  })**/
 ;
 
 param returns [Param ast]:
-  ID '::' t=type ','? {
+  ID '::' t=type {
     $ast = new Param($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $type.ast);}
 ;
 
@@ -119,15 +130,20 @@ cmd returns [Node ast]:
 ;
 
 returnsFunction returns[ReturnList ast]:
-  (r=returnElement {
+
+  e=exp{$ast = new ReturnList($e.ast.getLine(), $e.ast.getCol(), $e.ast); } 
+  (','e2=exp {$ast.addNode($e2.ast); })* 
+
+  /*(r=returnElement {
     if($ast == null){$ast = new ReturnList($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
     else{$ast.addNode($r.ast);}
-  })*
+  })**/
 ;
 
-returnElement returns [Return ast]:
+
+/*returnElement returns [Expr ast]:
   e=exp ','? {$ast = new Return($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
-;
+;*/
 
 exps returns [ExprList ast]:
   (

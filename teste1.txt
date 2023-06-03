@@ -4,6 +4,9 @@ data Integer{numerador :: Int;}
 
 myFunc(num :: Int, ch :: Char): Int, Int{
     b=1;
+    a=3;
+
+   return 0;
 }
 
 main (){
