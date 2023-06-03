@@ -50,8 +50,9 @@ funcList returns [FuncList ast]:
 ;
 
 func returns [Func ast]:
-  ID '(' params ')' ':'? types '{'cmdList'}'{
-    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, $types.ast, $cmdList.ast);}
+  {boolean hasTypes = false;}
+  ID '(' params ')' (':' types {hasTypes=true;})? '{'cmdList'}'{
+    $ast = new Func($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $params.ast, hasTypes? $types.ast : null, $cmdList.ast);}
 ;
 
 declList returns [DeclList ast]:
@@ -78,16 +79,14 @@ param returns [Param ast]:
 ;
 
 types returns [TypeList ast]:
-  (t=type {
-    if($ast == null){$ast = new TypeList($t.ast.getLine(), $t.ast.getCol(), $t.ast); }
-    else{$ast.addNode($t.ast);}
-  })*
+  t=type{$ast = new TypeList($t.ast.getLine(), $t.ast.getCol(), $t.ast); } 
+  (','t2=type {$ast.addNode($t2.ast); })* 
 ;
 
 type returns [Type ast]:
   //type '['']' ','?
   //|
-  ( t='Int' ','? | t='Char' ','? | t='Float' ','? | t='Bool' ','? | t=TYPE ','? ) {$ast = new Type($t.line, $t.pos, $t.text);}
+  ( t='Int'  | t='Char'  | t='Float'  | t='Bool'  | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text);}
 ;
 
 cmdList returns [CmdList ast]:
