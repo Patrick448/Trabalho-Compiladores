@@ -124,21 +124,11 @@ cmd returns [Node ast]:
  |
  f='if' '(' exp ')' c1=cmd 'else' c2=cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $c1.ast, $c2.ast);} 
  |
- 'return' r=returnsFunction ';' {$ast = new ReturnCMD($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
+ 'return' e=exps ';' {$ast = new ReturnCMD($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
  |
  ID '(' exps ')' '<'? lvalues '>'? ';' {$ast = new CallFunction($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $lvalues.ast);}
 ;
 
-returnsFunction returns[ReturnList ast]:
-
-  e=exp{$ast = new ReturnList($e.ast.getLine(), $e.ast.getCol(), $e.ast); } 
-  (','e2=exp {$ast.addNode($e2.ast); })* 
-
-  /*(r=returnElement {
-    if($ast == null){$ast = new ReturnList($r.ast.getLine(), $r.ast.getCol(), $r.ast);}
-    else{$ast.addNode($r.ast);}
-  })**/
-;
 
 
 /*returnElement returns [Expr ast]:

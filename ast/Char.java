@@ -30,7 +30,7 @@ public class Char extends Expr {
             return s;
         }
       
-      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
             return l;
       }
 }

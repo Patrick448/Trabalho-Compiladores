@@ -16,7 +16,7 @@ public class New extends Expr {
 
     @Override
     public Object interpret(HashMap<String, Object> variables, List<Func> functions, HashMap<String, Data> datas,
-            Stack<ReturnList> returns) {
+            Stack<ExprList> returns) {
 
         
         HashMap<String, Object> attributes = new HashMap<String, Object>();

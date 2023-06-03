@@ -38,7 +38,7 @@ public class CallFunctionVet extends Expr {
         return s;
     }
 
-    private void put_params_value(Func f, HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns)
+    private void put_params_value(Func f, HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns)
     {
         int i=0;
         if(f.getParams() != null)
@@ -50,7 +50,7 @@ public class CallFunctionVet extends Expr {
         }
     }
       
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
         for(Func f : functions)
         {
             if(f.getId().getName().equals(id.getName()))
@@ -60,14 +60,14 @@ public class CallFunctionVet extends Expr {
                     if(f.getParams().getParamsList().size()==le.getList().size()){
                         put_params_value(f, variables, functions, datas, returns);
                         f.interpret(variables, functions, datas, returns);
-                        returns.peek().getReturnList().get((Integer)e.interpret(variables, functions, datas, returns));
+                        return returns.peek().getList().get((Integer)e.interpret(variables, functions, datas, returns));
                     }
                 }
             }
             else if(e==null)
             {
                 f.interpret(variables, functions, datas, returns);
-                returns.peek().getReturnList().get((Integer)e.interpret(variables, functions, datas, returns));
+                return returns.peek().getList().get((Integer)e.interpret(variables, functions, datas, returns));
             }
         }
         return 0;

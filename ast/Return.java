@@ -17,7 +17,7 @@ public class Return extends Node{
     }
 
     @Override
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
         return e;
     }
 

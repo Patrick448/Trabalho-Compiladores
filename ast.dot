@@ -59,7 +59,7 @@ graph program {
 33--40
 40 [label="ReturnCMD"]
 40--39
-39 [label="ReturnList"]
+39 [label=ExprList]
 39--38
 38 [label="Int<0>"]
 42--22

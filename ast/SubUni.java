@@ -31,7 +31,7 @@ public class SubUni extends Expr {
         return s;
     }
 
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
       if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
         {
            return -(Integer)e.interpret(variables, functions, datas, returns);
