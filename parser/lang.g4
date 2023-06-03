@@ -123,7 +123,7 @@ cmd returns [Node ast]:
  f='if' '(' exp ')' cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $cmd.ast, null);} 
  |
  f='if' '(' exp ')' c1=cmd 'else' c2=cmd  {$ast = new If($f.line, $f.pos, $exp.ast, $c1.ast, $c2.ast);} 
- |
+  |
  'return' e=exps ';' {$ast = new ReturnCMD($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
  |
  ID '(' exps ')' '<'? lvalues '>'? ';' {$ast = new CallFunction($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $lvalues.ast);}
@@ -136,11 +136,11 @@ cmd returns [Node ast]:
 ;*/
 
 exps returns [ExprList ast]:
-  (
-    e=exp ','? {
-      if($ast == null){$ast = new ExprList($e.ast.getLine(), $e.ast.getCol(), $e.ast); }
-      else{$ast.addNode($e.ast);}}
-  )*;
+    e=exp{$ast = new ExprList($e.ast.getLine(), $e.ast.getCol(), $e.ast); } 
+  (','e2=exp {$ast.addNode($e2.ast); })* 
+  ;
+
+
 
 exp returns [Expr ast]:
   a1=exp '&&' a2=exp {$ast = new And($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);} 
@@ -220,7 +220,7 @@ lvalue returns [LValue ast]:
   |
   l=lvalue '[' exp ']' {}
   |
-  l=lvalue '.' ID { $ast = new LValue($l.ast.getLine(), $l.ast.getCol(), $l.ast);}
+  l=lvalue '.' ID {}
 ;
 
 
