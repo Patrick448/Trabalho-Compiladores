@@ -10,7 +10,7 @@ myFunc(num :: Int, ch :: Char): Int, Int{
 main (){
     var = -50 + 5;
     x = var + 10;
-    y = new String[3];
+    y = new Integer [3];
  
     print x;
     print '\n';

@@ -107,7 +107,7 @@ graph program {
 54--53
 53 [label= "New"]
 53--51
-51 [label="Type<String>"]
+51 [label="Type<Integer>"]
 53--52
 52 [label="Int<3>"]
 41--57
