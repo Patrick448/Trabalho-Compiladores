@@ -11,7 +11,8 @@ public class Type extends Expr {
       
       private String l;
       private Boolean isVet;
-     
+      private int dim;
+
       public Type(int l, int c, String name, Boolean iv){
            super(l,c);
            this.l = name;
@@ -34,9 +35,22 @@ public class Type extends Expr {
         return s; 
       }
 
+      public void addDimension(){
+        this.dim++;
+      }
+
         @Override
         public String dotString(){
-            String s = getUid() + " [label=\""+ this.getClass().getSimpleName()+"<"+ getName() +">"+"\"]\n";
+            String dimString = "";
+            if(isVet)
+            {
+              for(int i = 0; i < dim; i++)
+              {
+                dimString += "[]";
+              }
+            }
+
+            String s = getUid() + " [label=\""+ this.getClass().getSimpleName()+"<"+ getName() +">"+ dimString+"\"]\n";
             return s;
         }
       

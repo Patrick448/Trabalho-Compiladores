@@ -95,7 +95,9 @@ types returns [TypeList ast]:
 ;
 
 type returns [Type ast]:
-  type '['']' {$ast = new Type($t.line, $t.pos, $t.text, true);}
+  
+  t2=type{$ast = new Type($t2.ast.getLine(), $t2.ast.getCol(), $t2.ast.getName(), true); int i=0;} 
+  ('['']' {$ast.addDimension();})+ 
   |
   ( t='Int'  | t='Char'  | t='Float'  | t='Bool'  | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text, false);}
 ;

@@ -35,8 +35,18 @@ public class Print extends Node {
         return s;
     }
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+      
+      
       Object object = e.interpret(variables, functions, datas, returns);
+
+      if(object == null)
+      {
+         System.out.print("null");
+         return 0;
+      }
+
       String className = object.getClass().getSimpleName();
+      
       if(className.equals("Integer"))
          {
             System.out.print("" + object);
