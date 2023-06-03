@@ -45,7 +45,8 @@ public class CallFunctionVet extends Expr {
         {
             for(Param n : f.getParams().getParamsList())
             {
-                 f.getValuesParams().put(n.getId().getName(),le.getList().get(i).interpret(variables, functions, datas, returns));
+                f.getValuesParams().put(n.getId().getName(),le.getList().get(i).interpret(variables, functions, datas, returns));
+                i++;
             }
         }
     }
@@ -60,30 +61,22 @@ public class CallFunctionVet extends Expr {
                     if(f.getParams().getParamsList().size()==le.getList().size()){
                         put_params_value(f, variables, functions, datas, returns);
                         f.interpret(variables, functions, datas, returns);
-<<<<<<< HEAD
-                        int max = returns.peek().getReturnList().size();
+                        int max = returns.peek().getList().size();
                         if((Integer)e.interpret(variables, functions, datas, returns)<max)
                         {
-                            return returns.peek().getReturnList().get((Integer)e.interpret(variables, functions, datas, returns)).getE().interpret(variables, functions, datas, returns);
+                            return returns.peek().getList().get((Integer)e.interpret(variables, functions, datas, returns)).interpret(variables, functions, datas, returns);
                         }
-=======
-                        return returns.peek().getList().get((Integer)e.interpret(variables, functions, datas, returns));
->>>>>>> 3a2853104bfa71533129f93ebc8955fd85cbc044
                     }
                 }
             }
             else if(e==null)
             {
                 f.interpret(variables, functions, datas, returns);
-<<<<<<< HEAD
-                int max = returns.peek().getReturnList().size();
+                int max = returns.peek().getList().size();
                 if((Integer)e.interpret(variables, functions, datas, returns)<max)
                 {
-                    return returns.peek().getReturnList().get((Integer)e.interpret(variables, functions, datas, returns)).getE().interpret(variables, functions, datas, returns);
+                    return returns.peek().getList().get((Integer)e.interpret(variables, functions, datas, returns)).interpret(variables, functions, datas, returns);
                 }
-=======
-                return returns.peek().getList().get((Integer)e.interpret(variables, functions, datas, returns));
->>>>>>> 3a2853104bfa71533129f93ebc8955fd85cbc044
             }
         }
         return 0;

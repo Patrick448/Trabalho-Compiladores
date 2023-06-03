@@ -41,7 +41,6 @@ public class Attr extends Node {
      
           Object object = e.interpret(variables, functions, datas, returns);
           String className = object.getClass().getSimpleName();
-     
           if(className.equals("Integer"))
           {
                int x = (Integer)object;
@@ -70,6 +69,11 @@ public class Attr extends Node {
                DataInstance d = (DataInstance)object;
                variables.peek().put((String)lValue.getID().getName(), d);
                return d;
+          }
+          else if(className.equals("ArrayList")){
+               List a = (List)object;
+               variables.peek().put((String)lValue.getID().getName(), (List)object);
+               System.out.print(a);
           }
           return 0;
       }   

@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -18,15 +19,26 @@ public class New extends Expr {
     public Object interpret(Stack<HashMap<String, Object>> variables, List<Func> functions, HashMap<String, Data> datas,
             Stack<ExprList> returns) {
 
-        
         HashMap<String, Object> attributes = new HashMap<String, Object>();
 
         for(Decl d : datas.get(type.getName()).getDeclList().getList()){
             attributes.put(d.getId().getName(), null);
         }
-        
-        DataInstance instance = new DataInstance(type, attributes);
-        return instance;
+
+        if(e==null){
+            DataInstance instance = new DataInstance(type, attributes);
+            return instance;
+        }
+        else{
+            int i=0;
+            List<DataInstance> instance_list= new ArrayList<DataInstance>();
+            while(i < (Integer)e.interpret(variables, functions, datas, returns))
+            {
+                instance_list.add(new DataInstance(type, attributes));
+                i++;
+            }
+            return instance_list;
+        }
     }
 
     @Override
@@ -40,6 +52,14 @@ public class New extends Expr {
             s += e.dotString();
         }
 
+        return s;
+    }
+
+    public String toString() {
+        String s = "new " + type.toString();
+        if(e != null) {
+            s+= " [" + e.toString() + ']';
+        }
         return s;
     }
     

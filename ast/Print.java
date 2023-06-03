@@ -85,7 +85,11 @@ public class Print extends Node {
          }
 
          else if(className.equals("DataInstance")){
-            System.out.print(object.toString());
+            System.out.print(object);
+         }
+
+         else if(className.equals("ArrayList")){
+            System.out.print(object);
          }
          return 0;
       }

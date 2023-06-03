@@ -161,19 +161,19 @@ rexp returns [Expr ast]:
 ;
 
 aexp returns [Expr ast]:
-  a1=aexp '+' a2=aexp{$ast = new Add($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  a1=aexp '+' a2=mexp{$ast = new Add($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
-  a1=aexp '-' a2=aexp{$ast = new Sub($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  a1=aexp '-' a2=mexp{$ast = new Sub($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
   mexp{$ast=$mexp.ast;}  
 ;
 
 mexp returns [Expr ast]:
-  a1=mexp '*' a2=mexp{$ast = new Mul($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  a1=mexp '*' a2=sexp{$ast = new Mul($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
-  a1=mexp '/' a2=mexp{$ast = new Div($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  a1=mexp '/' a2=sexp{$ast = new Div($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
-  a1=mexp '%' a2=mexp{$ast = new Rest($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
+  a1=mexp '%' a2=sexp{$ast = new Rest($a1.ast.getLine(), $a1.ast.getCol(), $a1.ast, $a2.ast);}
   |
   sexp{$ast=$sexp.ast;}
 ;
@@ -231,7 +231,7 @@ lvalue returns [LValue ast]:
 
 ID : [a-z] ([a-z]|[A-Z]|[0-9]|'_')*;
 INT : [0-9]+;
-FLOAT : [0-9]+ '.' [0-9]+ | '.' [0-9];
+FLOAT : [0-9]+ '.' [0-9]+ | '.' [0-9]+;
 CHAR : ('\'' '\\n' '\'') 
     | ('\'' '\\t' '\'') 
     | ('\'' '\\b' '\'') 
