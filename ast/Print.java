@@ -52,27 +52,27 @@ public class Print extends Node {
          }
          else if(className.equals("String"))
          {
-            if(object.equals("'\\n'"))
+            if(object.equals("\\n"))
             {
                System.out.print("\n");
             }
-            else if(object.equals("'\\t'"))
+            else if(object.equals("\\t"))
             {
                System.out.print("\t");
             }
-            else if(object.equals("'\\b'"))
+            else if(object.equals("\\b"))
             {
                System.out.print("\b");
             }
-            else if(object.equals("'\\r'"))
+            else if(object.equals("\\r"))
             {
                System.out.print("\r");
             }
-            else if(object.equals("'\\\\'"))
+            else if(object.equals("\\\\"))
             {
                System.out.print("\\");
             }
-            else if(object.equals("'\\''"))
+            else if(object.equals("\\'"))
             {
                System.out.print("'");
             }
@@ -80,7 +80,7 @@ public class Print extends Node {
             else
             {
                String s = (String)object;
-               System.out.print("" + s.charAt(1));
+               System.out.print("" + s);
             }
          }
 
