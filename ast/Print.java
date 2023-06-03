@@ -34,58 +34,58 @@ public class Print extends Node {
         
         return s;
     }
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
       Object object = e.interpret(variables, functions, datas, returns);
       String className = object.getClass().getSimpleName();
       
       if(className.equals("Integer"))
          {
-            System.out.println("" + object);
+            System.out.print("" + object);
          }
          else if(className.equals("Float"))
          {
-            System.out.println("" + object);
+            System.out.print("" + object);
          }
          else if(className.equals("Boolean"))
          {
-            System.out.println("" + object);
+            System.out.print("" + object);
          }
          else if(className.equals("String"))
          {
             if(object.equals("'\\n'"))
             {
-               System.out.println("\n");
+               System.out.print("\n");
             }
             else if(object.equals("'\\t'"))
             {
-               System.out.println("\t");
+               System.out.print("\t");
             }
             else if(object.equals("'\\b'"))
             {
-               System.out.println("\b");
+               System.out.print("\b");
             }
             else if(object.equals("'\\r'"))
             {
-               System.out.println("\r");
+               System.out.print("\r");
             }
             else if(object.equals("'\\\\'"))
             {
-               System.out.println("\\");
+               System.out.print("\\");
             }
             else if(object.equals("'\\''"))
             {
-               System.out.println("'");
+               System.out.print("'");
             }
 
             else
             {
                String s = (String)object;
-               System.out.println("" + s.charAt(1));
+               System.out.print("" + s.charAt(1));
             }
          }
 
          else if(className.equals("DataInstance")){
-            System.out.println(object.toString());
+            System.out.print(object.toString());
          }
          return 0;
       }

@@ -37,7 +37,7 @@ public class Attr extends Node {
         return s;
     }
       
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
      
      Object object = e.interpret(variables, functions, datas, returns);
      String className = object.getClass().getSimpleName();
@@ -45,30 +45,30 @@ public class Attr extends Node {
      if(className.equals("Integer"))
           {
                int x = (Integer)object;
-               variables.put((String)lValue.getID().getName(), x);
+               variables.peek().put((String)lValue.getID().getName(), x);
                return x;
           }
           else if(className.equals("Float"))
           {
                float y = (Float)object;
-               variables.put((String)lValue.getID().getName(), y);
+               variables.peek().put((String)lValue.getID().getName(), y);
                return y;
           }
           else if(className.equals("String"))
           {
                String k = (String)object;
-               variables.put((String)lValue.getID().getName(), k);
+               variables.peek().put((String)lValue.getID().getName(), k);
                return k;
           }
           else if(className.equals("Boolean"))
           {
                boolean b = (boolean)object;
-               variables.put((String)lValue.getID().getName(), b);
+               variables.peek().put((String)lValue.getID().getName(), b);
                return b;
           }
           else if(className.equals("DataInstance")){
                DataInstance d = (DataInstance)object;
-               variables.put((String)lValue.getID().getName(), d);
+               variables.peek().put((String)lValue.getID().getName(), d);
                return d;
           }
           return null;

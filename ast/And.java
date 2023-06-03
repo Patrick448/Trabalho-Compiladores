@@ -32,7 +32,7 @@ public class And extends BinOP {
          return s;
       }
 
-      public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
          if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
          {
             return (boolean)getLeft().interpret(variables, functions, datas, returns) && (boolean)getRight().interpret(variables, functions, datas, returns);

@@ -38,17 +38,20 @@ public class LValue extends Expr {
         if(lval != null){
            s+= getUid() +"--"+lval.getUid()+"\n"; 
            s+= lval.dotString();  
+           s+= getUid() +"--"+id.getUid()+"\n";
+           s+= id.dotString();  
         }
         
         return s;
     }
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
         if(lval != null){
-            DataInstance instance = (DataInstance)variables.get(id.getName());
-            return lval.interpret(instance.getAttributes(), functions, datas, returns);
+            DataInstance instance = (DataInstance)variables.peek().get(id.getName());
+            variables.push(instance.getAttributes());
+            return lval.interpret(variables, functions, datas, returns);
         }
         else{
-            return variables.get(id.getName());
+            return variables.peek().get(id.getName());
         }
         
       }

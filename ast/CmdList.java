@@ -26,7 +26,7 @@ public class CmdList extends Node {
     }
 
     @Override
-    public Object interpret(HashMap<String,Object> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ReturnList> returns){
         Object v = null;
         for(Node n : list) {
               v= n.interpret(variables, functions, datas, returns);
