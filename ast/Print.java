@@ -37,7 +37,6 @@ public class Print extends Node {
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
       Object object = e.interpret(variables, functions, datas, returns);
       String className = object.getClass().getSimpleName();
-      
       if(className.equals("Integer"))
          {
             System.out.print("" + object);

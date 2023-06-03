@@ -3,8 +3,8 @@ package ast;
 import java.util.HashMap;
 
 public class DataInstance {
-    Type type;
-    HashMap<String, Object> attributes;
+    private Type type;
+    private HashMap<String, Object> attributes;
 
     public DataInstance(Type type, HashMap<String, Object> attributes) {
         this.type = type;

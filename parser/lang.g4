@@ -39,7 +39,7 @@ dataList returns [DataList ast]:
 ;
 
 data returns [Data ast]:
-  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), $declList.ast);}
+  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text, false), $declList.ast);}
   ;
 
 funcList returns [FuncList ast]:
@@ -95,9 +95,9 @@ types returns [TypeList ast]:
 ;
 
 type returns [Type ast]:
-  //type '['']' ','?
-  //|
-  ( t='Int'  | t='Char'  | t='Float'  | t='Bool'  | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text);}
+  type '['']' {$ast = new Type($t.line, $t.pos, $t.text, true);}
+  |
+  ( t='Int'  | t='Char'  | t='Float'  | t='Bool'  | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text, false);}
 ;
 
 cmdList returns [CmdList ast]:
@@ -221,11 +221,11 @@ lvalues returns [LValueList ast]:
   )*;*/
 
 lvalue returns [LValue ast]:
-  ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text));}
+  ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), null, null);}
   |
-  l=lvalue '[' exp ']' {}
+  l=lvalue '[' exp ']' {$ast = new LValue($ID.line, $ID.pos, null, $l.ast, $exp.ast);}
   |
-  l=lvalue '.' ID {}
+  l=lvalue '.' ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $l.ast, null);}
 ;
 
 

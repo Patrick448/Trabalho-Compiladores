@@ -41,39 +41,121 @@ public class Attr extends Node {
      
           Object object = e.interpret(variables, functions, datas, returns);
           String className = object.getClass().getSimpleName();
+          String key = "";
+          if(lValue.getLValue()!=null){
+               if(lValue.getLValue().getLValue()==null)
+               {
+                    key += (String)lValue.getLValue().getID().getName();
+               }
+               else
+               {
+                    key += (String)lValue.getLValue().getLValue().getID().getName();
+               }
+          }
+          else
+          {
+               key += (String)lValue.getID().getName();
+          }
           if(className.equals("Integer"))
           {
                int x = (Integer)object;
-               variables.peek().put((String)lValue.getID().getName(), x);
+               if(lValue.getLValue()!=null && lValue.getID()!=null){
+                    if(lValue.getLValue().getLValue()==null)
+                    {
+                         DataInstance di =  (DataInstance)variables.peek().get(key);
+                         di.put(lValue.getID().getName(), x);
+                    }
+                    else
+                    {
+                         List lt =  (List)variables.peek().get(key);
+                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         di.put(lValue.getID().getName(), x);
+                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                    }
+               }
+               else if(lValue.getLValue()!=null && lValue.getExpr()!=null){
+                    List lt =  (List)variables.peek().get(key);
+                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), x);
+               }
+               else{
+                    variables.peek().put(key, x);
+               }
                return x;
           }
           else if(className.equals("Float"))
           {
                float y = (Float)object;
-               variables.peek().put((String)lValue.getID().getName(), y);
+               if(lValue.getLValue()!=null && lValue.getID()!=null){
+                    DataInstance di =  (DataInstance)variables.peek().get(key);
+                    di.put(lValue.getID().getName(), y);
+               }
+               else if(lValue.getLValue()!=null && lValue.getExpr()!=null){
+                    List lt =  (List)variables.peek().get(key);
+                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), y);
+               }
                return y;
           }
           else if(className.equals("String"))
           {
                String k = (String)object;
-               variables.peek().put((String)lValue.getID().getName(), k);
+               if(lValue.getLValue()!=null && lValue.getID()!=null){
+                    DataInstance di =  (DataInstance)variables.peek().get(key);
+                    di.put(lValue.getID().getName(), k);
+               }
+               else if(lValue.getLValue()!=null && lValue.getExpr()!=null){
+                    List lt =  (List)variables.peek().get(key);
+                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), k);
+               }
+               else{
+                    variables.peek().put(key, k);
+               }
                return k;
           }
           else if(className.equals("Boolean"))
           {
                boolean b = (boolean)object;
-               variables.peek().put((String)lValue.getID().getName(), b);
+               if(lValue.getLValue()!=null && lValue.getID()!=null){
+                    DataInstance di =  (DataInstance)variables.peek().get(key);
+                    di.put(lValue.getID().getName(), b);
+               }
+               else if(lValue.getLValue()!=null && lValue.getExpr()!=null){
+                    List lt =  (List)variables.peek().get(key);
+                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), b);
+               }
+               else{
+                    variables.peek().put(key, b);
+               }
                return b;
           }
           else if(className.equals("DataInstance")){
                DataInstance d = (DataInstance)object;
-               variables.peek().put((String)lValue.getID().getName(), d);
+               if(lValue.getLValue()!=null && lValue.getID()!=null){
+                    DataInstance di =  (DataInstance)variables.peek().get(key);
+                    di.put(lValue.getID().getName(), d);
+               }
+               else if(lValue.getLValue()!=null && lValue.getExpr()!=null){
+                    List lt =  (List)variables.peek().get(key);
+                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), d);
+               }
+               else{
+                    variables.peek().put(key, d);
+               }
                return d;
           }
           else if(className.equals("ArrayList")){
-               List a = (List)object;
-               variables.peek().put((String)lValue.getID().getName(), (List)object);
-               System.out.print(a);
+               List<DataInstance> a = (List<DataInstance>)object;
+               if(lValue.getLValue()!=null && lValue.getID()!=null){
+                    DataInstance di =  (DataInstance)variables.peek().get(key);
+                    di.put(lValue.getID().getName(), a);
+               }
+               else if(lValue.getLValue()!=null && lValue.getExpr()!=null){
+                    List lt =  (List)variables.peek().get(key);
+                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), a);
+               }
+               else{
+                    variables.peek().put(key, a);
+               }
+               return a;
           }
           return 0;
       }   

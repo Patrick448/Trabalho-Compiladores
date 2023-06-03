@@ -11,31 +11,81 @@ import java.util.List;
 public class LValue extends Expr {
       
       private ID id;
+      private LValue lv;
+      private Expr e;
       
-      public LValue(int l, int c, ID id){
+      public LValue(int l, int c, ID id, LValue a, Expr e){
            super(l,c);
            this.id  = id;
+           this.lv = a;
+           this.e = e;
       }
       
       public ID getID(){ 
          return id;
       }
       
+      public LValue getLValue() {
+          return lv;
+      }
+
+      public Expr getExpr() {
+          return e;
+      }
+
       //@Override
       public String toString(){
-         return  id.toString(); 
+         String s = "";
+         if(lv != null){
+            s += lv.toString()+".";
+         }
+         if(e != null){
+            s += e.toString()+".";
+         }
+         if(id != null){
+            s += id.toString()+".";
+         }
+         return  s; 
       }
 
       public String dotString(){
         String s = getUid() + " [label=\""+this.getClass().getSimpleName()+"\"]\n";
      
-        s+= getUid() +"--"+id.getUid()+"\n";
-        s+= id.dotString();  
+        if(lv != null){
+         s+= getUid() +"--"+ lv.getUid()+"\n";
+         s+= lv.dotString(); 
+        }
+        if(e != null){
+         s+= getUid() +"--"+ e.getUid()+"\n";
+         s+= e.dotString(); 
+        }
+        if(id != null){
+         s+= getUid() +"--"+ id.getUid()+"\n";
+         s+= id.dotString(); 
+        }
         
         return s;
     }
 
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-            return variables.peek().get(id.getName());
+         if(lv != null && id != null){
+            if(lv.getLValue()==null)
+            {
+               DataInstance di = (DataInstance)variables.peek().get(lv.getID().getName());
+               return di.get(id.getName());
+            }
+            else
+            {
+               List lt =  (List)variables.peek().get(lv.getLValue().getID().getName());
+               DataInstance di =  (DataInstance)lt.get((Integer)lv.getExpr().interpret(variables, functions, datas, returns));
+               return di.get(id.getName());
+            }
+         }
+         if(lv != null && e != null)
+         {
+            List lt = (List)variables.peek().get(lv.getID().getName());
+            return lt.get((Integer)e.interpret(variables, functions, datas, returns));
+         }
+         return variables.peek().get(id.getName());
     }
 }

@@ -11,14 +11,14 @@ myFunc(num :: Int, ch :: Char): Int, Int{
 
 main (){
     var = -50 + 5;
-    j = new String;
+    j = new String [3];
     k = !false;
     x = var + 10;
     i = 'a';
-    --j = 6;
+    j.x = 6;
     print i;
     print 200;
     print k;
-    print j;
+    print j.x;
     print x;
 }

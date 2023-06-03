@@ -10,17 +10,28 @@ import java.util.List;
 public class Type extends Expr {
       
       private String l;
+      private Boolean isVet;
      
-      public Type(int l, int c, String name){
+      public Type(int l, int c, String name, Boolean iv){
            super(l,c);
            this.l = name;
+           this.isVet = iv;
       }
       
       public String getName(){ return l;}
       
+      public Boolean getIsVet() {
+          return isVet;
+      }
+
       //@Override
       public String toString(){
-         return   l; 
+        String s = l;
+        if(isVet)
+        {
+          s+="[]";
+        }
+        return s; 
       }
 
         @Override

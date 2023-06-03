@@ -34,7 +34,7 @@ public class New extends Expr {
             List<DataInstance> instance_list= new ArrayList<DataInstance>();
             while(i < (Integer)e.interpret(variables, functions, datas, returns))
             {
-                instance_list.add(new DataInstance(type, attributes));
+                instance_list.add(null);
                 i++;
             }
             return instance_list;
