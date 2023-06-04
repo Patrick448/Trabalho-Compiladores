@@ -63,10 +63,12 @@ public class Attr extends Node {
     }
     
       
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    /* public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
      
           Object object = e.interpret(variables, functions, datas, returns);
           String className = object.getClass().getSimpleName();
+
+          System.out.println(lValue);
           if(className.equals("Integer"))
           {
                int x = (Integer)object;
@@ -245,6 +247,14 @@ public class Attr extends Node {
                }
                return a;
           }
+          return 0;
+      }    */
+
+
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+          Object value = e.interpret(variables, functions, datas, returns); 
+          //System.out.println("l: " + lValue);    
+          lValue.attribute(value, variables);
           return 0;
       }   
 }

@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.ArrayList;
 /*
  * Esta classe representa um comando de Impressão.
  * Expr
@@ -36,6 +37,7 @@ public class LValue extends Expr {
       //@Override
       public String toString(){
          String s = "";
+
          if(lv != null){
             s += lv.toString()+".";
          }
@@ -67,8 +69,11 @@ public class LValue extends Expr {
         return s;
     }
 
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         if(lv != null && id != null){
+   /* public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+         
+      System.out.println(variables.peek());
+      System.out.println(lv);
+      if(lv != null && id != null){
             if(lv.getLValue()==null)
             {
                DataInstance di = (DataInstance)variables.peek().get(lv.getID().getName());
@@ -102,5 +107,50 @@ public class LValue extends Expr {
             return lt.get((Integer)e.interpret(variables, functions, datas, returns));
          }
          return variables.peek().get(id.getName());
+    }
+*/
+    public void attribute(Object value, Stack<HashMap<String,Object>> variables){
+
+      if(lv != null){
+         Object o = lv.interpret(variables, null, null, null);
+         
+         if(e != null){
+            int index = (Integer)e.interpret(variables, null, null, null);
+            ((List)o).set(index, value);
+         }
+ 
+         if(o instanceof DataInstance)
+            ((DataInstance)o).put(id.getName(), value);
+        
+      } else
+            variables.peek().put(id.getName(), value);
+
+
+    }
+
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+
+      if(lv == null){
+         Object o = variables.peek().get(id.getName());
+
+         if(e != null){
+            int index = (Integer)e.interpret(variables, functions, datas, returns);
+            return ((List)o).get(index);
+         }else{
+            return o;
+         }
+         
+      }else{
+         Object o = lv.interpret(variables, functions, datas, returns);
+
+         if(o instanceof ArrayList){
+            int index = (Integer)e.interpret(variables, functions, datas, returns);
+            return ((List)o).get(index);
+         }else{
+            return ((DataInstance)lv.interpret(variables, functions, datas, returns)).get(id.getName());
+
+         }
+
+      }
     }
 }
