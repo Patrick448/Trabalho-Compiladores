@@ -23,17 +23,33 @@ public class CallFunction extends Expr {
       public ID getId(){return id;}
       
       public String toString(){
-          return id.toString() + "(" + e.toString() + ")" + "<" + l.toString() + ">";
+          String s = id.toString() + "(";
+          if(e!=null)
+          {
+            s+= e.toString();
+          }
+          s+= ")";
+          if(l!=null)
+          {
+            s+= "<" + l.toString() + ">";
+          }
+          return s;
       }
 
      public String dotString(){
         String s = getUid() + " [label= \"CallFunction\"]\n";
         s+= getUid() +"--"+id.getUid()+"\n";
         s+=id.dotString();
-        s+= getUid() +"--"+e.getUid()+"\n";
-        s+=e.dotString();
-        s+= getUid() +"--"+l.getUid()+"\n";
-        s+=l.dotString();
+        if(e!=null)
+        {
+            s+= getUid() +"--"+e.getUid()+"\n";
+            s+=e.dotString();
+        }
+        if(l!=null)
+        {
+            s+= getUid() +"--"+l.getUid()+"\n";
+            s+=l.dotString();
+        }
         
         return s;
     }
@@ -60,7 +76,6 @@ public class CallFunction extends Expr {
             i+=1;
         }
     }
-      
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
         for(Func f : functions)
         {
@@ -76,7 +91,10 @@ public class CallFunction extends Expr {
                                 put_params_value(f, variables, functions, datas, returns);
                                 f.interpret(variables, functions, datas, returns);
                                 put_returns_value(variables, functions, datas, returns);
-                                returns.pop();
+                                if(!returns.isEmpty())
+                                {
+                                    returns.pop();
+                                }
                                 break;
                             }
                         }
@@ -84,7 +102,10 @@ public class CallFunction extends Expr {
                         {
                             put_params_value(f, variables, functions, datas, returns);
                             f.interpret(variables, functions, datas, returns);
-                            returns.pop();
+                            if(!returns.isEmpty())
+                            {
+                                returns.pop();
+                            }
                             break;
                         }
                     }
@@ -98,14 +119,20 @@ public class CallFunction extends Expr {
                     {
                         f.interpret(variables, functions, datas, returns);
                         put_returns_value(variables, functions, datas, returns);
-                        returns.pop();
+                        if(!returns.isEmpty())
+                        {
+                            returns.pop();
+                        }
                         break;
                     }
                 }
                 else if(l==null)
                 {
                     f.interpret(variables, functions, datas, returns);
-                    returns.pop();
+                    if(!returns.isEmpty())
+                    {
+                        returns.pop();
+                    }
                     break;
                 }
             }

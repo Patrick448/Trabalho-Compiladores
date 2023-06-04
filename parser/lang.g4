@@ -128,7 +128,9 @@ cmd returns [Node ast]:
   |
  'return' e=exps ';' {$ast = new ReturnCMD($e.ast.getLine(), $e.ast.getCol(), $e.ast);}
  |
- ID '(' exps ')' '<'? lvalues '>'? ';' {$ast = new CallFunction($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $lvalues.ast);}
+ {boolean hasLvalues = false;
+  boolean hasExps = false;}
+ ID '(' (exps {hasExps=true;})? ')' ('<' lvalues '>' {hasLvalues=true;})? ';' {$ast = new CallFunction($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), hasExps? $exps.ast:null, hasLvalues? $lvalues.ast:null);}
 ;
 
 
@@ -215,12 +217,6 @@ lvalues returns [LValueList ast]:
     l=lvalue{$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); } 
   (','l2=lvalue {$ast.addNode($l2.ast); })* 
   ;
-  
- /* (
-    l=lvalue ','? {
-      if($ast == null){$ast = new LValueList($l.ast.getLine(), $l.ast.getCol(), $l.ast); }
-      else{$ast.addNode($l.ast);}}
-  )*;*/
 
 lvalue returns [LValue ast]:
   ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), null, null);}

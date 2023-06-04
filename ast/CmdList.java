@@ -27,11 +27,19 @@ public class CmdList extends Node {
 
     @Override
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-        Object v = null;
         for(Node n : list) {
-              v= n.interpret(variables, functions, datas, returns);
+            Object o = n.interpret(variables, functions, datas, returns);
+            try
+            {
+                Boolean run_return = (Boolean)o;
+                if(n.getClass().getSimpleName().equals("ReturnCMD") || run_return)
+                {
+                    return true;
+                }
+            }
+            catch(Exception e){}
         }
-        return 0;
+        return false;
     }
 
     public String dotString(){

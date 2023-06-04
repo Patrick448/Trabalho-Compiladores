@@ -20,24 +20,42 @@ public class New extends Expr {
             Stack<ExprList> returns) {
 
         HashMap<String, Object> attributes = new HashMap<String, Object>();
-
-        for(Decl d : datas.get(type.getName()).getDeclList().getList()){
-            attributes.put(d.getId().getName(), null);
-        }
-
-        if(e==null){
-            DataInstance instance = new DataInstance(type, attributes);
-            return instance;
+        if(type.getName().equals("Int") || type.getName().equals("Float") || type.getName().equals("Char") || type.getName().equals("Bool"))
+        {
+            if(e==null){
+                Integer instance = 0;
+                return instance;
+            }
+            else{
+                int i=0;
+                List<Object> instance_list= new ArrayList<Object>();
+                while(i < (Integer)e.interpret(variables, functions, datas, returns))
+                {
+                    instance_list.add(null);
+                    i++;
+                }
+                return instance_list;
+            }
         }
         else{
-            int i=0;
-            List<DataInstance> instance_list= new ArrayList<DataInstance>();
-            while(i < (Integer)e.interpret(variables, functions, datas, returns))
-            {
-                instance_list.add(null);
-                i++;
+            for(Decl d : datas.get(type.getName()).getDeclList().getList()){
+                attributes.put(d.getId().getName(), null);
             }
-            return instance_list;
+
+            if(e==null){
+                DataInstance instance = new DataInstance(type, attributes);
+                return instance;
+            }
+            else{
+                int i=0;
+                List<DataInstance> instance_list= new ArrayList<DataInstance>();
+                while(i < (Integer)e.interpret(variables, functions, datas, returns))
+                {
+                    instance_list.add(null);
+                    i++;
+                }
+                return instance_list;
+            }
         }
     }
 

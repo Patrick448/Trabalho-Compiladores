@@ -48,7 +48,13 @@ public class Func extends Node {
       @Override
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
             variables.push(valuesParams);
-            if(cmdList != null) {return cmdList.interpret(variables, functions, datas, returns);};
+            if(cmdList != null) 
+            {
+                Object o = cmdList.interpret(variables, functions, datas, returns);
+                variables.pop();
+                valuesParams.clear();
+                return o;
+            };
             variables.pop();
             valuesParams.clear();
             return 0;

@@ -23,17 +23,33 @@ public class CallFunctionVet extends Expr {
       public ID getId(){return id;}
       
       public String toString(){
-          return id.toString() + "(" + le.toString() + ")" + '[' + e.toString() + "]" ;
+        String s = id.toString() + "(";
+        if(le!=null)
+        {
+          s+= le.toString();
+        }
+        s+= ")";
+        if(e!=null)
+        {
+          s+= "[" + e.toString() + "]";
+        }
+        return s;
       }
 
      public String dotString(){
         String s = getUid() + " [label= \"CallFunction\"]\n";
         s+= getUid() +"--"+id.getUid()+"\n";
         s+=id.dotString();
-        s+= getUid() +"--"+le.getUid()+"\n";
-        s+=le.dotString();
-        s+= getUid() +"--"+e.getUid()+"\n";
-        s+=e.dotString();
+        if(le!=null)
+        {
+            s+= getUid() +"--"+le.getUid()+"\n";
+            s+=le.dotString();
+        }
+        if(e!=null)
+        {
+            s+= getUid() +"--"+e.getUid()+"\n";
+            s+=e.dotString();
+        }
         
         return s;
     }
