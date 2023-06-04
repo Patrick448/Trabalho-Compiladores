@@ -11,7 +11,7 @@ myFunc(num :: Int, ch :: Char): Int, Int{
 main (){
     var = -50 + 5;
     j = new String;
-    k = !false;
+    k = true;
     x = var + 10;
     i = 'a';
     j.x = 6;
