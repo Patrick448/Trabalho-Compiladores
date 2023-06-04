@@ -19,6 +19,8 @@ spook(n :: Int) : Int{
 
 main(){
    k = fat(6)[0];
+   print k;
+   print '\n';
    k = spook(2)[0];
    print k;
    print '\n';

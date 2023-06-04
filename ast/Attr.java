@@ -1,5 +1,7 @@
 package ast;
 
+import java.nio.file.FileAlreadyExistsException;
+
 /*
  * Esta classe representa um comando de atribuição.
  * ID = Expr
@@ -36,12 +38,35 @@ public class Attr extends Node {
         
         return s;
     }
+
+    public List findDataInstace(LValue aux, Boolean vet, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
+    {
+          Stack<LValue> stack_aux = new Stack<LValue>();
+          stack_aux.push(aux);
+          while(aux.getLValue()!=null)
+          {
+               aux = aux.getLValue();
+               stack_aux.push(aux);
+          }
+          List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
+          stack_aux.pop();
+          int i=0;
+          while(i<stack_aux.size())
+          {
+               if((stack_aux.size() != 1 || vet))
+               {
+                    lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
+               }
+               stack_aux.pop();
+          }
+          return lt;
+    }
+    
       
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
      
           Object object = e.interpret(variables, functions, datas, returns);
           String className = object.getClass().getSimpleName();
-
           if(className.equals("Integer"))
           {
                int x = (Integer)object;
@@ -50,55 +75,22 @@ public class Attr extends Node {
                     LValue aux = lValue.getLValue();
                     if(aux.getLValue()==null)
                     {
-                         DataInstance di =  (DataInstance)variables.peek().get((String)lValue.getID().getName());
+                         DataInstance di =  (DataInstance)variables.peek().get((String)aux.getID().getName());
                          di.put(lValue.getID().getName(), x);
                     }
                     else
                     {
-                         Stack<LValue> stack_aux = new Stack<LValue>();
-                         stack_aux.push(aux);
-                         while(aux.getExpr()!=null && aux.getLValue()!=null)
-                         {
-                              aux = aux.getLValue();
-                              stack_aux.push(aux);
-                         }
-                         List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                         stack_aux.pop();
-                         int i=0;
-                         while(i<stack_aux.size())
-                         {
-                              if(stack_aux.size() != 1)
-                              {
-                                   lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                              }
-                              System.out.println(lt);
-                              stack_aux.pop();
-                         }
-                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         List f = findDataInstace(aux, false, variables, functions, datas, returns);
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), x);
-                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
-                    Stack<LValue> stack_aux = new Stack<LValue>();
-                    stack_aux.push(aux);
-                    while(aux.getExpr()!=null && aux.getLValue()!=null)
-                    {
-                         aux = aux.getLValue();
-                         stack_aux.push(aux);
-                    }
-                    List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                    System.out.println(stack_aux.peek().getID().getName());
-                    stack_aux.pop();
-                    int i=0;
-                    while(i<stack_aux.size())
-                    {
-                         lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                         stack_aux.pop();
-                    }
-                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), x);
+                    List f = findDataInstace(aux, true, variables, functions, datas, returns);
+                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), x);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), x);
@@ -113,52 +105,22 @@ public class Attr extends Node {
                     LValue aux = lValue.getLValue();
                     if(aux.getLValue()==null)
                     {
-                         DataInstance di =  (DataInstance)variables.peek().get((String)lValue.getID().getName());
+                         DataInstance di =  (DataInstance)variables.peek().get((String)aux.getID().getName());
                          di.put(lValue.getID().getName(), y);
                     }
                     else
                     {
-                         Stack<LValue> stack_aux = new Stack<LValue>();
-                         while(aux.getExpr()!=null && aux.getLValue()!=null)
-                         {
-                              stack_aux.push(aux);
-                              aux = aux.getLValue();
-                         }
-                         List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                         stack_aux.pop();
-                         int i=0;
-                         while(i<stack_aux.size())
-                         {
-                              if(stack_aux.size() != 1)
-                              {
-                              lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                              }
-                              stack_aux.pop();
-                         }
-                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         List f = findDataInstace(aux, false, variables, functions, datas, returns);
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), y);
-                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
-                    Stack<LValue> stack_aux = new Stack<LValue>();
-                    stack_aux.push(aux);
-                    while(aux.getExpr()!=null && aux.getLValue()!=null)
-                    {
-                         stack_aux.push(aux);
-                         aux = aux.getLValue();
-                    }
-                    List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                    stack_aux.pop();
-                    int i=0;
-                    while(i<stack_aux.size())
-                    {
-                         lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                         stack_aux.pop();
-                    }
-                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), y);
+                    List f = findDataInstace(aux, true, variables, functions, datas, returns);
+                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), y);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), y);
@@ -173,52 +135,22 @@ public class Attr extends Node {
                     LValue aux = lValue.getLValue();
                     if(aux.getLValue()==null)
                     {
-                         DataInstance di =  (DataInstance)variables.peek().get((String)lValue.getID().getName());
+                         DataInstance di =  (DataInstance)variables.peek().get((String)aux.getID().getName());
                          di.put(lValue.getID().getName(), k);
                     }
                     else
                     {
-                         Stack<LValue> stack_aux = new Stack<LValue>();
-                         while(aux.getExpr()!=null && aux.getLValue()!=null)
-                         {
-                              stack_aux.push(aux);
-                              aux = aux.getLValue();
-                         }
-                         List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                         stack_aux.pop();
-                         int i=0;
-                         while(i<stack_aux.size())
-                         {
-                              if(stack_aux.size() != 1)
-                              {
-                              lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                              }
-                              stack_aux.pop();
-                         }
-                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         List f = findDataInstace(aux, false, variables, functions, datas, returns);
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), k);
-                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
-                    Stack<LValue> stack_aux = new Stack<LValue>();
-                    stack_aux.push(aux);
-                    while(aux.getExpr()!=null && aux.getLValue()!=null)
-                    {
-                         stack_aux.push(aux);
-                         aux = aux.getLValue();
-                    }
-                    List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                    stack_aux.pop();
-                    int i=0;
-                    while(i<stack_aux.size())
-                    {
-                         lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                         stack_aux.pop();
-                    }
-                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), k);
+                    List f = findDataInstace(aux, true, variables, functions, datas, returns);
+                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), k);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), k);
@@ -233,52 +165,22 @@ public class Attr extends Node {
                     LValue aux = lValue.getLValue();
                     if(aux.getLValue()==null)
                     {
-                         DataInstance di =  (DataInstance)variables.peek().get((String)lValue.getID().getName());
+                         DataInstance di =  (DataInstance)variables.peek().get((String)aux.getID().getName());
                          di.put(lValue.getID().getName(), b);
                     }
                     else
                     {
-                         Stack<LValue> stack_aux = new Stack<LValue>();
-                         while(aux.getExpr()!=null && aux.getLValue()!=null)
-                         {
-                              stack_aux.push(aux);
-                              aux = aux.getLValue();
-                         }
-                         List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                         stack_aux.pop();
-                         int i=0;
-                         while(i<stack_aux.size())
-                         {
-                              if(stack_aux.size() != 1)
-                              {
-                              lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                              }
-                              stack_aux.pop();
-                         }
-                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         List f = findDataInstace(aux, false, variables, functions, datas, returns);
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), b);
-                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
-                    Stack<LValue> stack_aux = new Stack<LValue>();
-                    stack_aux.push(aux);
-                    while(aux.getExpr()!=null && aux.getLValue()!=null)
-                    {
-                         stack_aux.push(aux);
-                         aux = aux.getLValue();
-                    }
-                    List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                    stack_aux.pop();
-                    int i=0;
-                    while(i<stack_aux.size())
-                    {
-                         lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                         stack_aux.pop();
-                    }
-                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), b);
+                    List f = findDataInstace(aux, true, variables, functions, datas, returns);
+                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), b);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), b);
@@ -292,52 +194,22 @@ public class Attr extends Node {
                     LValue aux = lValue.getLValue();
                     if(aux.getLValue()==null)
                     {
-                         DataInstance di =  (DataInstance)variables.peek().get((String)lValue.getID().getName());
+                         DataInstance di =  (DataInstance)variables.peek().get((String)aux.getID().getName());
                          di.put(lValue.getID().getName(), d);
                     }
                     else
                     {
-                         Stack<LValue> stack_aux = new Stack<LValue>();
-                         while(aux.getExpr()!=null && aux.getLValue()!=null)
-                         {
-                              stack_aux.push(aux);
-                              aux = aux.getLValue();
-                         }
-                         List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                         stack_aux.pop();
-                         int i=0;
-                         while(i<stack_aux.size())
-                         {
-                              if(stack_aux.size() != 1)
-                              {
-                              lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                              }
-                              stack_aux.pop();
-                         }
-                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         List f = findDataInstace(aux, false, variables, functions, datas, returns);
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), d);
-                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
-                    Stack<LValue> stack_aux = new Stack<LValue>();
-                    stack_aux.push(aux);
-                    while(aux.getExpr()!=null && aux.getLValue()!=null)
-                    {
-                         stack_aux.push(aux);
-                         aux = aux.getLValue();
-                    }
-                    List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                    stack_aux.pop();
-                    int i=0;
-                    while(i<stack_aux.size())
-                    {
-                         lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                         stack_aux.pop();
-                    }
-                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), d);
+                    List f = findDataInstace(aux, true, variables, functions, datas, returns);
+                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), d);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), d);
@@ -351,52 +223,22 @@ public class Attr extends Node {
                     LValue aux = lValue.getLValue();
                     if(aux.getLValue()==null)
                     {
-                         DataInstance di =  (DataInstance)variables.peek().get((String)lValue.getID().getName());
+                         DataInstance di =  (DataInstance)variables.peek().get((String)aux.getID().getName());
                          di.put(lValue.getID().getName(), a);
                     }
                     else
                     {
-                         Stack<LValue> stack_aux = new Stack<LValue>();
-                         while(aux.getExpr()!=null && aux.getLValue()!=null)
-                         {
-                              stack_aux.push(aux);
-                              aux = aux.getLValue();
-                         }
-                         List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                         stack_aux.pop();
-                         int i=0;
-                         while(i<stack_aux.size())
-                         {
-                              if(stack_aux.size() != 1)
-                              {
-                              lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                              }
-                              stack_aux.pop();
-                         }
-                         DataInstance di =  (DataInstance)lt.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         List f = findDataInstace(aux, false, variables, functions, datas, returns);
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), a);
-                         lt.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
-                    Stack<LValue> stack_aux = new Stack<LValue>();
-                    stack_aux.push(aux);
-                    while(aux.getExpr()!=null && aux.getLValue()!=null)
-                    {
-                         stack_aux.push(aux);
-                         aux = aux.getLValue();
-                    }
-                    List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-                    stack_aux.pop();
-                    int i=0;
-                    while(i<stack_aux.size())
-                    {
-                         lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
-                         stack_aux.pop();
-                    }
-                    lt.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), a);
+                    List f = findDataInstace(aux, true, variables, functions, datas, returns);
+                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), a);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), a);

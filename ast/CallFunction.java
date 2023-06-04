@@ -54,7 +54,7 @@ public class CallFunction extends Expr {
         return s;
     }
 
-    private void put_params_value(Func f, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns)
+    private void put_params_value(Func f, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
     {
         int i=0;
         if(f.getParams() != null)
@@ -67,16 +67,16 @@ public class CallFunction extends Expr {
         }
     }
 
-    private void put_returns_value(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns)
+    private void put_returns_value(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
     {
         int i=0;
         for(LValue lv : l.getList())
         {
-            variables.peek().put(lv.getID().getName(), returns.peek().getList().get(i).interpret(variables, functions, datas, returns));
+            variables.peek().put(lv.getID().getName(), returns.peek().get(i));
             i+=1;
         }
     }
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
         for(Func f : functions)
         {
             if(f.getId().getName().equals(id.getName()))

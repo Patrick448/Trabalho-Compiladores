@@ -17,7 +17,7 @@ public class New extends Expr {
 
     @Override
     public Object interpret(Stack<HashMap<String, Object>> variables, List<Func> functions, HashMap<String, Data> datas,
-            Stack<ExprList> returns) {
+            Stack<List<Object>> returns) {
 
         HashMap<String, Object> attributes = new HashMap<String, Object>();
         if(type.getName().equals("Int") || type.getName().equals("Float") || type.getName().equals("Char") || type.getName().equals("Bool"))

@@ -36,14 +36,17 @@ public class Div extends BinOP {
          return s;
       }
       
-      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-         if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+         Object ol = getLeft().interpret(variables, functions, datas, returns);
+         Object or = getRight().interpret(variables, functions, datas, returns);
+
+         if(ol.getClass().getSimpleName().equals("Integer") && or.getClass().getSimpleName().equals("Integer"))
          {
-            return (Integer)getLeft().interpret(variables, functions, datas, returns) / (Integer)getRight().interpret(variables, functions, datas, returns);
+            return (Integer)ol / (Integer)or;
          }
-         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
+         else if(ol.getClass().getSimpleName().equals("Float") && or.getClass().getSimpleName().equals("Float"))
          {
-            return (Float)getLeft().interpret(variables, functions, datas, returns) / (Float)getRight().interpret(variables, functions, datas, returns);
+            return (Float)ol / (Float)or;
          }
          return 0;
       }

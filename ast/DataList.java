@@ -23,7 +23,7 @@ public class DataList extends Node {
     }
 
     @Override
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
         for(Data n : list)
         {
             datas.put(n.getId().getName(), n); 

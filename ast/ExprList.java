@@ -25,8 +25,13 @@ public class ExprList extends Node {
     }
     
     @Override
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-          return list;
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){  
+        List<Object> lo = new ArrayList<>();
+        for(Expr i : list)
+        {
+            lo.add(i.interpret(variables, functions, datas, returns));
+        }
+        return lo;
     }
 
     public String dotString(){

@@ -31,14 +31,15 @@ public class SubUni extends Expr {
         return s;
     }
 
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
-      if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+      Object oe = e.interpret(variables, functions, datas, returns);
+      if(oe.getClass().getSimpleName().equals("Integer"))
         {
-           return -(Integer)e.interpret(variables, functions, datas, returns);
+           return -(Integer)oe;
         }
-        if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
+        if(oe.getClass().getSimpleName().equals("Float"))
         {
-           return -(Float)e.interpret(variables, functions, datas, returns);
+           return -(Float)oe;
         }
         return 0;
      }

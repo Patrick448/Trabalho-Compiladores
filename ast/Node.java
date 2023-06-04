@@ -24,6 +24,6 @@ public abstract class Node {
       public int getLine(){ return line;}
       public int getCol(){ return col;}  
       public int getUid(){ return uid;}
-      public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<ExprList> returns);
+      public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns);
       
 }

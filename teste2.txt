@@ -1,4 +1,4 @@
-data Integer{numerador :: Int[][][];}
+data Integer{numerador :: Int[];}
 
 myFunc(num :: Int, ch :: Char): Int, Int{
     b=1;
@@ -11,7 +11,27 @@ main (){
     var = -50 + 5;
     x = var + 10;
     y = new Integer [3];
- 
+    i = 0;
+    j = 0;
+    iterate(3)
+    {
+        y[i] = new Integer;
+        i = i+1;
+    }
+    k = 9;
+    i = 0;
+    iterate(3)
+    {
+        y[i].numerador = new Integer[3];
+        i = i+1;
+        k = k-1;
+    }
+    i = 0;
+    iterate(3)
+    {
+        y[0].numerador[i] = 3;
+        i = i+1;
+    }
     print x;
     print '\n';
     print y;

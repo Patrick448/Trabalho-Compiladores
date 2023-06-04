@@ -67,7 +67,7 @@ public class LValue extends Expr {
         return s;
     }
 
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<ExprList> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
          if(lv != null && id != null){
             if(lv.getLValue()==null)
             {
@@ -83,7 +83,22 @@ public class LValue extends Expr {
          }
          if(lv != null && e != null)
          {
-            List lt = (List)variables.peek().get(lv.getID().getName());
+            LValue aux = lv;
+            Stack<LValue> stack_aux = new Stack<LValue>();
+            stack_aux.push(aux);
+            while(aux.getLValue()!=null)
+            {
+                  aux = aux.getLValue();
+                  stack_aux.push(aux);
+            }
+            List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
+            stack_aux.pop();
+            int i=0;
+            while(i<stack_aux.size())
+            {
+                  lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
+                  stack_aux.pop();
+            }
             return lt.get((Integer)e.interpret(variables, functions, datas, returns));
          }
          return variables.peek().get(id.getName());
