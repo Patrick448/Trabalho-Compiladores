@@ -4,8 +4,7 @@ f(x :: Int) : Int{
    return y;
 }
 
-main(){
+main(v :: Int[], f :: Float){
   z = 10;
-  x = f(z)[0];
-  print x;
+  f(z)< x >;
 }

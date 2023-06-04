@@ -47,19 +47,14 @@ public class Func extends Node {
 
       @Override
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-            variables.push(valuesParams);
-            System.out.println("Aloca:");
-            System.out.println(variables);
-            System.out.println(returns);
+            HashMap<String, Object> valuesParamsUnique = new HashMap<String, Object>(valuesParams);
+            variables.push(valuesParamsUnique);
             Object o = 0;
             if(cmdList != null) 
             {
                 o = cmdList.interpret(variables, functions, datas, returns);
             };
             variables.pop();
-            System.out.println("Desaloca");
-            System.out.println(variables);
-            System.out.println(returns);
             valuesParams.clear();
             return o;
       }

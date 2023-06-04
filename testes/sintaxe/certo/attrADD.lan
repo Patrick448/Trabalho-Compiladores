@@ -1,21 +1,3 @@
-data Ponto {
-   x :: Float;
-   y :: Float;
-}
-
-data Test {
-   x :: Float;
-   y :: Float;
-}
-
-a(d :: Int, x ::Float){
-  x = 1+2;
-  print x;
-}
-
 main(){
-   b = new Ponto;
-   a = new Ponto[3];
-   print a;
+  x = 1+2;
 }
-
