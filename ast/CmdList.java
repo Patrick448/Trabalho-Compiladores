@@ -34,7 +34,6 @@ public class CmdList extends Node {
                 Boolean run_return = (Boolean)o;
                 if((n.getClass().getSimpleName().equals("ReturnCMD") || run_return) && !(n.getClass().getSimpleName().equals("Bool")))
                 {
-                    System.out.println("AKI");
                     return true;
                 }
             }

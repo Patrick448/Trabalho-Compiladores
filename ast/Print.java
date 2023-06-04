@@ -42,7 +42,6 @@ public class Print extends Node {
          System.out.print("null");
          return 0;
       }
-
       String className = object.getClass().getSimpleName();
       
       if(className.equals("Integer"))

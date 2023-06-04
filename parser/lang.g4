@@ -118,7 +118,7 @@ cmd returns [Node ast]:
  |
  'read' lvalue ';' {$ast = new Read($lvalue.ast.getLine(), $lvalue.ast.getCol(), $lvalue.ast);}
  |
- 'iterate(' exp ')' cmd {$ast = new Iterate($exp.ast.getLine(), $exp.ast.getCol(), $exp.ast, $cmd.ast);}
+ 'iterate' '(' exp ')' cmd {$ast = new Iterate($exp.ast.getLine(), $exp.ast.getCol(), $exp.ast, $cmd.ast);}
  |
  lvalue '=' exp ';' {$ast = new Attr($lvalue.ast.getLine(), $lvalue.ast.getCol(), $lvalue.ast, $exp.ast);}
  |
@@ -236,7 +236,7 @@ CHAR : ('\'' '\\n' '\'')
     | ('\'' '\\r' '\'') 
     | ('\'' '\\\\' '\'') 
     | ('\'' '\\' '\'') 
-    | ('\'' [\u0000-\uFFFE] '\'')
+    | ('\'' ~('\''|'\\') '\'')
     ;
 TYPE: [A-Z]([a-z]|[A-Z]|[0-9]|'_')*;
 NEWLINE: '\r'? '\n' -> skip;

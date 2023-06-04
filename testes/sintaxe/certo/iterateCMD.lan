@@ -1,5 +1,5 @@
 main(){
-  iterate (10){
+  iterate(10){
      x = 10;
   }
 }
