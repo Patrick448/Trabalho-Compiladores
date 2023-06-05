@@ -62,7 +62,7 @@ BLANK=47
 'Bool'=15
 'print'=16
 'read'=17
-'iterate('=18
+'iterate'=18
 '='=19
 'if'=20
 'else'=21

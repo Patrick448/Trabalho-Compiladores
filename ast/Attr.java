@@ -95,7 +95,6 @@ public class Attr extends Node {
                else{
                     variables.peek().put(lValue.getID().getName(), x);
                }
-               return x;
           }
           else if(className.equals("Float"))
           {
@@ -125,7 +124,6 @@ public class Attr extends Node {
                else{
                     variables.peek().put(lValue.getID().getName(), y);
                }
-               return y;
           }
           else if(className.equals("String"))
           {
@@ -155,7 +153,6 @@ public class Attr extends Node {
                else{
                     variables.peek().put(lValue.getID().getName(), k);
                }
-               return k;
           }
           else if(className.equals("Boolean"))
           {
@@ -185,7 +182,6 @@ public class Attr extends Node {
                else{
                     variables.peek().put(lValue.getID().getName(), b);
                }
-               return b;
           }
           else if(className.equals("DataInstance")){
                DataInstance d = (DataInstance)object;
@@ -214,7 +210,6 @@ public class Attr extends Node {
                else{
                     variables.peek().put(lValue.getID().getName(), d);
                }
-               return d;
           }
           else if(className.equals("ArrayList")){
                List<DataInstance> a = (List<DataInstance>)object;
@@ -243,7 +238,6 @@ public class Attr extends Node {
                else{
                     variables.peek().put(lValue.getID().getName(), a);
                }
-               return a;
           }
           return 0;
       }   
