@@ -3,9 +3,6 @@ data Racional{numerador :: Racional; denominador :: Int;}
 main (){
     r = new Racional;
     r.numerador = new Racional;
-
-     print r;
-     
     r.numerador.numerador = 35;
 
    
@@ -20,8 +17,6 @@ main (){
     print s[0].numerador;
     print '\n';
     print s[0].numerador.numerador;
-
-    print r.numerador.numerador;
     print '\n';
 }
 

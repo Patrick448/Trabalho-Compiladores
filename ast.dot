@@ -1,6 +1,6 @@
 graph program {
-90 [label=Prog]
-90--9
+80 [label=Prog]
+80--9
 9 [label=DataList]
 9--8
 8 [label= "Data"]
@@ -20,13 +20,13 @@ graph program {
 5 [label="ID<denominador>"]
 6--4
 4 [label="Type<Int>"]
-90--89
-89 [label=FuncList]
-89--88
-88 [label="Func"]
-88--87
-87 [label="ID<main>"]
-88--16
+80--79
+79 [label=FuncList]
+79--78
+78 [label="Func"]
+78--77
+77 [label="ID<main>"]
+78--16
 16 [label=CmdList]
 16--15
 15 [label= "="]
@@ -52,130 +52,110 @@ graph program {
 22 [label= "New"]
 22--21
 21 [label="Type<Racional>"]
-16--26
-26 [label="Print"]
-26--25
+16--31
+31 [label= "="]
+31--29
+29 [label="LValue"]
+29--27
+27 [label="LValue"]
+27--25
 25 [label="LValue"]
 25--24
 24 [label="ID<r>"]
-16--34
-34 [label= "="]
-34--32
-32 [label="LValue"]
-32--30
-30 [label="LValue"]
-30--28
-28 [label="LValue"]
-28--27
-27 [label="ID<r>"]
-30--29
-29 [label="ID<numerador>"]
-32--31
-31 [label="ID<numerador>"]
-34--33
-33 [label="Int<35>"]
-16--40
-40 [label= "="]
-40--36
-36 [label="LValue"]
+27--26
+26 [label="ID<numerador>"]
+29--28
+28 [label="ID<numerador>"]
+31--30
+30 [label="Int<35>"]
+16--37
+37 [label= "="]
+37--33
+33 [label="LValue"]
+33--32
+32 [label="ID<s>"]
+37--36
+36 [label= "New"]
+36--34
+34 [label="Type<Racional>"]
 36--35
-35 [label="ID<s>"]
-40--39
-39 [label= "New"]
-39--37
-37 [label="Type<Racional>"]
+35 [label="Int<3>"]
+16--44
+44 [label= "="]
+44--41
+41 [label="LValue"]
+41--39
+39 [label="LValue"]
 39--38
-38 [label="Int<3>"]
-16--47
-47 [label= "="]
-47--44
-44 [label="LValue"]
-44--42
-42 [label="LValue"]
-42--41
-41 [label="ID<s>"]
+38 [label="ID<s>"]
+41--40
+40 [label="Int<0>"]
 44--43
-43 [label="Int<0>"]
+43 [label="LValue"]
+43--42
+42 [label="ID<r>"]
+16--47
+47 [label="Print"]
 47--46
 46 [label="LValue"]
 46--45
-45 [label="ID<r>"]
-16--50
-50 [label="Print"]
-50--49
-49 [label="LValue"]
+45 [label="ID<s>"]
+16--49
+49 [label="Print"]
 49--48
-48 [label="ID<s>"]
-16--52
-52 [label="Print"]
-52--51
-51 [label="Char<\n>"]
-16--57
-57 [label="Print"]
-57--56
-56 [label="LValue"]
-56--54
-54 [label="LValue"]
+48 [label="Char<\n>"]
+16--54
+54 [label="Print"]
 54--53
-53 [label="ID<s>"]
+53 [label="LValue"]
+53--51
+51 [label="LValue"]
+51--50
+50 [label="ID<s>"]
+53--52
+52 [label="Int<0>"]
+16--56
+56 [label="Print"]
 56--55
-55 [label="Int<0>"]
-16--59
-59 [label="Print"]
-59--58
-58 [label="Char<\n>"]
-16--66
-66 [label="Print"]
-66--65
-65 [label="LValue"]
-65--63
-63 [label="LValue"]
-63--61
-61 [label="LValue"]
-61--60
-60 [label="ID<s>"]
+55 [label="Char<\n>"]
+16--63
+63 [label="Print"]
 63--62
-62 [label="Int<0>"]
+62 [label="LValue"]
+62--60
+60 [label="LValue"]
+60--58
+58 [label="LValue"]
+58--57
+57 [label="ID<s>"]
+60--59
+59 [label="Int<0>"]
+62--61
+61 [label="ID<numerador>"]
+16--65
+65 [label="Print"]
 65--64
-64 [label="ID<numerador>"]
-16--68
-68 [label="Print"]
-68--67
-67 [label="Char<\n>"]
-16--77
-77 [label="Print"]
-77--76
-76 [label="LValue"]
-76--74
-74 [label="LValue"]
-74--72
-72 [label="LValue"]
-72--70
-70 [label="LValue"]
-70--69
-69 [label="ID<s>"]
-72--71
-71 [label="Int<0>"]
+64 [label="Char<\n>"]
+16--74
+74 [label="Print"]
 74--73
-73 [label="ID<numerador>"]
+73 [label="LValue"]
+73--71
+71 [label="LValue"]
+71--69
+69 [label="LValue"]
+69--67
+67 [label="LValue"]
+67--66
+66 [label="ID<s>"]
+69--68
+68 [label="Int<0>"]
+71--70
+70 [label="ID<numerador>"]
+73--72
+72 [label="ID<numerador>"]
+16--76
+76 [label="Print"]
 76--75
-75 [label="ID<numerador>"]
-16--84
-84 [label="Print"]
-84--83
-83 [label="LValue"]
-83--81
-81 [label="LValue"]
-81--79
-79 [label="LValue"]
-79--78
-78 [label="ID<r>"]
-81--80
-80 [label="ID<numerador>"]
-83--82
-82 [label="ID<numerador>"]
-16--86
-86 [label="Print"]
-86--85
-85 [label="Char<\n>"]
+75 [label="Char<\n>"]
 }

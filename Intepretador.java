@@ -10,7 +10,7 @@ import java.util.HashMap;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-public class Teste {
+public class Intepretador {
 
 	public static void writeToFile(String filename, String content) {
 		try {

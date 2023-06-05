@@ -1,11 +1,11 @@
-compile: genparser Teste.java
-	javac -cp .:antlr-4.8-complete.jar Teste.java
+compile: genparser Intepretador.java
+	javac -cp .:antlr-4.8-complete.jar Intepretador.java
 
 genparser: parser/lang.g4
 	java -jar antlr-4.8-complete.jar parser/lang.g4
 
 run: compile genparser
-	java -cp .:antlr-4.8-complete.jar Teste $(filter-out $@,$(MAKECMDGOALS))
+	java -cp .:antlr-4.8-complete.jar Intepretador $(filter-out $@,$(MAKECMDGOALS))
 
 clean:
 	rm -R parser/*Listener.java parser/langLexer* parser/langParser.java parser/lang.interp parser/lang.tokens
