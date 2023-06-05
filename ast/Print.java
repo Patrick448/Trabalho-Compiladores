@@ -36,7 +36,7 @@ public class Print extends Node {
     }
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
       
-      Object object = e.interpret(variables, functions, datas, returns);
+      Object object = e.tryInterpret(variables, functions, datas, returns);
       if(object == null)
       {
          System.out.print("null");

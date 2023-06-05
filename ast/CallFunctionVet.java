@@ -61,7 +61,7 @@ public class CallFunctionVet extends Expr {
         {
             for(Param n : f.getParams().getParamsList())
             {
-                f.getValuesParams().put(n.getId().getName(),le.getList().get(i).interpret(variables, functions, datas, returns));
+                f.getValuesParams().put(n.getId().getName(),le.getList().get(i).tryInterpret(variables, functions, datas, returns));
                 i++;
             }
         }
@@ -76,22 +76,22 @@ public class CallFunctionVet extends Expr {
                 {
                     if(f.getParams().getParamsList().size()==le.getList().size()){
                         put_params_value(f, variables, functions, datas, returns);
-                        f.interpret(variables, functions, datas, returns);
+                        f.tryInterpret(variables, functions, datas, returns);
                         int max = returns.peek().size();
-                        if((Integer)e.interpret(variables, functions, datas, returns)<max)
+                        if((Integer)e.tryInterpret(variables, functions, datas, returns)<max)
                         {
-                            return returns.peek().get((Integer)e.interpret(variables, functions, datas, returns));
+                            return returns.peek().get((Integer)e.tryInterpret(variables, functions, datas, returns));
                         }
                     }
                 }
             }
             else if(e==null)
             {
-                f.interpret(variables, functions, datas, returns);
+                f.tryInterpret(variables, functions, datas, returns);
                 int max = returns.peek().size();
-                if((Integer)e.interpret(variables, functions, datas, returns)<max)
+                if((Integer)e.tryInterpret(variables, functions, datas, returns)<max)
                 {
-                    return returns.peek().get((Integer)e.interpret(variables, functions, datas, returns));
+                    return returns.peek().get((Integer)e.tryInterpret(variables, functions, datas, returns));
                 }
             }
         }

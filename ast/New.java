@@ -29,7 +29,7 @@ public class New extends Expr {
             else{
                 int i=0;
                 List<Object> instance_list= new ArrayList<Object>();
-                while(i < (Integer)e.interpret(variables, functions, datas, returns))
+                while(i < (Integer)e.tryInterpret(variables, functions, datas, returns))
                 {
                     instance_list.add(null);
                     i++;
@@ -49,7 +49,7 @@ public class New extends Expr {
             else{
                 int i=0;
                 List<DataInstance> instance_list= new ArrayList<DataInstance>();
-                while(i < (Integer)e.interpret(variables, functions, datas, returns))
+                while(i < (Integer)e.tryInterpret(variables, functions, datas, returns))
                 {
                     instance_list.add(null);
                     i++;

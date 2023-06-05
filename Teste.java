@@ -47,7 +47,7 @@ public class Teste {
 		//System.out.println(ast.dotString());
 		writeToFile("ast.dot", ast.dotString());
 
-		ast.interpret(null, null, null, null);
+		ast.tryInterpret(null, null, null, null);
 	}
 
 	

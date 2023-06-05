@@ -77,7 +77,7 @@ public class LValue extends Expr {
             else
             {
                List lt =  (List)variables.peek().get(lv.getLValue().getID().getName());
-               DataInstance di =  (DataInstance)lt.get((Integer)lv.getExpr().interpret(variables, functions, datas, returns));
+               DataInstance di =  (DataInstance)lt.get((Integer)lv.getExpr().tryInterpret(variables, functions, datas, returns));
                return di.get(id.getName());
             }
          }
@@ -96,10 +96,10 @@ public class LValue extends Expr {
             int i=0;
             while(i<stack_aux.size())
             {
-                  lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
+                  lt = (List)lt.get((Integer)stack_aux.peek().getExpr().tryInterpret(variables, functions, datas, returns));
                   stack_aux.pop();
             }
-            return lt.get((Integer)e.interpret(variables, functions, datas, returns));
+            return lt.get((Integer)e.tryInterpret(variables, functions, datas, returns));
          }
          return variables.peek().get(id.getName());
     }

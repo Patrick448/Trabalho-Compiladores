@@ -24,6 +24,20 @@ public abstract class Node {
       public int getLine(){ return line;}
       public int getCol(){ return col;}  
       public int getUid(){ return uid;}
+      public Object tryInterpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns){
+            try{
+                  return this.interpret(variables, functions, datas, returns);
+            }
+            catch(Exception e){
+                  System.out.println("Error at line "+this.getLine()+", column "+this.getCol()+": "+e.getMessage());
+                  
+                  
+                  //e.printStackTrace(System.out);
+                  System.exit(0);
+
+                  return null;
+            }
+      }
       public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns);
       
 }

@@ -29,7 +29,7 @@ public class ExprList extends Node {
         List<Object> lo = new ArrayList<>();
         for(Expr i : list)
         {
-            lo.add(i.interpret(variables, functions, datas, returns));
+            lo.add(i.tryInterpret(variables, functions, datas, returns));
         }
         return lo;
     }

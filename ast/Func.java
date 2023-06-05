@@ -52,7 +52,7 @@ public class Func extends Node {
             Object o = 0;
             if(cmdList != null) 
             {
-                o = cmdList.interpret(variables, functions, datas, returns);
+                o = cmdList.tryInterpret(variables, functions, datas, returns);
             };
             variables.pop();
             valuesParams.clear();

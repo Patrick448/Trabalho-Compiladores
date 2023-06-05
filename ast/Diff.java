@@ -37,8 +37,8 @@ public class Diff extends BinOP {
       }
       
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         Object ol = getLeft().interpret(variables, functions, datas, returns);
-         Object or = getRight().interpret(variables, functions, datas, returns);
+         Object ol = getLeft().tryInterpret(variables, functions, datas, returns);
+         Object or = getRight().tryInterpret(variables, functions, datas, returns);
          if(ol.getClass().getSimpleName().equals("Integer"))
          {
             return (Integer)ol != (Integer)or;

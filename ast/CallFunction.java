@@ -61,7 +61,7 @@ public class CallFunction extends Expr {
         {
             for(Param n : f.getParams().getParamsList())
             {
-                 f.getValuesParams().put(n.getId().getName(),e.getList().get(i).interpret(variables, functions, datas, returns));
+                 f.getValuesParams().put(n.getId().getName(),e.getList().get(i).tryInterpret(variables, functions, datas, returns));
                  i++;
             }
         }
@@ -89,7 +89,7 @@ public class CallFunction extends Expr {
                             if(f.getReturns().getReturnTypes().size()==l.getList().size())
                             {
                                 put_params_value(f, variables, functions, datas, returns);
-                                f.interpret(variables, functions, datas, returns);
+                                f.tryInterpret(variables, functions, datas, returns);
                                 put_returns_value(variables, functions, datas, returns);
                                 if(!returns.isEmpty())
                                 {
@@ -101,7 +101,7 @@ public class CallFunction extends Expr {
                         else if(l==null)
                         {
                             put_params_value(f, variables, functions, datas, returns);
-                            f.interpret(variables, functions, datas, returns);
+                            f.tryInterpret(variables, functions, datas, returns);
                             if(!returns.isEmpty())
                             {
                                 returns.pop();
@@ -117,7 +117,7 @@ public class CallFunction extends Expr {
                 {
                     if(f.getReturns().getReturnTypes().size()==l.getList().size())
                     {
-                        f.interpret(variables, functions, datas, returns);
+                        f.tryInterpret(variables, functions, datas, returns);
                         put_returns_value(variables, functions, datas, returns);
                         if(!returns.isEmpty())
                         {
@@ -128,7 +128,7 @@ public class CallFunction extends Expr {
                 }
                 else if(l==null)
                 {
-                    f.interpret(variables, functions, datas, returns);
+                    f.tryInterpret(variables, functions, datas, returns);
                     if(!returns.isEmpty())
                     {
                         returns.pop();

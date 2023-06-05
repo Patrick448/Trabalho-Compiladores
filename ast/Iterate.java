@@ -31,9 +31,9 @@ public class Iterate extends Node {
       }
       
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-        int i = (Integer)condition.interpret(variables, functions, datas, returns);
+        int i = (Integer)condition.tryInterpret(variables, functions, datas, returns);
         while(i>0){
-          	cmd.interpret(variables, functions, datas, returns);
+          	cmd.tryInterpret(variables, functions, datas, returns);
             i--;
         }
         return 0;

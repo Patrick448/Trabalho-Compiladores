@@ -45,12 +45,12 @@ public class If extends Node {
       }
       
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-        boolean n = (boolean)teste.interpret(variables, functions, datas, returns);  
+        boolean n = (boolean)teste.tryInterpret(variables, functions, datas, returns);  
         if(n){
-              return thn.interpret(variables, functions, datas, returns);
+              return thn.tryInterpret(variables, functions, datas, returns);
         }
         else if(els !=null){
-            return els.interpret(variables, functions, datas, returns);
+            return els.tryInterpret(variables, functions, datas, returns);
         }
         return n;
       }

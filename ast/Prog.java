@@ -76,8 +76,8 @@ public class Prog extends Node {
     }
       
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-        if (dataList != null) dataList.interpret(stackVariables, funcList.getList(), hashDatas, stackReturns);
-        if (funcList != null) funcList.interpret(stackVariables, funcList.getList() , hashDatas, stackReturns);
+        if (dataList != null) dataList.tryInterpret(stackVariables, funcList.getList(), hashDatas, stackReturns);
+        if (funcList != null) funcList.tryInterpret(stackVariables, funcList.getList() , hashDatas, stackReturns);
 
         return 0;
     }

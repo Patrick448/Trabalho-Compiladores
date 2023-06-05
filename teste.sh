@@ -1,0 +1,14 @@
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste0.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste1.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste1eMeio.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste2.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste3.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste4.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste5.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste6.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste7.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste8.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste9.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste10.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste11.lan
+java -cp .:antlr-4.8-complete.jar Teste testes/semantica/certo/teste12.lan

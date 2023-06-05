@@ -35,13 +35,13 @@ public class Add extends BinOP {
      }
       
      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-      if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
+      if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer") && getRight().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Integer"))
          {
-            return (Integer)getLeft().interpret(variables, functions, datas, returns) + (Integer)getRight().interpret(variables, functions, datas, returns);
+            return (Integer)getLeft().tryInterpret(variables, functions, datas, returns) + (Integer)getRight().tryInterpret(variables, functions, datas, returns);
          }
-         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float") && getRight().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float") && getRight().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Float"))
          {
-            return (Float)getLeft().interpret(variables, functions, datas, returns) + (Float)getRight().interpret(variables, functions, datas, returns);
+            return (Float)getLeft().tryInterpret(variables, functions, datas, returns) + (Float)getRight().tryInterpret(variables, functions, datas, returns);
          }
          return 0;
       }

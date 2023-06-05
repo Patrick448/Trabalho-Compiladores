@@ -37,7 +37,7 @@ public class FuncList extends Node {
         {
             if(n.getId().getName().equals("main") && n.getParams()==null && n.getReturns()==null)
             {
-                n.interpret(variables, functions, datas, returns);
+                n.tryInterpret(variables, functions, datas, returns);
                 break;
             }
         }

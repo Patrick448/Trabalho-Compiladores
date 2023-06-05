@@ -34,9 +34,9 @@ public class Neg extends Expr {
     }
 
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-      if(e.interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
+      if(e.tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
         {
-           return !(Boolean)e.interpret(variables, functions, datas, returns);
+           return !(Boolean)e.tryInterpret(variables, functions, datas, returns);
         }
         return 0;
      }

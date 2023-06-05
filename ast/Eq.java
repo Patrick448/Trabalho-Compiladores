@@ -37,8 +37,8 @@ public class Eq extends BinOP {
       }
       
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         Object ol = getLeft().interpret(variables, functions, datas, returns);
-         Object or = getRight().interpret(variables, functions, datas, returns);
+         Object ol = getLeft().tryInterpret(variables, functions, datas, returns);
+         Object or = getRight().tryInterpret(variables, functions, datas, returns);
 
          if(ol.getClass().getSimpleName().equals("Integer"))
          {
@@ -52,15 +52,15 @@ public class Eq extends BinOP {
          {
             return (String)ol == (String)or;
          }
-         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("boolean"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("boolean"))
          {
             return (boolean)ol == (boolean)or;
          }
-         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("ArrayList"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("ArrayList"))
          {
             return (List)ol == (List)or;
          }
-         else if(getLeft().interpret(variables, functions, datas, returns).getClass().getSimpleName().equals("DataInstance"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("DataInstance"))
          {
             return (DataInstance)ol == (DataInstance)or;
          }

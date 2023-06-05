@@ -32,7 +32,7 @@ public class SubUni extends Expr {
     }
 
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-      Object oe = e.interpret(variables, functions, datas, returns);
+      Object oe = e.tryInterpret(variables, functions, datas, returns);
       if(oe.getClass().getSimpleName().equals("Integer"))
         {
            return -(Integer)oe;

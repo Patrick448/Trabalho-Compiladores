@@ -55,7 +55,7 @@ public class Attr extends Node {
           {
                if((stack_aux.size() != 1 || vet))
                {
-                    lt = (List)lt.get((Integer)stack_aux.peek().getExpr().interpret(variables, functions, datas, returns));
+                    lt = (List)lt.get((Integer)stack_aux.peek().getExpr().tryInterpret(variables, functions, datas, returns));
                }
                stack_aux.pop();
           }
@@ -65,7 +65,7 @@ public class Attr extends Node {
       
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
      
-          Object object = e.interpret(variables, functions, datas, returns);
+          Object object = e.tryInterpret(variables, functions, datas, returns);
           String className = object.getClass().getSimpleName();
           if(className.equals("Integer"))
           {
@@ -81,16 +81,16 @@ public class Attr extends Node {
                     else
                     {
                          List f = findDataInstace(aux, false, variables, functions, datas, returns);
-                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), x);
-                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
                     List f = findDataInstace(aux, true, variables, functions, datas, returns);
-                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), x);
+                    f.set((Integer)lValue.getExpr().tryInterpret(variables, functions, datas, returns), x);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), x);
@@ -111,16 +111,16 @@ public class Attr extends Node {
                     else
                     {
                          List f = findDataInstace(aux, false, variables, functions, datas, returns);
-                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), y);
-                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
                     List f = findDataInstace(aux, true, variables, functions, datas, returns);
-                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), y);
+                    f.set((Integer)lValue.getExpr().tryInterpret(variables, functions, datas, returns), y);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), y);
@@ -141,16 +141,16 @@ public class Attr extends Node {
                     else
                     {
                          List f = findDataInstace(aux, false, variables, functions, datas, returns);
-                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), k);
-                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
                     List f = findDataInstace(aux, true, variables, functions, datas, returns);
-                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), k);
+                    f.set((Integer)lValue.getExpr().tryInterpret(variables, functions, datas, returns), k);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), k);
@@ -171,16 +171,16 @@ public class Attr extends Node {
                     else
                     {
                          List f = findDataInstace(aux, false, variables, functions, datas, returns);
-                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), b);
-                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
                     List f = findDataInstace(aux, true, variables, functions, datas, returns);
-                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), b);
+                    f.set((Integer)lValue.getExpr().tryInterpret(variables, functions, datas, returns), b);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), b);
@@ -200,16 +200,16 @@ public class Attr extends Node {
                     else
                     {
                          List f = findDataInstace(aux, false, variables, functions, datas, returns);
-                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), d);
-                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
                     List f = findDataInstace(aux, true, variables, functions, datas, returns);
-                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), d);
+                    f.set((Integer)lValue.getExpr().tryInterpret(variables, functions, datas, returns), d);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), d);
@@ -229,16 +229,16 @@ public class Attr extends Node {
                     else
                     {
                          List f = findDataInstace(aux, false, variables, functions, datas, returns);
-                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns));
+                         DataInstance di =  (DataInstance)f.get((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns));
                          di.put(lValue.getID().getName(), a);
-                         f.set((Integer)lValue.getLValue().getExpr().interpret(variables, functions, datas, returns), di);
+                         f.set((Integer)lValue.getLValue().getExpr().tryInterpret(variables, functions, datas, returns), di);
                     }
                }
                else if(lValue.getLValue()!=null && lValue.getExpr()!=null)
                {
                     LValue aux = lValue.getLValue();
                     List f = findDataInstace(aux, true, variables, functions, datas, returns);
-                    f.set((Integer)lValue.getExpr().interpret(variables, functions, datas, returns), a);
+                    f.set((Integer)lValue.getExpr().tryInterpret(variables, functions, datas, returns), a);
                }
                else{
                     variables.peek().put(lValue.getID().getName(), a);
