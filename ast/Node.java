@@ -29,9 +29,7 @@ public abstract class Node {
                   return this.interpret(variables, functions, datas, returns);
             }
             catch(Exception e){
-                  System.out.println("Error at line "+this.getLine()+", column "+this.getCol()+": "+e.getMessage());
-                  
-                  
+                  System.out.println("Error at line "+this.getLine()+", column "+this.getCol());
                   //e.printStackTrace(System.out);
                   System.exit(0);
 

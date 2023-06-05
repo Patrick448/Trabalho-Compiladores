@@ -3,7 +3,12 @@ data Racional{numerador :: Racional; denominador :: Int;}
 main (){
     r = new Racional;
     r.numerador = new Racional;
+
+     print r;
+     
     r.numerador.numerador = 35;
+
+   
 
     s = new Racional[3];
 

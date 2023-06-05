@@ -16,9 +16,9 @@ public class Teste {
 		try {
 			File myObj = new File(filename);
 			if (myObj.createNewFile()) {
-				System.out.println("File created: " + myObj.getName());
+				//System.out.println("File created: " + myObj.getName());
 			} else {
-				System.out.println("File already exists.");
+				//System.out.println("File already exists.");
 			}
 
 			FileWriter myWriter = new FileWriter(filename);
@@ -26,7 +26,7 @@ public class Teste {
 			myWriter.close();
 
 		} catch (IOException e) {
-			System.out.println("An error occurred.");
+			//System.out.println("An error occurred.");
 			e.printStackTrace();
 		}
 	}
