@@ -6,6 +6,9 @@ package ast;
  */
 import java.util.HashMap; 
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class Mul extends BinOP {
@@ -48,5 +51,11 @@ public class Mul extends BinOP {
             return (Float)ol * (Float)or;
          }
          return 0;
+      }
+
+      @Override
+      public void accept(Visitor v) {
+         // TODO Auto-generated method stub
+         throw new UnsupportedOperationException("Unimplemented method 'accept'");
       }
 }

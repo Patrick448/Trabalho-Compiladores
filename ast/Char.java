@@ -6,6 +6,9 @@ package ast;
  */ 
 import java.util.HashMap; 
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class Char extends Expr {
@@ -33,4 +36,7 @@ public class Char extends Expr {
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
             return l;
       }
+
+      @Override
+      public void accept(Visitor v) {v.visit(this);}
 }

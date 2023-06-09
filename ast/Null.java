@@ -2,6 +2,9 @@ package ast;
 
 import java.util.HashMap;
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class Null extends Expr {
@@ -27,4 +30,10 @@ public class Null extends Expr {
       {
         return 0;
       }
+
+	@Override
+	public void accept(Visitor v) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'accept'");
+	}
 }

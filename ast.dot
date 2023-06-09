@@ -1,0 +1,19 @@
+graph program {
+8 [label=Prog]
+8--7
+7 [label=FuncList]
+7--6
+6 [label="Func"]
+6--5
+5 [label="ID<main>"]
+6--4
+4 [label=CmdList]
+4--3
+3 [label="Print"]
+3--2
+2 [label= "+"]
+2--0
+0 [label="Int<1>"]
+2--1
+1 [label="Char<a>"]
+}

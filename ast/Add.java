@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.util.List;
 
-public class Add extends BinOP implements Visitable{
+public class Add extends BinOP {
 
       public Add(int lin, int col, Expr l, Expr r){
            super(lin,col,l,r);

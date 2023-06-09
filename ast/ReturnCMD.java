@@ -6,6 +6,9 @@ package ast;
  */
 import java.util.HashMap; 
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
  
 public class ReturnCMD extends Node {
@@ -38,4 +41,10 @@ public class ReturnCMD extends Node {
       returns.push((List)e.tryInterpret(variables, functions, datas, returns));
       return true;
    }
+
+	@Override
+	public void accept(Visitor v) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'accept'");
+	}
 }

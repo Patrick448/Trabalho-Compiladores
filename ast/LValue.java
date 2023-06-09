@@ -7,6 +7,9 @@ import java.util.ArrayList;
  */
 import java.util.HashMap; 
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
  
 public class LValue extends Expr {
@@ -151,4 +154,10 @@ public class LValue extends Expr {
 
       }
     }
+
+   @Override
+   public void accept(Visitor v) {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'accept'");
+   }
 }

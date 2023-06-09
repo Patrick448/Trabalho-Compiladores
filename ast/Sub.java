@@ -7,6 +7,9 @@ package ast;
  
 import java.util.HashMap; 
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class Sub extends BinOP {
@@ -47,5 +50,11 @@ public class Sub extends BinOP {
          }
          return 0;
       }
+
+	@Override
+	public void accept(Visitor v) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'accept'");
+	}
       
 }
