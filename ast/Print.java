@@ -4,11 +4,15 @@ package ast;
  * Esta classe representa um comando de Impressão.
  * Expr
  */
+
+import visitors.Visitable;
+import visitors.Visitor;
+
 import java.util.HashMap; 
 import java.util.Stack;
 import java.util.List;
  
-public class Print extends Node {
+public class Print extends Node implements Visitable{
       
       private Expr e; 
       
@@ -99,4 +103,7 @@ public class Print extends Node {
          }
          return 0;
       }
+
+      @Override
+      public void accept(Visitor v) { v.visit(this);}
 }

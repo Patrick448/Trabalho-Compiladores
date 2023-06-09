@@ -6,9 +6,13 @@ package ast;
  */
 import java.util.HashMap;
 import java.util.Stack;
+
+import visitors.Visitable;
+import visitors.Visitor;
+
 import java.util.List;
 
-public class Prog extends Node {
+public class Prog extends Node implements Visitable{
     
 	private HashMap<String, Data> hashDatas;
     private Stack<List<Object>> stackReturns;
@@ -81,6 +85,9 @@ public class Prog extends Node {
 
         return 0;
     }
+
+    @Override
+    public void accept(Visitor v) { v.visit(this);}
 
 }
    

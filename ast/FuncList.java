@@ -1,11 +1,14 @@
 package ast;
 
+import visitors.Visitable;
+import visitors.Visitor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.List;
 
-public class FuncList extends Node {
+public class FuncList extends Node implements Visitable{
     
     private List<Func> list;
 
@@ -65,5 +68,8 @@ public class FuncList extends Node {
 
         return s;
     }
+
+    @Override
+      public void accept(Visitor v) { v.visit(this);}
 
 }

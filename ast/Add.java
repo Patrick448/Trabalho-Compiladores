@@ -4,13 +4,15 @@ package ast;
  * Esta classe representa uma expressão de soma.
  * Expr + Expr
  */
- 
+
+import visitors.Visitable;
+import visitors.Visitor;
+
 import java.util.HashMap; 
 import java.util.Stack;
 import java.util.List;
 
-
-public class Add extends BinOP {
+public class Add extends BinOP implements Visitable{
 
       public Add(int lin, int col, Expr l, Expr r){
            super(lin,col,l,r);
@@ -45,5 +47,8 @@ public class Add extends BinOP {
          }
          return 0;
       }
+
+      @Override
+      public void accept(Visitor v) { v.visit(this);}
       
 }

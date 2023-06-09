@@ -4,11 +4,15 @@ package ast;
  * Esta classe representa um comando de .
  * Expr
  */
+
+import visitors.Visitable;
+import visitors.Visitor;
+
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.List;
 
-public class Func extends Node {
+public class Func extends Node implements Visitable{
 
       private ID id;
       private ParamsList params;
@@ -93,5 +97,8 @@ public class Func extends Node {
 
           return "Func " + id.toString() + "(" + paramsStr + ") ret (" +returnsStr+ ") {" + cmdListStr + "}";
       }
+
+    @Override
+      public void accept(Visitor v) { v.visit(this);}
 
 }

@@ -1,5 +1,7 @@
 package visitors;
 
+import java.util.List;
+
 import ast.*;
 import util.*;
 
@@ -13,8 +15,84 @@ public class ScopeVisitor extends Visitor {
 	level = scopes.getLevel();
     }
 
+	@Override
+	public void visit(Prog p) {
+
+		DataList dataList = p.getDataList();
+		FuncList funcList = p.getFuncList();
+	
+		//if (dataList != null) dataList.accept(this);
+        if (funcList != null) funcList.accept(this);
+
+
+	}
+
+
+	@Override
+	public void visit(FuncList f) {
+
+		List<Func> list = f.getList();
+		for(Func n : list)
+        {
+            //if(n.getId().getName().equals("main") && n.getParams()==null && n.getReturns()==null)
+            //{
+                n.accept(this);
+             //   break;
+            //}
+        }
+
+	}
+
+
+
+
+	@Override
+	public void visit(Func f) {
+		//ParamsList params = f.getParams();
+		//for(Param p : params)
+		CmdList cmds = f.getCmdList();
+		cmds.accept(this);
+	}
+
+	@Override
+	public void visit(CmdList c) {
+		List<Node> list = c.getList();
+
+		for(Node n : list)
+		{
+			//if(n instanceof Print)
+			//	((Print) n).accept(this);
+			n.accept(this);
+		}
+	}
+
+	@Override
+	public void visit(Print p) {
+		Expr e = p.getExpr();
+		e.accept(this);
+	}
+
+	//f(r :: Racional): Float{
+	//	res = r.numerador / r.denominador;
+	//  x = (a+b) + d;
+	//	return res;
+	//}
+
+	@Override
+	public void visit(Add a) {
+		Expr l = a.getLeft();
+		l.accept(this);
+		Expr r = a.getRight();
+		r.accept(this);
+		
+		
+		
+		throw new UnsupportedOperationException("Unimplemented method 'visit'");
+	}
+
+	
     
-    public void visit(Program p) {
+    /*public void visit(Program p) {
 	Func[] funs = p.getFuncs();
 	for(int i = 0; i < funs.length; i++)
 	    funs[i].accept(this);
@@ -96,5 +174,5 @@ public class ScopeVisitor extends Visitor {
 
     public void visit(TyInt t) {}
 	 
-    public void visit(TyVoid t) {}
+    public void visit(TyVoid t) {}*/
 }
