@@ -46,6 +46,34 @@ public class If extends Node {
          s += " ? " + sthn + sels ;
          return  s; 
       }
+
+      public String dotString(){
+         String s = getUid() + " [label= \""+this.getClass().getSimpleName()+"\"]\n";
+         s+= getUid() +"--"+teste.getUid()+"\n";
+         s+=teste.dotString();
+
+         s+= getUid() +"--"+thn.getUid()+"\n";
+         s+=thn.dotString();
+
+         if(els != null){
+             s+= getUid() +"--"+els.getUid()+"\n";
+             s+=els.dotString();
+         }
+
+         return s;
+      }
+
+      public Node getTeste(){
+         return teste;
+      }
+
+      public Node getThn(){
+         return thn;
+      }
+
+      public Node getEls(){
+         return els;
+      }
       
       public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
         boolean n = (boolean)teste.tryInterpret(variables, functions, datas, returns);  
@@ -61,8 +89,7 @@ public class If extends Node {
 
     @Override
     public void accept(Visitor v) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'accept'");
+      v.visit(this);
     }
       
 }

@@ -19,6 +19,29 @@ public abstract  class  Visitor {
 
      public abstract void visit(Add a);
 
+     public abstract void visit(Sub a);
+
+     public abstract void visit(Div a);
+
+     public abstract void visit(Mul a);
+
+     public abstract void visit(Rest a);
+
+     public abstract void visit(And a);
+
+     public abstract void visit(GreaterThan a);
+
+     public abstract void visit(LessThan a);
+
+     public abstract void visit(Diff a);
+
+     public abstract void visit(SubUni a);
+
+     public abstract void visit(Neg a);
+
+
+     public abstract void visit(Eq a);
+
      public abstract void visit(Int a);
 
      public abstract void visit(Char a);
@@ -26,6 +49,14 @@ public abstract  class  Visitor {
      public abstract void visit(Bool a);
 
      public abstract void visit(FloatAst a);
+
+     public abstract void visit(Iterate a);
+
+     public abstract void visit(If a);
+
+     public abstract void visit(Data a);
+
+     public abstract void visit(DataList a);
 
 
      /*public abstract void visit(Add e);
