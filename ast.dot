@@ -1,12 +1,12 @@
 graph program {
-8 [label=Prog]
-8--7
-7 [label=FuncList]
-7--6
-6 [label="Func"]
-6--5
-5 [label="ID<main>"]
-6--4
+25 [label=Prog]
+25--24
+24 [label=FuncList]
+24--23
+23 [label="Func"]
+23--22
+22 [label="ID<main>"]
+23--4
 4 [label=CmdList]
 4--3
 3 [label="Print"]
@@ -15,5 +15,39 @@ graph program {
 2--0
 0 [label="Int<1>"]
 2--1
-1 [label="Char<a>"]
+1 [label="Int<2>"]
+4--16
+16 [label= "Iterate"]
+16--5
+5 [label="Int<2>"]
+16--8
+8 [label=CmdList]
+8--7
+7 [label="Print"]
+7--6
+6 [label="Char<b>"]
+8--15
+15 [label= "If"]
+15--9
+9 [label="Bool<true>"]
+15--14
+14 [label=CmdList]
+14--13
+13 [label="Print"]
+13--12
+12 [label= "+"]
+12--10
+10 [label="Char<x>"]
+12--11
+11 [label="Int<1>"]
+4--21
+21 [label= "If"]
+21--17
+17 [label="Bool<true>"]
+21--20
+20 [label=CmdList]
+20--19
+19 [label="Print"]
+19--18
+18 [label="Char<z>"]
 }

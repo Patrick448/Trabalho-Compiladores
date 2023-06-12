@@ -3,6 +3,8 @@ package visitors;
 import java.util.List;
 import java.util.Stack;
 
+import javax.lang.model.util.ElementScanner6;
+
 import ast.*;
 import util.*;
 
@@ -13,6 +15,8 @@ public class ScopeVisitor extends Visitor {
 	private static final String BOOL = "BOOL";
 	private static final String CHAR = "CHAR";
 	private static final String ERROR = "ERROR";
+	private static final String CMD = "CMD";
+
 
 
     private ScopeTable scopes;
@@ -30,9 +34,8 @@ public class ScopeVisitor extends Visitor {
 		DataList dataList = p.getDataList();
 		FuncList funcList = p.getFuncList();
 	
-		//if (dataList != null) dataList.accept(this);
+		if (dataList != null) dataList.accept(this);
         if (funcList != null) funcList.accept(this);
-		
 		System.out.println(typeStack);
 
 	}
@@ -42,11 +45,11 @@ public class ScopeVisitor extends Visitor {
 	public void visit(FuncList f) {
 
 		List<Func> list = f.getList();
-		for(Func n : list)
+		for(Func func : list)
         {
             //if(n.getId().getName().equals("main") && n.getParams()==null && n.getReturns()==null)
             //{
-                n.accept(this);
+                func.accept(this);
              //   break;
             //}
         }
@@ -54,6 +57,24 @@ public class ScopeVisitor extends Visitor {
 	}
 
 
+	@Override
+	public void visit(DataList d) {
+
+		List<Data> list = d.getList();
+		for(Data data : list)
+        {
+            data.accept(this);
+
+        }
+
+	}
+
+	@Override
+	public void visit(Data d) {
+
+		//d.accept(this);
+		return;
+	}
 
 
 	@Override
@@ -67,12 +88,21 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(CmdList c) {
 		List<Node> list = c.getList();
+		boolean hasError = false;
 
 		for(Node n : list)
 		{
-			//if(n instanceof Print)
-			//	((Print) n).accept(this);
 			n.accept(this);
+			if(typeStack.pop().equals(ERROR)){
+				hasError= true;
+			}
+		}
+
+		if(hasError){
+			typeStack.push(ERROR);
+		}
+		else{
+			typeStack.push(CMD);
 		}
 	}
 
@@ -80,6 +110,15 @@ public class ScopeVisitor extends Visitor {
 	public void visit(Print p) {
 		Expr e = p.getExpr();
 		e.accept(this);
+		String type = typeStack.pop();
+
+		if(type.equals(ERROR)){
+			typeStack.push(ERROR);
+		}
+		else{
+			typeStack.push(CMD);
+		}
+		
 	}
 
 	//f(r :: Racional): Float{
@@ -87,9 +126,130 @@ public class ScopeVisitor extends Visitor {
 	//  x = (a+b) + d;
 	//	return res;
 	//}
+	
 
 	@Override
 	public void visit(Add a) {
+		Expr l = a.getLeft();
+		l.accept(this);
+		Expr r = a.getRight();
+		r.accept(this);
+		String r_type =  typeStack.pop();
+		String l_type =  typeStack.pop();
+
+
+		if(r_type.equals(ERROR) || l_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else if(r_type.equals(INT) && l_type.equals(INT))
+		{
+			typeStack.push(INT);
+		}
+		else if(r_type.equals(FLOAT) && l_type.equals(FLOAT))
+		{
+			typeStack.push(FLOAT);
+		}
+		else
+		{
+			typeStack.push(ERROR);
+			System.out.println("error at line "+ a.getLine() + ":" + a.getCol() + ": invalid operation between "+l_type +" and "+ r_type+".");
+		}
+		
+	}
+
+	@Override
+	public void visit(Mul a) {
+		Expr l = a.getLeft();
+		l.accept(this);
+		Expr r = a.getRight();
+		r.accept(this);
+		String r_type =  typeStack.pop();
+		String l_type =  typeStack.pop();
+
+
+		if(r_type.equals(ERROR) || l_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else if(r_type.equals(INT) && l_type.equals(INT))
+		{
+			typeStack.push(INT);
+		}
+		else if(r_type.equals(FLOAT) && l_type.equals(FLOAT))
+		{
+			typeStack.push(FLOAT);
+		}
+		else
+		{
+			typeStack.push(ERROR);
+			System.out.println("error at line "+ a.getLine() + ":" + a.getCol() + ": attempted to operate "+l_type +" and "+ r_type+".");
+		}
+		
+	}
+
+	@Override
+	public void visit(Rest a) {
+		Expr l = a.getLeft();
+		l.accept(this);
+		Expr r = a.getRight();
+		r.accept(this);
+		String r_type =  typeStack.pop();
+		String l_type =  typeStack.pop();
+
+
+		if(r_type.equals(ERROR) || l_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else if(r_type.equals(INT) && l_type.equals(INT))
+		{
+			typeStack.push(INT);
+		}
+		else if(r_type.equals(FLOAT) && l_type.equals(FLOAT))
+		{
+			typeStack.push(FLOAT);
+		}
+		else
+		{
+			typeStack.push(ERROR);
+			System.out.println("error at line "+ a.getLine() + ":" + a.getCol() + ": attempted to operate "+l_type +" and "+ r_type+".");
+		}
+		
+	}
+	
+	@Override
+	public void visit(Div a) {
+		Expr l = a.getLeft();
+		l.accept(this);
+		Expr r = a.getRight();
+		r.accept(this);
+		String r_type =  typeStack.pop();
+		String l_type =  typeStack.pop();
+
+
+		if(r_type.equals(ERROR) || l_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else if(r_type.equals(INT) && l_type.equals(INT))
+		{
+			typeStack.push(INT);
+		}
+		else if(r_type.equals(FLOAT) && l_type.equals(FLOAT))
+		{
+			typeStack.push(FLOAT);
+		}
+		else
+		{
+			typeStack.push(ERROR);
+			System.out.println("error at line "+ a.getLine() + ":" + a.getCol() + ": attempted to operate "+l_type +" and "+ r_type+".");
+		}
+		
+	}
+
+	@Override
+	public void visit(Sub a) {
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -133,6 +293,65 @@ public class ScopeVisitor extends Visitor {
 		typeStack.push(BOOL);
 	}
     
+	public void visit(Iterate i){
+		Expr e = i.getCondition();
+		e.accept(this);
+
+		CmdList c = (CmdList)i.getCmd();
+		c.accept(this);
+
+		System.out.println(typeStack);
+		String c_type = typeStack.pop();
+		String e_type = typeStack.pop();
+
+		
+		System.out.println("e_type: "+e_type);
+		System.out.println("c_type: "+c_type);
+		
+
+		if(!e_type.equals(INT))
+		{
+			typeStack.push(ERROR);
+			System.out.println("error at line "+ i.getLine() + ":" + i.getCol() + ": attempted to iterate with "+e_type+".");
+		}
+		else if(c_type.equals(ERROR)){
+			typeStack.push(ERROR);
+		}
+		else{
+			typeStack.push(CMD);
+		}
+	
+	}
+
+	public void visit(If i) {
+		Expr e = (Expr)i.getTeste();
+		e.accept(this);
+
+		CmdList c = (CmdList)i.getThn();
+		c.accept(this);
+
+		String thn_type = typeStack.pop();
+		String e_type = typeStack.pop();
+		String else_type = "";
+		if(i.getEls() != null)
+		{
+			CmdList c2 = (CmdList)i.getEls();
+			c2.accept(this);
+			else_type = typeStack.pop();
+		}
+
+		if(thn_type.equals(ERROR) || e_type.equals(ERROR) || else_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else{
+			typeStack.push(CMD);
+		}
+
+	
+	}
+
+
     /*public void visit(Program p) {
 	Func[] funs = p.getFuncs();
 	for(int i = 0; i < funs.length; i++)

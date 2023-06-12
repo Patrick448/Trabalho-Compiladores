@@ -1,5 +1,18 @@
 main (){
-    print 1 +'a';
+    print 1 + 2;
+
+    iterate(2){
+        print 'b';
+        if(true){
+            print 'x' +1;
+        }
+    }
+
+    if(true){
+            print 'z';
+        }
 }
+
+
 
 
