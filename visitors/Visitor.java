@@ -27,6 +27,21 @@ public abstract  class  Visitor {
 
      public abstract void visit(Rest a);
 
+     public abstract void visit(And a);
+
+     public abstract void visit(GreaterThan a);
+
+     public abstract void visit(LessThan a);
+
+     public abstract void visit(Diff a);
+
+     public abstract void visit(SubUni a);
+
+     public abstract void visit(Neg a);
+
+
+     public abstract void visit(Eq a);
+
      public abstract void visit(Int a);
 
      public abstract void visit(Char a);

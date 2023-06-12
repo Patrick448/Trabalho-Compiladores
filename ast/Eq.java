@@ -53,7 +53,7 @@ public class Eq extends BinOP {
          }
          else if(ol.getClass().getSimpleName().equals("String"))
          {
-            return (String)ol == (String)or;
+            return ((String)ol).equals((String)or);
          }
          else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("boolean"))
          {
@@ -70,9 +70,8 @@ public class Eq extends BinOP {
          return 0;
       }
 
-      @Override
+            @Override
       public void accept(Visitor v) {
-         // TODO Auto-generated method stub
-         throw new UnsupportedOperationException("Unimplemented method 'accept'");
+         v.visit(this);
       }
 }

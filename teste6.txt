@@ -4,13 +4,15 @@ main (){
     iterate(2){
         print 'b';
         if(true){
-            print 'x' +1;
+            print 'x';
         }
     }
 
-    if(true){
+    if(!(-5<0)){
             print 'z';
         }
+
+  
 }
 
 

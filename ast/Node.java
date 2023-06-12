@@ -33,7 +33,7 @@ public abstract class Node implements Visitable{
                   return this.interpret(variables, functions, datas, returns);
             }
             catch(Exception e){
-                  System.out.println("Error at line "+this.getLine()+", column "+this.getCol());
+                  System.out.println("Error at line " + this.getLine() + ":" + this.getCol());
                   //e.printStackTrace(System.out);
                   System.exit(0);
 
