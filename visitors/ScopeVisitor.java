@@ -1,14 +1,23 @@
 package visitors;
 
 import java.util.List;
+import java.util.Stack;
 
 import ast.*;
 import util.*;
 
 public class ScopeVisitor extends Visitor {
 
+	private static final String INT = "INT";
+	private static final String FLOAT = "FLOAT";
+	private static final String BOOL = "BOOL";
+	private static final String CHAR = "CHAR";
+	private static final String ERROR = "ERROR";
+
+
     private ScopeTable scopes;
     private int level;
+	private Stack<String> typeStack = new Stack<String>();
     
     public ScopeVisitor() {
 	scopes = new ScopeTable();
@@ -23,7 +32,8 @@ public class ScopeVisitor extends Visitor {
 	
 		//if (dataList != null) dataList.accept(this);
         if (funcList != null) funcList.accept(this);
-
+		
+		System.out.println(typeStack);
 
 	}
 
@@ -84,13 +94,44 @@ public class ScopeVisitor extends Visitor {
 		l.accept(this);
 		Expr r = a.getRight();
 		r.accept(this);
+		String r_type =  typeStack.pop();
+		String l_type =  typeStack.pop();
+
+
+		if(r_type.equals(ERROR) || l_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else if(r_type.equals(INT) && l_type.equals(INT))
+		{
+			typeStack.push(INT);
+		}
+		else if(r_type.equals(FLOAT) && l_type.equals(FLOAT))
+		{
+			typeStack.push(FLOAT);
+		}
+		else
+		{
+			typeStack.push(ERROR);
+			System.out.println("error at line "+ a.getLine() + ":" + a.getCol() + ": attempted to operate "+l_type +" and "+ r_type+".");
+		}
 		
-		
-		
-		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
+	public void visit(Int i) {
+		typeStack.push(INT);
+	}
+	public void visit(Char i) {
+		typeStack.push(CHAR);
+	}
+
+	public void visit(FloatAst i) {
+		typeStack.push(FLOAT);
+	}
 	
+	public void visit(Bool i) {
+		typeStack.push(BOOL);
+	}
     
     /*public void visit(Program p) {
 	Func[] funs = p.getFuncs();

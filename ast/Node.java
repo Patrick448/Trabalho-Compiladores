@@ -3,11 +3,12 @@ package ast;
 import java.util.HashMap;
 import java.util.Stack;
 
+import visitors.Visitable;
 import visitors.Visitor;
 
 import java.util.List;
 
-public abstract class Node {
+public abstract class Node implements Visitable{
       
       private int line,col, uid;
       
@@ -40,7 +41,9 @@ public abstract class Node {
             }
       }
 
-      public void accept(Visitor v) { v.visit(this);}
+
+      @Override
+      public abstract void accept(Visitor v);
 
       public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns);
       

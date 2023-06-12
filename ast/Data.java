@@ -6,6 +6,9 @@ package ast;
  */
 import java.util.HashMap;
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class Data extends Node {
@@ -50,6 +53,12 @@ public class Data extends Node {
             String declListString = declList != null ? declList.toString() : "";
 
           return "Data: {" + id + " {" + declListString + "}}";
+      }
+
+      @Override
+      public void accept(Visitor v) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'accept'");
       }
 
 }

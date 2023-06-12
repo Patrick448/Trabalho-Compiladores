@@ -1,6 +1,7 @@
 
 import parser.*;
 import ast.*;
+import visitors.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -42,7 +43,10 @@ public class Intepretador {
 		// tell ANTLR to does not automatically build an AST
 		parser.setBuildParseTree(false);
 
+		
+
 		Node ast = parser.prog().ast;
+		((Prog)ast).accept(new ScopeVisitor());
 		//System.out.println(ast);
 		//System.out.println(ast.dotString());
 		writeToFile("ast.dot", ast.dotString());

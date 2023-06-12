@@ -4,7 +4,7 @@ import ast.*;
 
 public abstract  class  Visitor {
 
-     public abstract void visit(Node p);
+    // public abstract void visit(Node p);
 
 
      public abstract void visit(Prog p);
@@ -17,10 +17,15 @@ public abstract  class  Visitor {
 
      public abstract void visit(Print p);
 
-     public abstract void visit(Expr e);
-
      public abstract void visit(Add a);
 
+     public abstract void visit(Int a);
+
+     public abstract void visit(Char a);
+
+     public abstract void visit(Bool a);
+
+     public abstract void visit(FloatAst a);
 
 
      /*public abstract void visit(Add e);

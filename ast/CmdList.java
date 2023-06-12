@@ -3,6 +3,9 @@ package ast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class CmdList extends Node {
@@ -63,6 +66,12 @@ public class CmdList extends Node {
         s+="}";
 
         return s;
+    }
+
+
+    @Override
+    public void accept(Visitor v) {
+       v.visit(this);
     }
 
 }

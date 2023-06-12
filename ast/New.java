@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import visitors.Visitor;
+
 public class New extends Expr {
     private Type type;
     private Expr e;
@@ -79,6 +81,12 @@ public class New extends Expr {
             s+= " [" + e.toString() + ']';
         }
         return s;
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'accept'");
     }
     
     

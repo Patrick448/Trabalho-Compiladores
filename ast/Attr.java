@@ -9,6 +9,9 @@ import java.nio.file.FileAlreadyExistsException;
  
 import java.util.HashMap; 
 import java.util.Stack;
+
+import visitors.Visitor;
+
 import java.util.List;
 
 public class Attr extends Node {
@@ -250,5 +253,11 @@ public class Attr extends Node {
           //System.out.println("l: " + lValue);    
           lValue.attribute(value, variables);
           return 0;
-      }   
+      }
+
+     @Override
+     public void accept(Visitor v) {
+          // TODO Auto-generated method stub
+          throw new UnsupportedOperationException("Unimplemented method 'accept'");
+     }   
 }
