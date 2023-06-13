@@ -17,6 +17,14 @@ public class New extends Expr {
         this.e = e;
     }
 
+    public Expr getExpr() {
+        return e;
+    }
+
+    public Type getType() {
+        return type;
+    }
+    
     @Override
     public Object interpret(Stack<HashMap<String, Object>> variables, List<Func> functions, HashMap<String, Data> datas,
             Stack<List<Object>> returns) {
@@ -84,10 +92,5 @@ public class New extends Expr {
     }
 
     @Override
-    public void accept(Visitor v) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'accept'");
-    }
-    
-    
+    public void accept(Visitor v) {v.visit(this);}
 }

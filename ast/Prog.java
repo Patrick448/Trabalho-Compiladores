@@ -7,12 +7,11 @@ package ast;
 import java.util.HashMap;
 import java.util.Stack;
 
-import visitors.Visitable;
 import visitors.Visitor;
 
 import java.util.List;
 
-public class Prog extends Node implements Visitable{
+public class Prog extends Node {
     
 	private HashMap<String, Data> hashDatas;
     private Stack<List<Object>> stackReturns;

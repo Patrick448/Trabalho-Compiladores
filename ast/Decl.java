@@ -32,6 +32,10 @@ public class Decl extends Node {
             return id;
       }
 
+      public Type getType(){
+            return type;
+      }
+
       public String toString() {
           return type.toString() + " " + id.toString();
       }

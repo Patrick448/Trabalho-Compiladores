@@ -39,7 +39,6 @@ public abstract  class  Visitor {
 
      public abstract void visit(Neg a);
 
-
      public abstract void visit(Eq a);
 
      public abstract void visit(Int a);
@@ -58,7 +57,15 @@ public abstract  class  Visitor {
 
      public abstract void visit(DataList a);
 
+     public abstract void visit(Type t);
 
+     public abstract void visit(Attr a);
+
+     public abstract void visit(LValue l);
+
+     public abstract void visit(New n);
+     
+     public abstract void visit(ID i);
      /*public abstract void visit(Add e);
           
      public abstract void visit(Var e);

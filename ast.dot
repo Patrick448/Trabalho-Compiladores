@@ -1,90 +1,129 @@
 graph program {
-<<<<<<< HEAD
-15 [label=Prog]
-15--14
-14 [label=FuncList]
-14--13
-13 [label="Func"]
-13--12
-12 [label="ID<main>"]
-13--4
-=======
-27 [label=Prog]
-27--26
-26 [label=FuncList]
-26--25
-25 [label="Func"]
-25--24
-24 [label="ID<main>"]
-25--4
->>>>>>> 829d537b4830424f366dbe31e5f43c47ac4824c3
-4 [label=CmdList]
-4--3
-3 [label= "="]
-3--1
-1 [label="LValue"]
-1--0
-0 [label="ID<b>"]
-3--2
-<<<<<<< HEAD
-2 [label="Int<4>"]
-4--11
-11 [label= "="]
-11--6
-6 [label="LValue"]
-6--5
-5 [label="ID<a>"]
-11--10
-10 [label= "+"]
-10--7
-7 [label="Int<1>"]
-10--9
-9 [label="LValue"]
-9--8
-8 [label="ID<b>"]
-=======
-2 [label= "+"]
-2--0
-0 [label="Int<1>"]
+64 [label=Prog]
+64--2
+2 [label=DataList]
 2--1
-1 [label="Int<2>"]
-4--14
-14 [label= "Iterate"]
-14--5
-5 [label="Int<2>"]
-14--8
-8 [label=CmdList]
-8--7
-7 [label="Print"]
-7--6
-6 [label="Char<b>"]
-8--13
-13 [label= "If"]
-13--9
-9 [label="Bool<true>"]
-13--12
-12 [label=CmdList]
+1 [label= "Data"]
+1--0
+0 [label="Type<Object>"]
+2--12
+12 [label= "Data"]
 12--11
-11 [label="Print"]
-11--10
-10 [label="Char<x>"]
-4--23
-23 [label= "If"]
-23--19
-19 [label= "!"]
-19--18
-18 [label= "<"]
-18--16
-16 [label= "-"]
-16--15
-15 [label="Int<5>"]
+11 [label="Type<String>"]
+12--7
+7 [label=DeclList]
+7--6
+6 [label="Decl"]
+6--5
+5 [label="ID<x>"]
+6--4
+4 [label="Type<Int>"]
+7--10
+10 [label="Decl"]
+10--9
+9 [label="ID<y>"]
+10--8
+8 [label="Type<Char>"]
+2--18
+18 [label= "Data"]
 18--17
-17 [label="Int<0>"]
-23--22
-22 [label=CmdList]
+17 [label="Type<Integer>"]
+18--16
+16 [label=DeclList]
+16--15
+15 [label="Decl"]
+15--14
+14 [label="ID<numerador>"]
+15--13
+13 [label="Type<Int>"]
+64--63
+63 [label=FuncList]
+63--62
+62 [label="Func"]
+62--61
+61 [label="ID<main>"]
+62--26
+26 [label=CmdList]
+26--25
+25 [label= "="]
+25--20
+20 [label="LValue"]
+20--19
+19 [label="ID<var>"]
+25--24
+24 [label= "+"]
+24--22
+22 [label= "-"]
 22--21
-21 [label="Print"]
-21--20
-20 [label="Char<z>"]
->>>>>>> 829d537b4830424f366dbe31e5f43c47ac4824c3
+21 [label="Int<50>"]
+24--23
+23 [label="Int<5>"]
+26--31
+31 [label= "="]
+31--28
+28 [label="LValue"]
+28--27
+27 [label="ID<j>"]
+31--30
+30 [label= "New"]
+30--29
+29 [label="Type<String>"]
+26--35
+35 [label= "="]
+35--33
+33 [label="LValue"]
+33--32
+32 [label="ID<k>"]
+35--34
+34 [label="Bool<true>"]
+26--42
+42 [label= "="]
+42--37
+37 [label="LValue"]
+37--36
+36 [label="ID<x>"]
+42--41
+41 [label= "+"]
+41--39
+39 [label="LValue"]
+39--38
+38 [label="ID<var>"]
+41--40
+40 [label="Int<10>"]
+26--46
+46 [label= "="]
+46--44
+44 [label="LValue"]
+44--43
+43 [label="ID<i>"]
+46--45
+45 [label="Char<a>"]
+26--49
+49 [label="Print"]
+49--48
+48 [label="LValue"]
+48--47
+47 [label="ID<i>"]
+26--51
+51 [label="Print"]
+51--50
+50 [label="Int<200>"]
+26--54
+54 [label="Print"]
+54--53
+53 [label="LValue"]
+53--52
+52 [label="ID<k>"]
+26--57
+57 [label="Print"]
+57--56
+56 [label="LValue"]
+56--55
+55 [label="ID<j>"]
+26--60
+60 [label="Print"]
+60--59
+59 [label="LValue"]
+59--58
+58 [label="ID<x>"]
 }

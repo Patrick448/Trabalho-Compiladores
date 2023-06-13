@@ -1,10 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
-/*
- * Esta classe representa um comando de Impressão.
- * Expr
- */
+
 import java.util.HashMap; 
 import java.util.Stack;
 
@@ -72,46 +69,6 @@ public class LValue extends Expr {
         return s;
     }
 
-   /* public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         
-      System.out.println(variables.peek());
-      System.out.println(lv);
-      if(lv != null && id != null){
-            if(lv.getLValue()==null)
-            {
-               DataInstance di = (DataInstance)variables.peek().get(lv.getID().getName());
-               return di.get(id.getName());
-            }
-            else
-            {
-               List lt =  (List)variables.peek().get(lv.getLValue().getID().getName());
-               DataInstance di =  (DataInstance)lt.get((Integer)lv.getExpr().tryInterpret(variables, functions, datas, returns));
-               return di.get(id.getName());
-            }
-         }
-         if(lv != null && e != null)
-         {
-            LValue aux = lv;
-            Stack<LValue> stack_aux = new Stack<LValue>();
-            stack_aux.push(aux);
-            while(aux.getLValue()!=null)
-            {
-                  aux = aux.getLValue();
-                  stack_aux.push(aux);
-            }
-            List lt =  (List)variables.peek().get(stack_aux.peek().getID().getName());
-            stack_aux.pop();
-            int i=0;
-            while(i<stack_aux.size())
-            {
-                  lt = (List)lt.get((Integer)stack_aux.peek().getExpr().tryInterpret(variables, functions, datas, returns));
-                  stack_aux.pop();
-            }
-            return lt.get((Integer)e.tryInterpret(variables, functions, datas, returns));
-         }
-         return variables.peek().get(id.getName());
-    }
-*/
     public void attribute(Object value, Stack<HashMap<String,Object>> variables){
 
       if(lv != null){
@@ -156,8 +113,5 @@ public class LValue extends Expr {
     }
 
    @Override
-   public void accept(Visitor v) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'accept'");
-   }
+   public void accept(Visitor v) {v.visit(this);}
 }

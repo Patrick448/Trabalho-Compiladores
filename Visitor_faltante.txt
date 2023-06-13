@@ -1,0 +1,48 @@
+Add - FEITO
+And - FEITO
+Attr
+Bool - FEITO
+CallFunction
+CallFunctionVet
+Char - FEITO
+CmdList - FEITO
+Data - FEITO
+DataInstance
+DataList - FEITO
+Decl
+DeclList
+Diff - FEITO
+Div - FEITO
+Eq - FEITO
+Expr
+ExprList
+FloatAst - FEITO
+Func - FEITO
+FuncList - FEITO
+GreaterThan - FEITO
+ID - FEITO
+If - FEITO
+Int - FEITO
+Iterate - FEITO
+LessThan - FEITO
+LValue - FEITO
+LValueList
+Mul - FEITO
+Neg - FEITO
+New - FEITO
+Node
+NodeList
+Null
+Param
+ParamsList
+Print - FEITO
+Prog - FEITO
+Read
+Rest - FEITO
+Return
+ReturnCMD
+ReturnList
+Sub - FEITO
+SubUni - FEITO
+Type - FEITO
+TypeList

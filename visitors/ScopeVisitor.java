@@ -2,6 +2,9 @@ package visitors;
 
 import java.util.List;
 import java.util.Stack;
+import java.io.Console;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.lang.model.util.ElementScanner6;
 
@@ -10,20 +13,26 @@ import util.*;
 
 public class ScopeVisitor extends Visitor {
 
-	private static final String INT = "INT";
-	private static final String FLOAT = "FLOAT";
-	private static final String BOOL = "BOOL";
-	private static final String CHAR = "CHAR";
-	private static final String ERROR = "ERROR";
+	private static final String INT = "Int";
+	private static final String FLOAT = "Float";
+	private static final String BOOL = "Bool";
+	private static final String CHAR = "Char";
+	private static final String DATA_INSTANCE = "DataInstance";
+	private static final String ERROR = "Error";
 	private static final String CMD = "CMD";
 
-	private ScopeTable scopes;
+	private HashMap<String, Integer> HashMapScope = new HashMap<String, Integer>();
+	private List<HashMap<String, String>> Variables = new ArrayList<HashMap<String, String>>();
+	private List<List<String>> Params = new ArrayList<List<String>>();
+	private List<List<String>> Returns = new ArrayList<List<String>>();
+	private HashMap<String, HashMap<String,String>> HashMapData = new HashMap<String, HashMap<String,String>>();
 	private int level;
+
 	private Stack<String> typeStack = new Stack<String>();
 
 	public ScopeVisitor() {
-		scopes = new ScopeTable();
-		level = scopes.getLevel();
+		//scopes = new ScopeTable();
+		//level = scopes.getLevel();
 	}
 
 	@Override
@@ -33,9 +42,13 @@ public class ScopeVisitor extends Visitor {
 		FuncList funcList = p.getFuncList();
 
 		if (dataList != null)
+		{
 			dataList.accept(this);
+		}
 		if (funcList != null)
+		{
 			funcList.accept(this);
+		}
 		System.out.println(typeStack);
 
 	}
@@ -45,12 +58,7 @@ public class ScopeVisitor extends Visitor {
 
 		List<Func> list = f.getList();
 		for (Func func : list) {
-			// if(n.getId().getName().equals("main") && n.getParams()==null &&
-			// n.getReturns()==null)
-			// {
 			func.accept(this);
-			// break;
-			// }
 		}
 
 	}
@@ -61,55 +69,69 @@ public class ScopeVisitor extends Visitor {
 		List<Data> list = d.getList();
 		for (Data data : list) {
 			data.accept(this);
-
 		}
-
 	}
 
 	@Override
 	public void visit(Data d) {
-
-		// d.accept(this);
+		DeclList decls = d.getDeclList();
+		HashMapData.put(d.getId().getName(), (new HashMap<String,String>()));
+		if(decls!=null)
+		{
+			for(Decl decl : decls.getList())
+			{
+				decl.getType().accept(this);
+				HashMapData.get(d.getId().getName()).put(decl.getId().getName(), typeStack.pop());
+			}
+		}
 		return;
 	}
 
 	@Override
 	public void visit(Func f) {
-		// ParamsList params = f.getParams();
-		// params.accept(this);
+
+		int scope_value = HashMapScope.size();
+		HashMapScope.put(f.getId().getName(), scope_value);
+
+		HashMap<String,String> HashMapVariables = new HashMap<String,String>();
+		List<String> ListParams = new ArrayList<String>();
+
+		ParamsList params = f.getParams();
+
+		if(params!=null)
+		{
+			for(Param p : params.getParamsList())
+			{
+				p.getType().accept(this);
+				String type = typeStack.pop();
+				HashMapVariables.put(p.getId().getName(), type);
+				ListParams.add(type);
+			}
+		}
+
+		Params.add(ListParams);
+		Variables.add(HashMapVariables);
+
+		List<String> ListReturn = new ArrayList<String>();
+
+		TypeList returns = f.getReturns();
+
+		if(returns!=null)
+		{
+			for(Type t : returns.getReturnTypes())
+			{
+				t.accept(this);
+				ListReturn.add(typeStack.pop());
+			}
+		}
+
+		Returns.add(ListReturn);
+		level = scope_value;
+
 		CmdList cmds = f.getCmdList();
 		cmds.accept(this);
 	}
 
-	/*
-	 * @Override
-	 * public void visit(ParamsList p) {
-	 * List<Param> list = p.getList();
-	 * for(Param param : list)
-	 * {
-	 * param.accept(this);
-	 * }
-	 * }
-	 * 
-	 * @Override
-	 * public void visit(Param p) {
-	 * String typeName = p.getType().getName();
-	 * 
-	 * if(typeName.equals("int")){
-	 * typeStack.push(INT);
-	 * }
-	 * else if(typeName.equals("float")){
-	 * typeStack.push(FLOAT);
-	 * }
-	 * else if(typeName.equals("bool")){
-	 * typeStack.push(BOOL);
-	 * }
-	 * else if(typeName.equals("char")){
-	 * typeStack.push(CHAR);
-	 * }
-	 * 
-	 * }
-	 */
 
 	@Override
 	public void visit(CmdList c) {
@@ -118,7 +140,9 @@ public class ScopeVisitor extends Visitor {
 
 		for (Node n : list) {
 			n.accept(this);
-			if (typeStack.pop().equals(ERROR)) {
+			String test = typeStack.pop();
+			System.out.println(test);
+			if (test.equals(ERROR)) {
 				hasError = true;
 			}
 		}
@@ -144,11 +168,34 @@ public class ScopeVisitor extends Visitor {
 
 	}
 
-	// f(r :: Racional): Float{
-	// res = r.numerador / r.denominador;
-	// x = (a+b) + d;
-	// return res;
-	// }
+	@Override
+	public void visit(Type t){
+		if(t.getName().equals(INT))
+		{
+			typeStack.push(INT);
+		}
+		else if(t.getName().equals(FLOAT))
+		{
+			typeStack.push(FLOAT);
+		}
+		else if(t.getName().equals(BOOL))
+		{
+			typeStack.push(BOOL);
+		}
+		else if(t.getName().equals(CHAR))
+		{
+			typeStack.push(CHAR);
+		}
+		else if(HashMapData.containsKey(t.getName()))
+		{
+			typeStack.push(DATA_INSTANCE);
+		}
+		else
+		{
+			typeStack.push(ERROR);
+		}
+
+	}
 
 	@Override
 	public void visit(Add a) {
@@ -481,92 +528,106 @@ public class ScopeVisitor extends Visitor {
 
 	}
 
-	/*
-	 * public void visit(Program p) {
-	 * Func[] funs = p.getFuncs();
-	 * for(int i = 0; i < funs.length; i++)
-	 * funs[i].accept(this);
-	 * }
-	 * 
-	 * public void visit(Add e) {
-	 * Expr exp = e.getLeft();
-	 * exp.accept(this);
-	 * exp = e.getRight();
-	 * exp.accept(this);
-	 * }
-	 * 
-	 * public void visit(Var e) {
-	 * Pair<Symbol, Integer> pair = scopes.search(e.getName());
-	 * if(pair == null) { //
-	 * System.err.println("Variable not declared: " + e.getName());
-	 * System.exit(1);
-	 * }
-	 * // Diferença entre o nível atual e o da variável indica a profundidade que
-	 * devemos retornar nos scopos para obter o valor da variável
-	 * System.out.println("\u27e6" + e.getName() + "\u27e7 : " + pair.second());
-	 * }
-	 * 
-	 * public void visit(NInt e) {
-	 * 
-	 * }
-	 * 
-	 * public void visit(Call e) {
-	 * Expr args[] = e.getArgs();
-	 * for(int i = 0; i < args.length; ++i)
-	 * args[i].accept(this);
-	 * }
-	 * 
-	 * public void visit(Attr e) {
-	 * String name = e.getID();
-	 * Expr exp = e.getExp();
-	 * Pair<Symbol, Integer> pair = scopes.search(e.getID());
-	 * if(pair == null) { //
-	 * System.err.println("Variable not declared: " + name);
-	 * System.exit(1);
-	 * }
-	 * System.out.println("<- \u27e6" + name + "\u27e7: " + pair.second());
-	 * exp.accept(this);
-	 * }
-	 * 
-	 * public void visit(Print e) {
-	 * e.getExpr().accept(this);
-	 * }
-	 * 
-	 * public void visit(Block e) {
-	 * // Criar um novo escopo
-	 * level = scopes.push();
-	 * System.out.println("<<<<<<<<<< Bloco / " + level +" >>>>>>>>");
-	 * Node[] ns = e.getStmts();
-	 * for(int i = 0; i < ns.length; i++)
-	 * ns[i].accept(this);
-	 * level = scopes.pop();
-	 * System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-	 * }
-	 * public void visit(Func f) {
-	 * // Criar um novo escopo
-	 * level = scopes.push();
-	 * System.out.println("<<<<<<<<<< Função: " + f.getID() + " / " + level
-	 * +" >>>>>>>>");
-	 * Param[] ps = f.getParams();
-	 * for(int i = 0; i < ps.length; i++)
-	 * ps[i].accept(this);
-	 * Block b = f.getBody();
-	 * // Visita cada elemento do bloco aqui para evitar criar um escopo ao entrar
-	 * no corpo da função
-	 * Node[] ns = b.getStmts();
-	 * for(int i = 0; i < ns.length; i++)
-	 * ns[i].accept(this);
-	 * level = scopes.pop();
-	 * System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-	 * }
-	 * 
-	 * public void visit(Param e) {
-	 * System.out.println("adding ... " + e.getID());
-	 * scopes.put(e.getID(), new Symbol());
-	 * }
-	 * 
-	 * public void visit(TyInt t) {}
-	 * 
-	 * public void visit(TyVoid t) {}
-	 */
+	public void visit(Attr a) {
+		if(a.getLValue().getLValue()==null)
+		{
+			if(a.getLValue().getExpr()==null)
+			{
+				Expr e = a.getExp();
+				e.accept(this);
+				String e_type = typeStack.pop();
+				Variables.get(level).put(a.getLValue().getID().getName(), e_type);
+				typeStack.push(e_type);
+			}
+		}
+	}
+
+	public void visit(LValue l) {
+
+		LValue lv = l.getLValue();
+		Expr e = l.getExpr();
+		ID i = l.getID();
+
+		if(lv==null)
+		{
+			if(e==null)
+			{
+				if(Variables.get(level).containsKey(i.getName()))
+				{
+					i.accept(this);
+					String i_type = typeStack.pop(); 
+					typeStack.push(i_type);
+				}
+				else
+				{
+					typeStack.push(ERROR);
+					System.out.println(
+						"Error at line " + l.getLine() + ":" + l.getCol() + ": The variable " + i.getName() + " is not inicialized.");
+				}
+			}
+			else
+			{
+				if(Variables.get(level).containsKey(i.getName()))
+				{
+					e.accept(this);
+					String e_type = typeStack.pop();
+					if(!e_type.equals(INT))
+					{
+						typeStack.push(ERROR);
+						System.out.println(
+							"Error at line " + l.getLine() + ":" + l.getCol() + ": A vetor access expected INT reveived" + e_type + ".");
+					}
+					else
+					{
+						i.accept(this);
+						String i_type = typeStack.pop(); 
+						typeStack.push(i_type);
+					}
+				}
+				else
+				{
+					typeStack.push(ERROR);
+					System.out.println(
+						"Error at line " + l.getLine() + ":" + l.getCol() + ": The variable " + i.getName() + " is not inicialized.");
+				}
+			}
+		}
+		else
+		{
+
+		}
+	}
+
+	public void visit(ID i)
+	{
+		typeStack.push(Variables.get(level).get(i.getName()));
+	}
+
+	public void visit(New n) {
+		Expr e = n.getExpr();
+		Type type = n.getType();
+		if(e!=null)
+		{
+			e.accept(this);
+			String e_type = typeStack.pop();
+			if(!e_type.equals(INT))
+			{
+				typeStack.push(ERROR);
+				System.out.println(
+					"Error at line " + n.getLine() + ":" + n.getCol() + ": A vetor access expected INT reveived" + e_type + ".");
+			}
+			else
+			{
+				type.accept(this);
+				String t_type = typeStack.pop();
+				typeStack.push(t_type);
+			}
+		}
+		else
+		{
+			type.accept(this);
+			String t_type = typeStack.pop();
+			typeStack.push(t_type);
+		}
+	}
 }

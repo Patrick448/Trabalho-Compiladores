@@ -10,7 +10,7 @@ import visitors.Visitor;
 
 import java.util.List;
 
-public class Type extends Expr {
+public class Type extends Expr{
       
       private String l;
       private Boolean isVet;
@@ -62,8 +62,6 @@ public class Type extends Expr {
       }
 
 		@Override
-		public void accept(Visitor v) {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Unimplemented method 'accept'");
-		}
+		public void accept(Visitor v) { v.visit(this);}
+
 }
