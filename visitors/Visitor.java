@@ -69,6 +69,12 @@ public abstract  class  Visitor {
 
      public abstract void visit(Read i);
 
+     public abstract void visit(ReturnCMD r);
+
+     public abstract void visit(CallFunction c);
+
+     public abstract void visit(CallFunctionVet c);
+
 
      /*public abstract void visit(Add e);
           

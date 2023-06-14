@@ -2,12 +2,12 @@ Add - FEITO
 And - FEITO
 Attr
 Bool - FEITO
-CallFunction
-CallFunctionVet
+CallFunction - FEITO
+CallFunctionVet - FEITO
 Char - FEITO
 CmdList - FEITO
 Data - FEITO
-DataInstance
+DataInstance 
 DataList - FEITO
 Decl
 DeclList
@@ -37,10 +37,10 @@ Param
 ParamsList
 Print - FEITO
 Prog - FEITO
-Read - testar
+Read - FEITO
 Rest - FEITO
 Return
-ReturnCMD
+ReturnCMD - FEITO
 ReturnList
 Sub - FEITO
 SubUni - FEITO

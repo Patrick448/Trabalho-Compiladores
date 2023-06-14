@@ -144,8 +144,5 @@ public class CallFunction extends Expr {
     }
 
     @Override
-    public void accept(Visitor v) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'accept'");
-    }
+    public void accept(Visitor v) {v.visit(this);}
 }

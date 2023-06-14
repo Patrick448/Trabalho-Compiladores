@@ -21,7 +21,7 @@ public class Read extends Node {
            this.v  = v;
       }
       
-      public Expr getExpr(){ return v;}
+      public LValue getLValue(){ return v;}
       
       //@Override
       public String toString(){

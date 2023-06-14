@@ -46,10 +46,12 @@ public class Intepretador {
 		
 
 		Node ast = parser.prog().ast;
+
+		writeToFile("ast.dot", ast.dotString());
+		
 		((Prog)ast).accept(new ScopeVisitor());
 		//System.out.println(ast);
 		//System.out.println(ast.dotString());
-		writeToFile("ast.dot", ast.dotString());
 
 		ast.tryInterpret(null, null, null, null);
 	}
