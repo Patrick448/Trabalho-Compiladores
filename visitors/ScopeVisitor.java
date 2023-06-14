@@ -575,7 +575,7 @@ public class ScopeVisitor extends Visitor {
 					{
 						typeStack.push(ERROR);
 						System.out.println(
-							"Error at line " + l.getLine() + ":" + l.getCol() + ": A vetor access expected INT reveived" + e_type + ".");
+							"Error at line " + l.getLine() + ":" + l.getCol() + ": A vector access expected INT, received" + e_type + ".");
 					}
 					else
 					{
@@ -598,6 +598,9 @@ public class ScopeVisitor extends Visitor {
 		}
 	}
 
+
+
+
 	public void visit(ID i)
 	{
 		typeStack.push(Variables.get(level).get(i.getName()));
@@ -614,7 +617,7 @@ public class ScopeVisitor extends Visitor {
 			{
 				typeStack.push(ERROR);
 				System.out.println(
-					"Error at line " + n.getLine() + ":" + n.getCol() + ": A vetor access expected INT reveived" + e_type + ".");
+					"Error at line " + n.getLine() + ":" + n.getCol() + ": A vector access expected INT, received" + e_type + ".");
 			}
 			else
 			{
@@ -629,5 +632,20 @@ public class ScopeVisitor extends Visitor {
 			String t_type = typeStack.pop();
 			typeStack.push(t_type);
 		}
+	}
+
+	@Override
+	public void visit(Read i) {
+	
+		Expr e = i.getExpr();
+		e.accept(this);
+		String type = typeStack.pop();
+
+		if (type.equals(ERROR)) {
+			typeStack.push(ERROR);
+		} else {
+			typeStack.push(CMD);
+		}
+			
 	}
 }

@@ -1,129 +1,59 @@
 graph program {
-64 [label=Prog]
-64--2
-2 [label=DataList]
-2--1
-1 [label= "Data"]
-1--0
-0 [label="Type<Object>"]
-2--12
-12 [label= "Data"]
-12--11
-11 [label="Type<String>"]
-12--7
-7 [label=DeclList]
-7--6
-6 [label="Decl"]
-6--5
-5 [label="ID<x>"]
-6--4
-4 [label="Type<Int>"]
-7--10
-10 [label="Decl"]
+30 [label=Prog]
+30--10
+10 [label=DataList]
 10--9
-9 [label="ID<y>"]
-10--8
-8 [label="Type<Char>"]
-2--18
-18 [label= "Data"]
-18--17
-17 [label="Type<Integer>"]
-18--16
-16 [label=DeclList]
-16--15
-15 [label="Decl"]
-15--14
-14 [label="ID<numerador>"]
-15--13
-13 [label="Type<Int>"]
-64--63
-63 [label=FuncList]
-63--62
-62 [label="Func"]
-62--61
-61 [label="ID<main>"]
-62--26
-26 [label=CmdList]
-26--25
-25 [label= "="]
-25--20
-20 [label="LValue"]
-20--19
-19 [label="ID<var>"]
-25--24
-24 [label= "+"]
-24--22
-22 [label= "-"]
-22--21
-21 [label="Int<50>"]
-24--23
-23 [label="Int<5>"]
-26--31
-31 [label= "="]
-31--28
-28 [label="LValue"]
-28--27
-27 [label="ID<j>"]
-31--30
-30 [label= "New"]
+9 [label= "Data"]
+9--8
+8 [label="Type<Teste>"]
+9--4
+4 [label=DeclList]
+4--3
+3 [label="Decl"]
+3--2
+2 [label="ID<t1>"]
+3--1
+1 [label="Type<Int>[]"]
+4--7
+7 [label="Decl"]
+7--6
+6 [label="ID<t2>"]
+7--5
+5 [label="Type<Int>"]
 30--29
-29 [label="Type<String>"]
-26--35
-35 [label= "="]
-35--33
-33 [label="LValue"]
-33--32
-32 [label="ID<k>"]
-35--34
-34 [label="Bool<true>"]
-26--42
-42 [label= "="]
-42--37
-37 [label="LValue"]
-37--36
-36 [label="ID<x>"]
-42--41
-41 [label= "+"]
-41--39
-39 [label="LValue"]
-39--38
-38 [label="ID<var>"]
-41--40
-40 [label="Int<10>"]
-26--46
-46 [label= "="]
-46--44
-44 [label="LValue"]
-44--43
-43 [label="ID<i>"]
-46--45
-45 [label="Char<a>"]
-26--49
-49 [label="Print"]
-49--48
-48 [label="LValue"]
-48--47
-47 [label="ID<i>"]
-26--51
-51 [label="Print"]
-51--50
-50 [label="Int<200>"]
-26--54
-54 [label="Print"]
-54--53
-53 [label="LValue"]
-53--52
-52 [label="ID<k>"]
-26--57
-57 [label="Print"]
-57--56
-56 [label="LValue"]
-56--55
-55 [label="ID<j>"]
-26--60
-60 [label="Print"]
-60--59
-59 [label="LValue"]
-59--58
-58 [label="ID<x>"]
+29 [label=FuncList]
+29--28
+28 [label="Func"]
+28--27
+27 [label="ID<main>"]
+28--17
+17 [label=CmdList]
+17--16
+16 [label= "="]
+16--13
+13 [label="LValue"]
+13--12
+12 [label="ID<y>"]
+16--15
+15 [label= "New"]
+15--14
+14 [label="Type<Teste>"]
+17--21
+21 [label= "="]
+21--19
+19 [label="LValue"]
+19--18
+18 [label="ID<x>"]
+21--20
+20 [label="Int<1>"]
+17--26
+26 [label="Print"]
+26--25
+25 [label= "+"]
+25--22
+22 [label="Int<1>"]
+25--24
+24 [label="LValue"]
+24--23
+23 [label="ID<x>"]
 }

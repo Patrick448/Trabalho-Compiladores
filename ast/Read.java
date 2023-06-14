@@ -50,7 +50,6 @@ public class Read extends Node {
 
 	@Override
 	public void accept(Visitor v) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'accept'");
+		v.visit(this);
 	}
 }

@@ -37,7 +37,7 @@ Param
 ParamsList
 Print - FEITO
 Prog - FEITO
-Read
+Read - testar
 Rest - FEITO
 Return
 ReturnCMD

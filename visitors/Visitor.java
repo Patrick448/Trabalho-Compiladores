@@ -66,6 +66,10 @@ public abstract  class  Visitor {
      public abstract void visit(New n);
      
      public abstract void visit(ID i);
+
+     public abstract void visit(Read i);
+
+
      /*public abstract void visit(Add e);
           
      public abstract void visit(Var e);
