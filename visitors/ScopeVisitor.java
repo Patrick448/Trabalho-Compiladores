@@ -57,6 +57,47 @@ public class ScopeVisitor extends Visitor {
 	public void visit(FuncList f) {
 
 		List<Func> list = f.getList();
+		int scope_value = 0;
+		HashMap<String,String> HashMapVariables;
+
+		for (Func func : list) {
+			scope_value = HashMapScope.size();
+			HashMapScope.put(func.getId().getName(), scope_value);
+
+			HashMapVariables = new HashMap<String,String>();
+
+			List<String> ListParams = new ArrayList<String>();
+			ParamsList params = func.getParams();
+
+			if(params!=null)
+			{
+				for(Param p : params.getParamsList())
+				{
+					p.getType().accept(this);
+					String type = typeStack.pop();
+					HashMapVariables.put(p.getId().getName(), type);
+					ListParams.add(type);
+				}
+			}
+
+			Params.add(ListParams);
+			Variables.add(HashMapVariables);
+
+			List<String> ListReturn = new ArrayList<String>();
+
+			TypeList returns = func.getReturns();
+
+			if(returns!=null)
+			{
+				for(Type t : returns.getReturnTypes())
+				{
+					t.accept(this);
+					ListReturn.add(typeStack.pop());
+				}
+			}
+
+			Returns.add(ListReturn);
+		}
 		for (Func func : list) {
 			func.accept(this);
 		}
@@ -89,45 +130,7 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Func f) {
-
-		int scope_value = HashMapScope.size();
-		HashMapScope.put(f.getId().getName(), scope_value);
-
-		HashMap<String,String> HashMapVariables = new HashMap<String,String>();
-		List<String> ListParams = new ArrayList<String>();
-
-		ParamsList params = f.getParams();
-
-		if(params!=null)
-		{
-			for(Param p : params.getParamsList())
-			{
-				p.getType().accept(this);
-				String type = typeStack.pop();
-				HashMapVariables.put(p.getId().getName(), type);
-				ListParams.add(type);
-			}
-		}
-
-		Params.add(ListParams);
-		Variables.add(HashMapVariables);
-
-		List<String> ListReturn = new ArrayList<String>();
-
-		TypeList returns = f.getReturns();
-
-		if(returns!=null)
-		{
-			for(Type t : returns.getReturnTypes())
-			{
-				t.accept(this);
-				ListReturn.add(typeStack.pop());
-			}
-		}
-
-		Returns.add(ListReturn);
-		level = scope_value;
-
+		level = HashMapScope.get(f.getId().getName());
 		CmdList cmds = f.getCmdList();
 		cmds.accept(this);
 	}
@@ -551,6 +554,32 @@ public class ScopeVisitor extends Visitor {
 				typeStack.push(e_type);
 				return;
 			}
+			else
+			{
+				Expr e = a.getExp();
+				e.accept(this);
+				String e_type = typeStack.pop();
+				LValue lv = a.getLValue();
+				lv.accept(this);
+				String lv_type = typeStack.pop();
+				if(lv_type.equals(ERROR) || e_type.equals(ERROR))
+				{
+					typeStack.push(ERROR);
+					return;
+				}
+				else if (lv_type.equals(e_type))
+				{
+					typeStack.push(e_type);
+					return;
+				}
+				else
+				{
+					typeStack.push(ERROR);
+					System.out.println(
+						"Error at line " + a.getLine() + ":" + a.getCol());
+					return;
+				}
+			}
 		}
 	}
 
@@ -592,16 +621,9 @@ public class ScopeVisitor extends Visitor {
 							"Error at line " + l.getLine() + ":" + l.getCol() + ": A vector access expected INT, received" + e_type + ".");
 						return;
 					}
-					if(e_type.equals(ERROR))
+					else if(e_type.equals(ERROR))
 					{
 						typeStack.push(ERROR);
-						return;
-					}
-					else
-					{
-						i.accept(this);
-						String i_type = typeStack.pop(); 
-						typeStack.push(i_type);
 						return;
 					}
 				}
@@ -809,7 +831,9 @@ public class ScopeVisitor extends Visitor {
 				}
 				else
 				{
-					typeStack.push(CMD);
+					Int i_value = (Int)e;
+					int value = i_value.getValue();
+					typeStack.push(Returns.get(scope).get(value));
 					return;
 				}
 			}

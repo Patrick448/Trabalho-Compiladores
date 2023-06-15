@@ -48,8 +48,6 @@ public class SubUni extends Expr {
      }
 
 	@Override
-	public void accept(Visitor v) {
-		v.visit(this);
-	}
+	public void accept(Visitor v) {v.visit(this);}
       
 }

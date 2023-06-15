@@ -55,7 +55,5 @@ public class GreaterThan extends BinOP {
       }
 
       @Override
-      public void accept(Visitor v) {
-         v.visit(this);
-      }
+      public void accept(Visitor v) {v.visit(this);}
 }

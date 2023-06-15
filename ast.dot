@@ -1,143 +1,39 @@
 graph program {
-70 [label=Prog]
-70--25
-25 [label=FuncList]
-25--24
-24 [label="Func"]
-24--23
-23 [label="ID<myFunc>"]
-24--14
-14 [label=CmdList]
-14--13
-13 [label= "="]
-13--11
+18 [label=Prog]
+18--17
+17 [label=FuncList]
+17--16
+16 [label="Func"]
+16--15
+15 [label="ID<main>"]
+16--4
+4 [label=CmdList]
+4--3
+3 [label= "="]
+3--1
+1 [label="LValue"]
+1--0
+0 [label="ID<x>"]
+3--2
+2 [label="Int<0>"]
+4--6
+6 [label="Print"]
+6--5
+5 [label="Char<>>"]
+4--9
+9 [label="Read"]
+9--8
+8 [label="LValue"]
+8--7
+7 [label="ID<x>"]
+4--12
+12 [label="Print"]
+12--11
 11 [label="LValue"]
 11--10
-10 [label="ID<b>"]
-13--12
-12 [label="Int<1>"]
-14--18
-18 [label= "="]
-18--16
-16 [label="LValue"]
-16--15
-15 [label="ID<a>"]
-18--17
-17 [label="Int<3>"]
-14--22
-22 [label="ReturnCMD"]
-22--20
-20 [label=ExprList]
-20--19
-19 [label="Int<0>"]
-20--21
-21 [label="Int<1>"]
-24--3
-3 [label="ParamsList"]
-3--2
-2 [label="Param"]
-2--1
-1 [label="ID<num>"]
-2--0
-0 [label="Type<Int>"]
-3--6
-6 [label="Param"]
-6--5
-5 [label="ID<ch>"]
-6--4
-4 [label="Type<Char>"]
-24--8
-8 [label="TypeList"]
-8--7
-7 [label="Type<Int>"]
-8--9
-9 [label="Type<Int>"]
-25--69
-69 [label="Func"]
-69--68
-68 [label="ID<main>"]
-69--33
-33 [label=CmdList]
-33--32
-32 [label= "="]
-32--27
-27 [label="LValue"]
-27--26
-26 [label="ID<var>"]
-32--31
-31 [label= "+"]
-31--29
-29 [label= "-"]
-29--28
-28 [label="Int<50>"]
-31--30
-30 [label="Int<5>"]
-33--40
-40 [label= "="]
-40--35
-35 [label="LValue"]
-35--34
-34 [label="ID<x>"]
-40--39
-39 [label= "+"]
-39--37
-37 [label="LValue"]
-37--36
-36 [label="ID<var>"]
-39--38
-38 [label="Int<10>"]
-33--51
-51 [label= "CallFunction"]
-51--50
-50 [label="ID<myFunc>"]
-51--43
-43 [label=ExprList]
-43--42
-42 [label="LValue"]
-42--41
-41 [label="ID<x>"]
-43--44
-44 [label="Char<a>"]
-51--47
-47 [label=LValueList]
-47--46
-46 [label="LValue"]
-46--45
-45 [label="ID<z>"]
-47--49
-49 [label="LValue"]
-49--48
-48 [label="ID<a>"]
-33--61
-61 [label= "="]
-61--53
-53 [label="LValue"]
-53--52
-52 [label="ID<a>"]
-61--60
-60 [label= "CallFunction"]
-60--59
-59 [label="ID<myFunc>"]
-60--56
-56 [label=ExprList]
-56--55
-55 [label="LValue"]
-55--54
-54 [label="ID<x>"]
-56--57
-57 [label="Char<a>"]
-60--58
-58 [label="Int<0>"]
-33--64
-64 [label="Read"]
-64--63
-63 [label="LValue"]
-63--62
-62 [label="ID<b>"]
-33--67
-67 [label="Print"]
-67--66
-66 [label="LValue"]
-66--65
-65 [label="ID<b>"]
+10 [label="ID<x>"]
+4--14
+14 [label="Print"]
+14--13
+13 [label="Char<\n>"]
 }

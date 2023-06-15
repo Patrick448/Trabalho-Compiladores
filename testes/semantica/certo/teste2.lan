@@ -7,5 +7,4 @@ main(){
    read x;
    print x;
    print '\n';
-   
 }

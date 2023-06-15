@@ -1,5 +1,23 @@
-main()
-{
-    b = 4;
-    a = 1+b;
+data Racional{numerador :: Racional; denominador :: Int;}
+
+main (){
+    r = new Racional;
+    r.numerador = new Racional;
+    r.numerador.numerador = 35;
+
+   
+
+    s = new Racional[3];
+
+    s[0] = r;
+    print s;
+    print '\n';
+    print s[0];
+    print '\n';
+    print s[0].numerador;
+    print '\n';
+    print s[0].numerador.numerador;
+    print '\n';
 }
+
+
