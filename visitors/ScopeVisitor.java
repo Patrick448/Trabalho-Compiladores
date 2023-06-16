@@ -534,25 +534,7 @@ public class ScopeVisitor extends Visitor {
 
 	}
 
-	//todo: rever essa função
-	public void visit2(Attr a) {
-		if(a.getLValue().getLValue()==null)
-		{
-			if(a.getLValue().getExpr()==null)
-			{
-				Expr e = a.getExp();
-				e.accept(this);
-				String e_type = typeStack.pop();
-				Variables.get(level).put(a.getLValue().getID().getName(), e_type);
-				typeStack.push(e_type);
-				
-				return;
-			}
-		}
-		//todo: remover depois
-		typeStack.push(ERROR);
-		
-	}
+
 
 	public void visit(Attr a) {
 		Expr e = a.getExp();
