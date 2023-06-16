@@ -1,143 +1,83 @@
 graph program {
-70 [label=Prog]
-70--25
-25 [label=FuncList]
-25--24
-24 [label="Func"]
-24--23
-23 [label="ID<myFunc>"]
-24--14
-14 [label=CmdList]
-14--13
-13 [label= "="]
-13--11
-11 [label="LValue"]
-11--10
-10 [label="ID<b>"]
-13--12
-12 [label="Int<1>"]
-14--18
-18 [label= "="]
-18--16
-16 [label="LValue"]
+43 [label=Prog]
+43--17
+17 [label=DataList]
+17--16
+16 [label= "Data"]
 16--15
-15 [label="ID<a>"]
-18--17
-17 [label="Int<3>"]
-14--22
-22 [label="ReturnCMD"]
-22--20
-20 [label=ExprList]
-20--19
-19 [label="Int<0>"]
-20--21
-21 [label="Int<1>"]
-24--3
-3 [label="ParamsList"]
+15 [label="Type<Teste>"]
+16--4
+4 [label=DeclList]
+4--3
+3 [label="Decl"]
 3--2
-2 [label="Param"]
-2--1
-1 [label="ID<num>"]
-2--0
-0 [label="Type<Int>"]
-3--6
-6 [label="Param"]
-6--5
-5 [label="ID<ch>"]
-6--4
-4 [label="Type<Char>"]
-24--8
-8 [label="TypeList"]
-8--7
-7 [label="Type<Int>"]
-8--9
-9 [label="Type<Int>"]
-25--69
-69 [label="Func"]
-69--68
-68 [label="ID<main>"]
-69--33
-33 [label=CmdList]
-33--32
-32 [label= "="]
-32--27
-27 [label="LValue"]
-27--26
-26 [label="ID<var>"]
-32--31
-31 [label= "+"]
-31--29
-29 [label= "-"]
-29--28
-28 [label="Int<50>"]
+2 [label="ID<t1>"]
+3--1
+1 [label="Type<Int>[]"]
+4--7
+7 [label="Decl"]
+7--6
+6 [label="ID<t2>"]
+7--5
+5 [label="Type<Teste>"]
+4--10
+10 [label="Decl"]
+10--9
+9 [label="ID<t3>"]
+10--8
+8 [label="Type<Int>"]
+4--14
+14 [label="Decl"]
+14--13
+13 [label="ID<t4>"]
+14--12
+12 [label="Type<Int>[]"]
+43--42
+42 [label=FuncList]
+42--41
+41 [label="Func"]
+41--40
+40 [label="ID<main>"]
+41--24
+24 [label=CmdList]
+24--23
+23 [label= "="]
+23--20
+20 [label="LValue"]
+20--19
+19 [label="ID<y>"]
+23--22
+22 [label= "New"]
+22--21
+21 [label="Type<Teste>"]
+24--31
+31 [label= "="]
+31--28
+28 [label="LValue"]
+28--26
+26 [label="LValue"]
+26--25
+25 [label="ID<y>"]
+28--27
+27 [label="ID<t2>"]
 31--30
-30 [label="Int<5>"]
-33--40
-40 [label= "="]
-40--35
-35 [label="LValue"]
-35--34
-34 [label="ID<x>"]
-40--39
-39 [label= "+"]
+30 [label= "New"]
+30--29
+29 [label="Type<Teste>"]
+24--39
+39 [label= "="]
 39--37
 37 [label="LValue"]
+37--35
+35 [label="LValue"]
+35--33
+33 [label="LValue"]
+33--32
+32 [label="ID<y>"]
+35--34
+34 [label="ID<t2>"]
 37--36
-36 [label="ID<var>"]
+36 [label="ID<t3>"]
 39--38
-38 [label="Int<10>"]
-33--51
-51 [label= "CallFunction"]
-51--50
-50 [label="ID<myFunc>"]
-51--43
-43 [label=ExprList]
-43--42
-42 [label="LValue"]
-42--41
-41 [label="ID<x>"]
-43--44
-44 [label="Char<a>"]
-51--47
-47 [label=LValueList]
-47--46
-46 [label="LValue"]
-46--45
-45 [label="ID<z>"]
-47--49
-49 [label="LValue"]
-49--48
-48 [label="ID<a>"]
-33--61
-61 [label= "="]
-61--53
-53 [label="LValue"]
-53--52
-52 [label="ID<a>"]
-61--60
-60 [label= "CallFunction"]
-60--59
-59 [label="ID<myFunc>"]
-60--56
-56 [label=ExprList]
-56--55
-55 [label="LValue"]
-55--54
-54 [label="ID<x>"]
-56--57
-57 [label="Char<a>"]
-60--58
-58 [label="Int<0>"]
-33--64
-64 [label="Read"]
-64--63
-63 [label="LValue"]
-63--62
-62 [label="ID<b>"]
-33--67
-67 [label="Print"]
-67--66
-66 [label="LValue"]
-66--65
-65 [label="ID<b>"]
+38 [label="Int<111>"]
 }

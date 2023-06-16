@@ -22,7 +22,16 @@ public class Type extends Expr{
            this.isVet = iv;
       }
       
-      public String getName(){ return l;}
+      public String getName(){ 
+        return l;
+      }
+
+      public String getFullName(){
+        if(isVet){
+          return this.toString();
+        }
+        return l;
+      }
       
       public Boolean getIsVet() {
           return isVet;

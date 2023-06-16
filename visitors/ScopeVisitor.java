@@ -50,6 +50,10 @@ public class ScopeVisitor extends Visitor {
 			funcList.accept(this);
 		}
 		System.out.println(typeStack);
+		System.out.println(HashMapData);
+		System.out.println(Variables);
+
+
 
 	}
 
@@ -140,6 +144,7 @@ public class ScopeVisitor extends Visitor {
 
 		for (Node n : list) {
 			n.accept(this);
+
 			String test = typeStack.pop();
 			if (test.equals(ERROR)) {
 				hasError = true;
@@ -169,25 +174,15 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Type t){
-		if(t.getName().equals(INT))
+		String n = t.getName();
+		if(n.equals(INT)|| n.equals(FLOAT) || n.equals(BOOL) || n.equals(CHAR))
 		{
-			typeStack.push(INT);
+			typeStack.push(t.getFullName());
 		}
-		else if(t.getName().equals(FLOAT))
-		{
-			typeStack.push(FLOAT);
-		}
-		else if(t.getName().equals(BOOL))
-		{
-			typeStack.push(BOOL);
-		}
-		else if(t.getName().equals(CHAR))
-		{
-			typeStack.push(CHAR);
-		}
+	
 		else if(HashMapData.containsKey(t.getName()))
 		{
-			typeStack.push(DATA_INSTANCE);
+			typeStack.push(t.getName());
 		}
 		else
 		{
@@ -539,7 +534,8 @@ public class ScopeVisitor extends Visitor {
 
 	}
 
-	public void visit(Attr a) {
+	//todo: rever essa função
+	public void visit2(Attr a) {
 		if(a.getLValue().getLValue()==null)
 		{
 			if(a.getLValue().getExpr()==null)
@@ -549,12 +545,44 @@ public class ScopeVisitor extends Visitor {
 				String e_type = typeStack.pop();
 				Variables.get(level).put(a.getLValue().getID().getName(), e_type);
 				typeStack.push(e_type);
+				
 				return;
 			}
 		}
+		//todo: remover depois
+		typeStack.push(ERROR);
+		
 	}
 
-	public void visit(LValue l) {
+	public void visit(Attr a) {
+		Expr e = a.getExp();
+		LValue l = a.getLValue();
+		e.accept(this);
+		String e_type = typeStack.pop();
+		
+		l.accept(this);
+		String l_type = typeStack.pop();
+		//System.out.println(typeStack);
+
+
+		if(l.isSingleID()){
+			Variables.get(level).put(a.getLValue().getID().getName(), e_type);
+			typeStack.push(CMD);
+		}else if(!l_type.equals(e_type)){
+			typeStack.push(ERROR);
+			System.out.println(
+				"Error at line " + l.getLine() + ":" + l.getCol() + ":Attempted to attibute value of type " + e_type + " to variable of type " + l_type + ".");
+		}else{
+			typeStack.push(CMD);
+		}
+		
+		//System.out.println(typeStack);
+
+		return;
+		
+	}
+
+	public void visit2(LValue l) {
 
 		LValue lv = l.getLValue();
 		Expr e = l.getExpr();
@@ -617,11 +645,43 @@ public class ScopeVisitor extends Visitor {
 		else
 		{
 
+			typeStack.push(CMD);
 		}
 	}
 
+	public void visit(LValue l) {
 
+		//System.out.println(HashMapData);
 
+		LValue lv = l.getLValue();
+		Expr e = l.getExpr();
+		ID i = l.getID();
+
+		if(lv == null){
+			
+			if(e==null){
+				String type = Variables.get(level).get(i.getName());
+
+				if(type == null){
+					typeStack.push(ERROR);
+				}else{
+					typeStack.push(type);
+				}
+			}
+			else{
+
+			}
+		}
+		
+		else{
+
+			lv.accept(this);
+			String type = typeStack.pop();
+			typeStack.push(HashMapData.get(type).get(i.getName()));
+		}
+		
+		
+	}
 
 	public void visit(ID i)
 	{
