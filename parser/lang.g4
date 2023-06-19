@@ -39,7 +39,7 @@ dataList returns [DataList ast]:
 ;
 
 data returns [Data ast]:
-  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text, false), $declList.ast);}
+  kw='data' TYPE '{' declList '}' { $ast = new Data($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), $declList.ast);}
   ;
 
 funcList returns [FuncList ast]:
@@ -96,10 +96,10 @@ types returns [TypeList ast]:
 
 type returns [Type ast]:
   
-  t2=type{$ast = new Type($t2.ast.getLine(), $t2.ast.getCol(), $t2.ast.getName(), true); int i=0;} 
+  t2=type{$ast = new Type($t2.ast.getLine(), $t2.ast.getCol(), $t2.ast.getName()); int i=0;} 
   ('['']' {$ast.addDimension();})+ 
   |
-  ( t='Int'  | t='Char'  | t='Float'  | t='Bool'  | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text, false);}
+  ( t='Int'  | t='Char'  | t='Float'  | t='Bool'  | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text);}
 ;
 
 cmdList returns [CmdList ast]:
@@ -207,9 +207,11 @@ pexp returns [Expr ast]:
   |
 
   {boolean hasExp = false;}
-  'new' type ('[' exp ']'{hasExp=true;})? {$ast = new New($type.ast.getLine(), $type.ast.getCol(), $type.ast, hasExp? $exp.ast:null);}
+  'new' type ('[' exp ']'{hasExp=true;})? {$ast = new New($type.ast.getLine(), $type.ast.getCol(), $type.ast, hasExp? $exp.ast:null);
+    if(hasExp){$type.ast.addDimension();}}
   |
-  ID '(' exps ')' '[' exp ']' {$ast = new CallFunctionVet($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $exps.ast, $exp.ast);}
+  {boolean hasExps = false;}
+  ID '(' (exps {hasExps=true;})? ')' '[' exp ']' {$ast = new CallFunctionVet($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text),  hasExps? $exps.ast:null, $exp.ast);}
 ;
 
 lvalues returns [LValueList ast]:

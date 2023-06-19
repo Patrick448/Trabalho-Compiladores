@@ -49,11 +49,16 @@ public class Intepretador {
 
 		writeToFile("ast.dot", ast.dotString());
 		
-		((Prog)ast).accept(new ScopeVisitor());
+		ScopeVisitor scope = new ScopeVisitor();
+		((Prog)ast).accept(scope);
+		String analise = scope.getStack().pop();
+		if(!analise.equals("Error"))
+		{
+			ast.tryInterpret(null, null, null, null);
+		}
+
 		//System.out.println(ast);
 		//System.out.println(ast.dotString());
-
-		ast.tryInterpret(null, null, null, null);
 	}
 
 	

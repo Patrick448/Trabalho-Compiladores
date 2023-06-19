@@ -1,8 +1,5 @@
 package ast;
 
-/*
- */
- 
 import java.util.HashMap; 
 import java.util.Stack;
 
@@ -13,27 +10,39 @@ import java.util.List;
 public class Type extends Expr{
       
       private String l;
-      private Boolean isVet;
       private int dim;
 
-      public Type(int l, int c, String name, Boolean iv){
+      public Type(int l, int c, String name){
            super(l,c);
            this.l = name;
-           this.isVet = iv;
       }
       
-      public String getName(){ return l;}
-      
-      public Boolean getIsVet() {
-          return isVet;
+      public String getName(){ 
+        return l;
+      }
+
+      public String getFullName(){
+        if(dim > 0){
+          return this.toString();
+        }
+        return l;
+      }
+
+      public int getDim() {
+          return dim;
       }
 
       //@Override
       public String toString(){
         String s = l;
-        if(isVet)
+        if(dim > 0)
         {
-          s+="[]";
+          int i = dim;
+          while(i>0)
+          {
+            s+="[]";
+            i = i-1;
+          }
         }
         return s; 
       }
@@ -45,7 +54,7 @@ public class Type extends Expr{
         @Override
         public String dotString(){
             String dimString = "";
-            if(isVet)
+            if(dim > 0)
             {
               for(int i = 0; i < dim; i++)
               {

@@ -34,6 +34,10 @@ public class LValue extends Expr {
           return e;
       }
 
+      public boolean isSingleID(){
+         return lv == null && e == null;
+      }
+
       //@Override
       public String toString(){
          String s = "";

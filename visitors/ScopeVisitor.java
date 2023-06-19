@@ -2,14 +2,10 @@ package visitors;
 
 import java.util.List;
 import java.util.Stack;
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.lang.model.util.ElementScanner6;
-
 import ast.*;
-import util.*;
 
 public class ScopeVisitor extends Visitor {
 
@@ -17,7 +13,6 @@ public class ScopeVisitor extends Visitor {
 	private static final String FLOAT = "Float";
 	private static final String BOOL = "Bool";
 	private static final String CHAR = "Char";
-	private static final String DATA_INSTANCE = "DataInstance";
 	private static final String ERROR = "Error";
 	private static final String CMD = "CMD";
 
@@ -30,9 +25,14 @@ public class ScopeVisitor extends Visitor {
 
 	private Stack<String> typeStack = new Stack<String>();
 
+
 	public ScopeVisitor() {
-		//scopes = new ScopeTable();
-		//level = scopes.getLevel();
+
+	}
+
+	public Stack<String> getStack()
+	{
+		return typeStack;
 	}
 
 	@Override
@@ -49,8 +49,6 @@ public class ScopeVisitor extends Visitor {
 		{
 			funcList.accept(this);
 		}
-		System.out.println(typeStack);
-
 	}
 
 	@Override
@@ -98,10 +96,33 @@ public class ScopeVisitor extends Visitor {
 
 			Returns.add(ListReturn);
 		}
+		Boolean have_error = false;
+
 		for (Func func : list) {
 			func.accept(this);
+			String func_type = typeStack.pop();
+			if(func_type.equals(ERROR))
+			{
+				have_error = true;
+			}
 		}
 
+		if(HashMapScope.containsKey("main"))
+		{
+			if(!have_error)
+			{
+				typeStack.push(CMD);
+			}
+			else
+			{
+				typeStack.push(ERROR);
+			}
+		}
+		else
+		{
+			typeStack.push(ERROR);
+			System.out.println("Error at line 0:0: Program don't have main() function");
+		}
 	}
 
 	@Override
@@ -132,7 +153,7 @@ public class ScopeVisitor extends Visitor {
 	public void visit(Func f) {
 		level = HashMapScope.get(f.getId().getName());
 		CmdList cmds = f.getCmdList();
-		cmds.accept(this);
+		cmds.accept(this); 
 	}
 
 
@@ -140,7 +161,6 @@ public class ScopeVisitor extends Visitor {
 	public void visit(CmdList c) {
 		List<Node> list = c.getList();
 		boolean hasError = false;
-
 		for (Node n : list) {
 			n.accept(this);
 			String test = typeStack.pop();
@@ -172,29 +192,19 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Type t){
-		if(t.getName().equals(INT))
+		String n = t.getName();
+		if(n.equals(INT)|| n.equals(FLOAT) || n.equals(BOOL) || n.equals(CHAR))
 		{
-			typeStack.push(INT);
-		}
-		else if(t.getName().equals(FLOAT))
-		{
-			typeStack.push(FLOAT);
-		}
-		else if(t.getName().equals(BOOL))
-		{
-			typeStack.push(BOOL);
-		}
-		else if(t.getName().equals(CHAR))
-		{
-			typeStack.push(CHAR);
+			typeStack.push(t.getFullName());
 		}
 		else if(HashMapData.containsKey(t.getName()))
 		{
-			typeStack.push(DATA_INSTANCE);
+			typeStack.push(t.getFullName());
 		}
 		else
 		{
 			typeStack.push(ERROR);
+			System.out.println("Error at line " + t.getLine() + ":" + t.getCol() + ": Type " + t.getFullName() + " not exist");
 		}
 
 	}
@@ -520,14 +530,23 @@ public class ScopeVisitor extends Visitor {
 		Expr e = (Expr) i.getTeste();
 		e.accept(this);
 
-		CmdList c = (CmdList) i.getThn();
+		Node c = i.getThn();
 		c.accept(this);
 
 		String thn_type = typeStack.pop();
 		String e_type = typeStack.pop();
+
+		if(!e_type.equals(BOOL) && !e_type.equals(ERROR))
+		{
+			typeStack.push(ERROR);
+			System.out.println(
+				"Error at line " + i.getLine() + ":" + i.getCol() + ": attempted to condition with " + e_type + ".");
+			return;
+		}
+
 		String else_type = "";
 		if (i.getEls() != null) {
-			CmdList c2 = (CmdList) i.getEls();
+			Node c2 = i.getEls();
 			c2.accept(this);
 			else_type = typeStack.pop();
 		}
@@ -542,45 +561,54 @@ public class ScopeVisitor extends Visitor {
 
 	}
 
+
+
 	public void visit(Attr a) {
-		if(a.getLValue().getLValue()==null)
-		{
-			if(a.getLValue().getExpr()==null)
+		Expr e = a.getExp();
+		LValue l = a.getLValue();
+		e.accept(this);
+		String e_type = typeStack.pop();
+
+		if(l.isSingleID()){
+			if(Variables.get(level).containsKey(a.getLValue().getID().getName()))
 			{
-				Expr e = a.getExp();
-				e.accept(this);
-				String e_type = typeStack.pop();
-				Variables.get(level).put(a.getLValue().getID().getName(), e_type);
-				typeStack.push(e_type);
+				if(!e_type.equals(Variables.get(level).get(a.getLValue().getID().getName())))	
+				{
+					typeStack.push(ERROR);
+					System.out.println(
+						"Error at line " + a.getLine() + ":" + a.getCol() + ": Attempted to attibute value of type " + e_type + 
+						" to variable of type " + Variables.get(level).get(a.getLValue().getID().getName()) + ".");
+					return;
+				}
+			}
+			Variables.get(level).put(a.getLValue().getID().getName(), e_type);
+			if(e_type.equals(ERROR))
+			{
+				typeStack.push(ERROR);
 				return;
 			}
 			else
 			{
-				Expr e = a.getExp();
-				e.accept(this);
-				String e_type = typeStack.pop();
-				LValue lv = a.getLValue();
-				lv.accept(this);
-				String lv_type = typeStack.pop();
-				if(lv_type.equals(ERROR) || e_type.equals(ERROR))
-				{
-					typeStack.push(ERROR);
-					return;
-				}
-				else if (lv_type.equals(e_type))
-				{
-					typeStack.push(e_type);
-					return;
-				}
-				else
-				{
-					typeStack.push(ERROR);
-					System.out.println(
-						"Error at line " + a.getLine() + ":" + a.getCol());
-					return;
-				}
+				typeStack.push(CMD);
+				return;
 			}
 		}
+		
+		l.accept(this);
+		String l_type = typeStack.pop();
+
+		if(!l_type.equals(e_type) && !e_type.equals(ERROR) && !l_type.equals(ERROR)){
+			typeStack.push(ERROR);
+			System.out.println(
+				"Error at line " + l.getLine() + ":" + l.getCol() + ": Attempted to attibute value of type " + e_type + " to variable of type " + l_type + ".");
+		}else if(e_type.equals(ERROR) || l_type.equals(ERROR)){
+			typeStack.push(ERROR);
+		}
+		else{
+			typeStack.push(CMD);
+		}
+		return;
+		
 	}
 
 	public void visit(LValue l) {
@@ -588,62 +616,78 @@ public class ScopeVisitor extends Visitor {
 		LValue lv = l.getLValue();
 		Expr e = l.getExpr();
 		ID i = l.getID();
-
-		if(lv==null)
-		{
-			if(e==null)
-			{
-				if(Variables.get(level).containsKey(i.getName()))
+		if(lv != null){
+			if(e==null){
+				lv.accept(this);
+				String type = typeStack.pop();
+				if(type.equals(ERROR))
 				{
-					i.accept(this);
-					String i_type = typeStack.pop(); 
-					typeStack.push(i_type);
+					typeStack.push(ERROR);
 					return;
+				}
+				if(HashMapData.get(type).containsKey(i.getName()))
+				{
+					typeStack.push(HashMapData.get(type).get(i.getName()));
 				}
 				else
 				{
 					typeStack.push(ERROR);
-					System.out.println(
-						"Error at line " + l.getLine() + ":" + l.getCol() + ": The variable " + i.getName() + " is not inicialized.");
-					return;
+					{
+						System.out.println(
+							"Error at line " + l.getLine() + ":" + l.getCol() + ": The attribute " + i.getName() + " not exist in data " + type + ".");
+					}
 				}
 			}
-			else
-			{
-				if(Variables.get(level).containsKey(i.getName()))
-				{
-					e.accept(this);
-					String e_type = typeStack.pop();
-					if(!e_type.equals(INT) && !e_type.equals(ERROR))
-					{
-						typeStack.push(ERROR);
-						System.out.println(
-							"Error at line " + l.getLine() + ":" + l.getCol() + ": A vector access expected INT, received" + e_type + ".");
-						return;
-					}
-					else if(e_type.equals(ERROR))
-					{
-						typeStack.push(ERROR);
-						return;
-					}
-				}
-				else
+			else{
+				e.accept(this);
+				String e_type = typeStack.pop();
+
+				if((!e_type.equals(INT)) && (!e_type.equals(ERROR)))
 				{
 					typeStack.push(ERROR);
 					System.out.println(
-						"Error at line " + l.getLine() + ":" + l.getCol() + ": The variable " + i.getName() + " is not inicialized.");
-					return;
+						"Error at line " + l.getLine() + ":" + l.getCol() + ": A vector access expected INT, received" + e_type + ".");
+				}
+				else if(e_type.equals(ERROR))
+				{
+					typeStack.push(ERROR);
+				}
+				else
+				{
+					lv.accept(this);
+					String type = typeStack.pop();
+					if(type.equals(ERROR))
+					{
+						typeStack.push(ERROR);
+					}
+					else
+					{
+						int index = type.indexOf('[');
+						int size = type.length();
+						if(size > index+2)
+						{
+							type = type.substring(0, index) + type.substring(index+2, size);
+						}
+						else
+						{
+							type = type.substring(0, index);
+						}
+						typeStack.push(type);
+					}
 				}
 			}
 		}
-		else
-		{
-
+		
+		else{
+			String type = Variables.get(level).get(i.getName());
+			if(type == null){
+				typeStack.push(ERROR);
+				System.out.println("Error at line " + l.getLine() + ":" + l.getCol() + ": Variable " + i.getName() + " was not inicialized.");
+			}else{
+				typeStack.push(type);
+			}
 		}
 	}
-
-
-
 
 	public void visit(ID i)
 	{
@@ -657,11 +701,15 @@ public class ScopeVisitor extends Visitor {
 		{
 			e.accept(this);
 			String e_type = typeStack.pop();
-			if(!e_type.equals(INT))
+			if(!e_type.equals(INT) && !e_type.equals(ERROR))
 			{
 				typeStack.push(ERROR);
 				System.out.println(
 					"Error at line " + n.getLine() + ":" + n.getCol() + ": A vector access expected INT, received" + e_type + ".");
+			}
+			else if(e_type.equals(ERROR))
+			{
+				typeStack.push(ERROR);
 			}
 			else
 			{
@@ -681,7 +729,8 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(Read i) {
 		LValue lv = i.getLValue();
-		Variables.get(level).put(lv.getID().getName(), CHAR);		
+		Variables.get(level).put(lv.getID().getName(), CHAR);
+		typeStack.push(CMD);		
 	}
 
 	public void visit(ReturnCMD r) {
@@ -727,55 +776,89 @@ public class ScopeVisitor extends Visitor {
 			Integer scope = HashMapScope.get(c.getId().getName());
 			ExprList e_list = c.getExpList();
 			
-			if(Params.get(scope).size() == e_list.getList().size())
+			if(e_list != null)
 			{
-				Integer i=0;
-				for(Expr e : e_list.getList())
+				if(Params.get(scope).size() == e_list.getList().size())
 				{
-					e.accept(this);
-					String e_type = typeStack.pop();
-					String expected = Params.get(scope).get(i);
-					if(!e_type.equals(expected) && !e_type.equals(ERROR))
+					Integer i=0;
+					for(Expr e : e_list.getList())
 					{
-						typeStack.push(ERROR);
-						System.out.println(
-							"Error at line " + c.getLine() + ":" + c.getCol() + ": The " + (i+1) + "º parameter expected " + expected + " but received " + e_type + ".");
-						return;
+						e.accept(this);
+						String e_type = typeStack.pop();
+						String expected = Params.get(scope).get(i);
+						if(!e_type.equals(expected) && !e_type.equals(ERROR))
+						{
+							typeStack.push(ERROR);
+							System.out.println(
+								"Error at line " + c.getLine() + ":" + c.getCol() + ": The " + (i+1) + "º parameter expected " + expected + " but received " + e_type + ".");
+							return;
+						}
+						else if(e_type.equals(ERROR))
+						{
+							typeStack.push(ERROR);
+							return;
+						}
+						i = i+1;
 					}
-					else if(e_type.equals(ERROR))
-					{
-						typeStack.push(ERROR);
-						return;
-					}
-					i = i+1;
 				}
-				LValueList lv_list = c.getLValueList();
-				if(Returns.get(scope).size() == lv_list.getList().size())
-				{
-					Integer j = 0;
-					for(LValue lv : lv_list.getList())
-					{
-						Variables.get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
-						j= j+1;
-					}
-					typeStack.push(CMD);
-					return;
-				}
-				else
+				else if(Params.get(scope).size() > 0)
 				{
 					typeStack.push(ERROR);
 					System.out.println(
-						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received " + lv_list.getList().size() + ".");
+						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received " + e_list.getList().size() + ".");
+					return;
+				}
+
+				LValueList lv_list = c.getLValueList();
+				
+				if(lv_list != null)
+				{
+					if(Returns.get(scope).size() == lv_list.getList().size())
+					{
+						Integer j = 0;
+						for(LValue lv : lv_list.getList())
+						{
+							if(Variables.get(level).containsKey(lv.getID().getName()))
+							{
+								if(!Returns.get(scope).get(j).equals(Variables.get(level).get(lv.getID().getName())))	
+								{
+									typeStack.push(ERROR);
+									System.out.println(
+										"Error at line " + c.getLine() + ":" + c.getCol() + ": Attempted to attibute value of type " + Returns.get(scope).get(j) + 
+										" to variable of type " + Variables.get(level).get(lv.getID().getName()) + ".");
+									return;
+								}
+							}
+							Variables.get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
+							j= j+1;
+						}
+						typeStack.push(CMD);
+						return;
+					}
+					else
+					{
+						typeStack.push(ERROR);
+						System.out.println(
+							"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received " + lv_list.getList().size() + ".");
+						return;
+					}
+				}
+				else if(Returns.get(scope).size() > 0)
+				{
+					typeStack.push(ERROR);
+					System.out.println(
+						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received 0.");
 					return;
 				}
 			}
-			else
+			else if(Params.get(scope).size() > 0)
 			{
 				typeStack.push(ERROR);
 				System.out.println(
-					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received " + e_list.getList().size() + ".");
+					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received 0.");
 				return;
 			}
+			typeStack.push(CMD);
 		}
 		else
 		{
@@ -792,19 +875,38 @@ public class ScopeVisitor extends Visitor {
 			Integer scope = HashMapScope.get(c.getId().getName());
 			ExprList e_list = c.getExpList();
 			
-			if(Params.get(scope).size() == e_list.getList().size())
+			if(e_list!=null)
 			{
-				Integer i=0;
-				for(Expr e : e_list.getList())
+				if(Params.get(scope).size() == e_list.getList().size())
 				{
+					Integer i=0;
+					for(Expr e : e_list.getList())
+					{
+						e.accept(this);
+						String e_type = typeStack.pop();
+						String expected = Params.get(scope).get(i);
+						if(!e_type.equals(expected) && !e_type.equals(ERROR))
+						{
+							typeStack.push(ERROR);
+							System.out.println(
+								"Error at line " + c.getLine() + ":" + c.getCol() + ": The " + (i+1) + "º parameter expected " + expected + " but received " + e_type + ".");
+							return;
+						}
+						else if(e_type.equals(ERROR))
+						{
+							typeStack.push(ERROR);
+							return;
+						}
+						i = i+1;
+					}
+					Expr e = c.getLExp();
 					e.accept(this);
 					String e_type = typeStack.pop();
-					String expected = Params.get(scope).get(i);
-					if(!e_type.equals(expected) && !e_type.equals(ERROR))
+					if(!e_type.equals(INT) && !e_type.equals(ERROR))
 					{
 						typeStack.push(ERROR);
 						System.out.println(
-							"Error at line " + c.getLine() + ":" + c.getCol() + ": The " + (i+1) + "º parameter expected " + expected + " but received " + e_type + ".");
+							"Error at line " + c.getLine() + ":" + c.getCol() + ": The functions return position expected a " + INT + " but received a " + e_type + ".");
 						return;
 					}
 					else if(e_type.equals(ERROR))
@@ -812,38 +914,30 @@ public class ScopeVisitor extends Visitor {
 						typeStack.push(ERROR);
 						return;
 					}
-					i = i+1;
-				}
-				Expr e = c.getLExp();
-				e.accept(this);
-				String e_type = typeStack.pop();
-				if(!e_type.equals(INT) && !e_type.equals(ERROR))
-				{
-					typeStack.push(ERROR);
-					System.out.println(
-						"Error at line " + c.getLine() + ":" + c.getCol() + ": The functions return position expected a " + INT + " but received a " + e_type + ".");
-					return;
-				}
-				else if(e_type.equals(ERROR))
-				{
-					typeStack.push(ERROR);
-					return;
+					else
+					{
+						Int i_value = (Int)e;
+						int value = i_value.getValue();
+						typeStack.push(Returns.get(scope).get(value));
+						return;
+					}
 				}
 				else
 				{
-					Int i_value = (Int)e;
-					int value = i_value.getValue();
-					typeStack.push(Returns.get(scope).get(value));
+					typeStack.push(ERROR);
+						System.out.println(
+							"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received " + e_list.getList().size() + ".");
 					return;
 				}
 			}
-			else
+			else if(Params.get(scope).size() > 0)
 			{
 				typeStack.push(ERROR);
-					System.out.println(
-						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received " + e_list.getList().size() + ".");
+				System.out.println(
+					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received 0.");
 				return;
 			}
+			typeStack.push(CMD);
 		}
 		else
 		{
