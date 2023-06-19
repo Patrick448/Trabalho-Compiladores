@@ -56,9 +56,6 @@ public class Intepretador {
 		{
 			ast.tryInterpret(null, null, null, null);
 		}
-
-		//System.out.println(ast);
-		//System.out.println(ast.dotString());
 	}
 
 	
