@@ -40,14 +40,33 @@ public class ScopeVisitor extends Visitor {
 
 		DataList dataList = p.getDataList();
 		FuncList funcList = p.getFuncList();
+		Boolean have_error = false;
 
 		if (dataList != null)
 		{
 			dataList.accept(this);
+			String d_type = typeStack.pop();
+			if(d_type == ERROR)
+			{
+				have_error = true;
+			}
 		}
 		if (funcList != null)
 		{
 			funcList.accept(this);
+			String f_type = typeStack.pop();
+			if(f_type == ERROR)
+			{
+				have_error = true;
+			}
+		}
+		if(have_error)
+		{
+			typeStack.push(ERROR);
+		} 
+		else
+		{
+			typeStack.push(CMD);
 		}
 	}
 
@@ -135,14 +154,34 @@ public class ScopeVisitor extends Visitor {
 	public void visit(DataList d) {
 
 		List<Data> list = d.getList();
+		boolean have_error = false;
 		for (Data data : list) {
 			data.accept(this);
+			String t_data = typeStack.pop();
+			if(t_data == ERROR)
+			{
+				have_error = true;
+			}
+		}
+		if(have_error)
+		{
+			typeStack.push(ERROR);
+		}
+		else
+		{
+			typeStack.push(CMD);
 		}
 	}
 
 	@Override
 	public void visit(Data d) {
 		DeclList decls = d.getDeclList();
+		if(HashMapData.containsKey(d.getId().getName()))
+		{
+			System.out.println("Error at line " + d.getLine() + ":" + d.getCol() + ": Data " + d.getId().getName() + " already declared");
+			typeStack.push(ERROR);
+			return;
+		}
 		HashMapData.put(d.getId().getName(), (new HashMap<String,String>()));
 		if(decls!=null)
 		{
@@ -152,6 +191,7 @@ public class ScopeVisitor extends Visitor {
 				HashMapData.get(d.getId().getName()).put(decl.getId().getName(), typeStack.pop());
 			}
 		}
+		typeStack.push(CMD);
 		return;
 	}
 
