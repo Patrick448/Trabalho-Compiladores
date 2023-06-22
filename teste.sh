@@ -17,6 +17,7 @@ java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/attrFALSE
 java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/data0.lan
 java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/data1.lan
 java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/data2.lan
+java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/data3.lan
 java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/function_call_expr.lan
 java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/function_call_ret_use.lan
 java -cp .:antlr-4.8-complete.jar Intepretador testes/semantica/errado/function0.lan
