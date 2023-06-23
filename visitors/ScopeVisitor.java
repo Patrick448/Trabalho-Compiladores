@@ -863,8 +863,34 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(Read i) {
 		LValue lv = i.getLValue();
-		Variables.get(scopeFunc).get(level).put(lv.getID().getName(), CHAR);
-		typeStack.push(CMD);		
+		if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
+		{
+			String t_read = Variables.get(scopeFunc).get(level).get(lv.getID().getName());
+			if(!t_read.equals(CHAR) && !t_read.equals(ERROR))
+			{
+				System.out.println(
+					"Error at line " + i.getLine() + ":" + i.getCol() + ": Attempted to attibute value of type " + CHAR + 
+					" to variable of type " + t_read + ".");
+				typeStack.push(ERROR);
+				return;
+			}
+			if(t_read.equals(ERROR))
+			{
+				typeStack.push(ERROR);
+				return;
+			}
+			else
+			{
+				typeStack.push(CMD);
+				return;
+			}
+		}
+		else
+		{
+			Variables.get(scopeFunc).get(level).put(lv.getID().getName(), CHAR);
+			typeStack.push(CMD);
+			return;
+		}		
 	}
 
 	public void visit(ReturnCMD r) {
@@ -925,101 +951,73 @@ public class ScopeVisitor extends Visitor {
 				}
 			}
 		s_p = s_p + ")";
+
+		LValueList lv_list = c.getLValueList();
+
 		if(HashMapScope.containsKey(c.getId().getName()+s_p))
 		{
 			Integer scope = HashMapScope.get(c.getId().getName()+s_p);
-			ExprList e_list = c.getExpList();
-			
-			if(e_list != null)
+				
+			if(lv_list != null)
 			{
-				if(Params.get(scope).size() == e_list.getList().size())
+				if(Returns.get(scope).size() == lv_list.getList().size())
 				{
-					Boolean have_error = false;
-					Integer i=0;
-					for(Expr e : e_list.getList())
+					Integer j = 0;
+					for(LValue lv : lv_list.getList())
 					{
-						e.accept(this);
-						String e_type = typeStack.pop();
-						String expected = Params.get(scope).get(i);
-						if(!e_type.equals(expected) && !e_type.equals(ERROR))
+						if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 						{
-							have_error = true;
-							System.out.println(
-								"Error at line " + c.getLine() + ":" + c.getCol() + ": The " + (i+1) + "º parameter expected " + expected + " but received " + e_type + ".");
+							if(!Returns.get(scope).get(j).equals(Variables.get(scopeFunc).get(level).get(lv.getID().getName())))	
+							{
+								typeStack.push(ERROR);
+								System.out.println(
+									"Error at line " + c.getLine() + ":" + c.getCol() + ": Attempted to attibute value of type " + Returns.get(scope).get(j) + 
+									" to variable of type " + Variables.get(scopeFunc).get(level).get(lv.getID().getName()) + ".");
+								return;
+							}
 						}
-						else if(e_type.equals(ERROR))
-						{
-							have_error = true;
-						}
-						i = i+1;
+						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
+						j= j+1;
 					}
-					if(have_error)
-					{
-						typeStack.push(ERROR);
-						return;
-					}
-				}
-				else if(Params.get(scope).size() > 0)
-				{
-					typeStack.push(ERROR);
-					System.out.println(
-						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received " + e_list.getList().size() + ".");
+					typeStack.push(CMD);
 					return;
 				}
-
-				LValueList lv_list = c.getLValueList();
-				
-				if(lv_list != null)
+				else
 				{
-					if(Returns.get(scope).size() == lv_list.getList().size())
+					for(LValue lv : lv_list.getList())
 					{
-						Integer j = 0;
-						for(LValue lv : lv_list.getList())
+						if(!Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 						{
-							if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
-							{
-								if(!Returns.get(scope).get(j).equals(Variables.get(scopeFunc).get(level).get(lv.getID().getName())))	
-								{
-									typeStack.push(ERROR);
-									System.out.println(
-										"Error at line " + c.getLine() + ":" + c.getCol() + ": Attempted to attibute value of type " + Returns.get(scope).get(j) + 
-										" to variable of type " + Variables.get(scopeFunc).get(level).get(lv.getID().getName()) + ".");
-									return;
-								}
-							}
-							Variables.get(scopeFunc).get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
-							j= j+1;
+							Variables.get(scopeFunc).get(level).put(lv.getID().getName(), ERROR);
 						}
-						typeStack.push(CMD);
-						return;
 					}
-					else
-					{
-						typeStack.push(ERROR);
-						System.out.println(
-							"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received " + lv_list.getList().size() + ".");
-						return;
-					}
-				}
-				else if(Returns.get(scope).size() > 0)
-				{
 					typeStack.push(ERROR);
 					System.out.println(
-						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received 0.");
+						"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received " + lv_list.getList().size() + ".");
 					return;
 				}
 			}
-			else if(Params.get(scope).size() > 0)
+			else if(Returns.get(scope).size() > 0)
 			{
 				typeStack.push(ERROR);
 				System.out.println(
-					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received 0.");
+					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received 0.");
 				return;
 			}
 			typeStack.push(CMD);
 		}
 		else
 		{
+			if(lv_list != null)
+			{
+				for(LValue lv : lv_list.getList())
+				{
+					if(!Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
+					{
+						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), ERROR);
+					}
+				}
+			}
 			typeStack.push(ERROR);
 			System.out.println(
 				"Error at line " + c.getLine() + ":" + c.getCol() + ": The function " + c.getId().getName()+s_p + " is not defined.");

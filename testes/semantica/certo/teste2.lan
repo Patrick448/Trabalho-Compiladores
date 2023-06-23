@@ -2,7 +2,7 @@
 -- > [valor digitado]
 
 main(){
-   x = 0;
+   x = ' ';
    print '>';
    read x;
    print x;

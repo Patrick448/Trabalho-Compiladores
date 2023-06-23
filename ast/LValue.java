@@ -81,6 +81,11 @@ public class LValue extends Expr {
          
          if(e != null){
             int index = (Integer)e.interpret(variables, null, null, null, v);
+            if(((List)o).size()<=index)
+            {
+               System.out.println("Error at line " + this.getLine() + ":" + this.getCol() + ": Attempt to access invalid index of vetor.");
+               System.exit(0);
+            }
             ((List)o).set(index, value);
          }
  
@@ -98,6 +103,12 @@ public class LValue extends Expr {
 
          if(e != null){
             int index = (Integer)e.interpret(variables, functions, datas, returns, v);
+            if(((List)o).size()<=index)
+            {
+               System.out.println("Error at line " + this.getLine() + ":" + this.getCol() + ": Attempt to access invalid index of vetor.");
+               System.exit(0);
+               return null;
+            }
             return ((List)o).get(index);
          }else{
             return o;
@@ -105,13 +116,17 @@ public class LValue extends Expr {
          
       }else{
          Object o = lv.interpret(variables, functions, datas, returns, v);
-
          if(o instanceof ArrayList){
             int index = (Integer)e.interpret(variables, functions, datas, returns, v);
+            if(((List)o).size()<=index)
+            {
+               System.out.println("Error at line " + this.getLine() + ":" + this.getCol() + ": Attempt to access invalid index of vetor.");
+               System.exit(0);
+               return null;
+            }
             return ((List)o).get(index);
          }else{
             return ((DataInstance)lv.interpret(variables, functions, datas, returns, v)).get(id.getName());
-
          }
 
       }
