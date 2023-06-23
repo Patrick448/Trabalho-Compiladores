@@ -9,40 +9,40 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import visitors.Visitor;
-
+import visitors.ScopeVisitor;
 import java.util.List;
 
 public class Read extends Node {
       
-      private LValue v; 
+      private LValue vl; 
       
       public Read(int l, int c, LValue v){
            super(l,c);
-           this.v  = v;
+           this.vl  = v;
       }
       
-      public LValue getLValue(){ return v;}
+      public LValue getLValue(){ return vl;}
       
       //@Override
       public String toString(){
-         return   "read " + v.toString(); 
+         return   "read " + vl.toString(); 
       }
 
       public String dotString(){
         String s = getUid() + " [label=\""+this.getClass().getSimpleName()+"\"]\n";
      
-        if(v != null){
-           s+= getUid() +"--"+v.getUid()+"\n"; 
-           s+= v.dotString();  
+        if(vl != null){
+           s+= getUid() +"--"+vl.getUid()+"\n"; 
+           s+= vl.dotString();  
         }
         
         return s;
     }
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
 
         Scanner keyboard = new Scanner(System.in);
-        String read = keyboard.next();
-        variables.peek().put((String)v.getID().getName(), read);
+        String read = keyboard.next().substring(0,1);
+        variables.peek().put((String)vl.getID().getName(), read);
         keyboard.close();
 
         return read;

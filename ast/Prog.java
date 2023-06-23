@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -78,10 +79,9 @@ public class Prog extends Node {
         return s+"\n";
     }
       
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-        if (dataList != null) dataList.tryInterpret(stackVariables, funcList.getList(), hashDatas, stackReturns);
-        if (funcList != null) funcList.tryInterpret(stackVariables, funcList.getList() , hashDatas, stackReturns);
-
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns,ScopeVisitor v){
+        if (dataList != null) dataList.tryInterpret(stackVariables, funcList.getList(), hashDatas, stackReturns, v);
+        if (funcList != null) funcList.tryInterpret(stackVariables, funcList.getList() , hashDatas, stackReturns, v);
         return 0;
     }
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -52,10 +53,10 @@ public class Iterate extends Node {
          return cmd;
       }
       
-      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-        int i = (Integer)condition.tryInterpret(variables, functions, datas, returns);
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+        int i = (Integer)condition.tryInterpret(variables, functions, datas, returns, v);
         while(i>0){
-          	cmd.tryInterpret(variables, functions, datas, returns);
+          	cmd.tryInterpret(variables, functions, datas, returns, v);
             i--;
         }
         return 0;

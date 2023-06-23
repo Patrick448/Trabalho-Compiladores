@@ -5,14 +5,14 @@ package ast;
  * Expr
  */
 
-import visitors.Visitable;
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.HashMap; 
 import java.util.Stack;
 import java.util.List;
  
-public class Print extends Node implements Visitable{
+public class Print extends Node{
       
       private Expr e; 
       
@@ -38,9 +38,9 @@ public class Print extends Node implements Visitable{
         
         return s;
     }
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
       
-      Object object = e.tryInterpret(variables, functions, datas, returns);
+      Object object = e.tryInterpret(variables, functions, datas, returns, v);
       if(object == null)
       {
          System.out.print("null");

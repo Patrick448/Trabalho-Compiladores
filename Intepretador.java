@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -43,20 +44,21 @@ public class Intepretador {
 		// tell ANTLR to does not automatically build an AST
 		parser.setBuildParseTree(false);
 
-		
-
-		Node ast = parser.prog().ast;
-
-		writeToFile("ast.dot", ast.dotString());
-		
-		ScopeVisitor scope = new ScopeVisitor();
-		((Prog)ast).accept(scope);
-		String analise = scope.getStack().pop();
-		if(!analise.equals("Error"))
+		try
 		{
-			ast.tryInterpret(null, null, null, null);
+			Node ast = parser.prog().ast;
+			writeToFile("ast.dot", ast.dotString());
+		
+			ScopeVisitor scope = new ScopeVisitor();
+			((Prog)ast).accept(scope);
+			String analise = scope.getStack().pop();
+			if(!analise.equals("Error"))
+			{
+				ast.tryInterpret(null, null, null, null, scope);
+			}
 		}
-	}
-
-	
+		catch(Exception e){
+			System.exit(0);
+	  	}
+	}	
 }

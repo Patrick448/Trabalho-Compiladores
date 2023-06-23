@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
  
@@ -73,13 +74,13 @@ public class LValue extends Expr {
         return s;
     }
 
-    public void attribute(Object value, Stack<HashMap<String,Object>> variables){
+    public void attribute(Object value, Stack<HashMap<String,Object>> variables, ScopeVisitor v){
 
       if(lv != null){
-         Object o = lv.interpret(variables, null, null, null);
+         Object o = lv.interpret(variables, null, null, null, v);
          
          if(e != null){
-            int index = (Integer)e.interpret(variables, null, null, null);
+            int index = (Integer)e.interpret(variables, null, null, null, v);
             ((List)o).set(index, value);
          }
  
@@ -90,26 +91,26 @@ public class LValue extends Expr {
             variables.peek().put(id.getName(), value);
     }
 
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
 
       if(lv == null){
          Object o = variables.peek().get(id.getName());
 
          if(e != null){
-            int index = (Integer)e.interpret(variables, functions, datas, returns);
+            int index = (Integer)e.interpret(variables, functions, datas, returns, v);
             return ((List)o).get(index);
          }else{
             return o;
          }
          
       }else{
-         Object o = lv.interpret(variables, functions, datas, returns);
+         Object o = lv.interpret(variables, functions, datas, returns, v);
 
          if(o instanceof ArrayList){
-            int index = (Integer)e.interpret(variables, functions, datas, returns);
+            int index = (Integer)e.interpret(variables, functions, datas, returns, v);
             return ((List)o).get(index);
          }else{
-            return ((DataInstance)lv.interpret(variables, functions, datas, returns)).get(id.getName());
+            return ((DataInstance)lv.interpret(variables, functions, datas, returns, v)).get(id.getName());
 
          }
 

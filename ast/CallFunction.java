@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -57,14 +58,14 @@ public class CallFunction extends Expr {
         return s;
     }
 
-    private void put_params_value(Func f, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
+    private void put_params_value(Func f, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v)
     {
         int i=0;
         if(f.getParams() != null)
         {
             for(Param n : f.getParams().getParamsList())
             {
-                 f.getValuesParams().put(n.getId().getName(),e.getList().get(i).tryInterpret(variables, functions, datas, returns));
+                 f.getValuesParams().put(n.getId().getName(),e.getList().get(i).tryInterpret(variables, functions, datas, returns, v));
                  i++;
             }
         }
@@ -79,62 +80,54 @@ public class CallFunction extends Expr {
             i+=1;
         }
     }
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
         for(Func f : functions)
         {
             if(f.getId().getName().equals(id.getName()))
             {
                 if(f.getParams()!=null)
                 {
-                    if(f.getParams().getParamsList().size()==e.getList().size()){
-                        if(f.getReturns()!=null)
+                    Boolean t_parameters_equal = true;
+                    int count = 0;
+                    if(f.getParams().getParamsList().size()==e.getList().size())
+                    {
+                        while(count<f.getParams().getParamsList().size())
                         {
-                            if(f.getReturns().getReturnTypes().size()==l.getList().size())
+                            e.getList().get(count).accept(v);
+                            String e_type = v.getStack().pop();
+                            if(!e_type.equals(f.getParams().getParamsList().get(count).getType().getFullName()))
                             {
-                                put_params_value(f, variables, functions, datas, returns);
-                                f.tryInterpret(variables, functions, datas, returns);
+                                t_parameters_equal = false;
+                                break;
+                            }
+                            count = count+1;
+                        }
+                        if(t_parameters_equal)
+                        {
+                            put_params_value(f, variables, functions, datas, returns, v);
+                            f.tryInterpret(variables, functions, datas, returns, v);
+                            if(l!=null)
+                            {
                                 put_returns_value(variables, functions, datas, returns);
                                 if(!returns.isEmpty())
                                 {
                                     returns.pop();
                                 }
-                                break;
-                            }
-                        }
-                        else if(l==null)
-                        {
-                            put_params_value(f, variables, functions, datas, returns);
-                            f.tryInterpret(variables, functions, datas, returns);
-                            if(!returns.isEmpty())
-                            {
-                                returns.pop();
                             }
                             break;
                         }
                     }
                 }
-            }
-            else if(e==null)
-            {
-                if(f.getReturns()!=null)
+                else if(e==null)
                 {
-                    if(f.getReturns().getReturnTypes().size()==l.getList().size())
+                    f.tryInterpret(variables, functions, datas, returns, v);
+                    if(l!=null)
                     {
-                        f.tryInterpret(variables, functions, datas, returns);
                         put_returns_value(variables, functions, datas, returns);
                         if(!returns.isEmpty())
                         {
                             returns.pop();
                         }
-                        break;
-                    }
-                }
-                else if(l==null)
-                {
-                    f.tryInterpret(variables, functions, datas, returns);
-                    if(!returns.isEmpty())
-                    {
-                        returns.pop();
                     }
                     break;
                 }

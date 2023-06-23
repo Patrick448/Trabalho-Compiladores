@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ID extends Expr {
         return s;
     }
 
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
       return variables.peek().get(l);
     }
 

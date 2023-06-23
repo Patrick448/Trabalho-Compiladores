@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -35,10 +36,10 @@ public class And extends BinOP {
          return s;
       }
 
-      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean") && getRight().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("Boolean"))
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns,ScopeVisitor v){
+         if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("Boolean") && getRight().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("Boolean"))
          {
-            return (boolean)getLeft().tryInterpret(variables, functions, datas, returns) && (boolean)getRight().tryInterpret(variables, functions, datas, returns);
+            return (boolean)getLeft().tryInterpret(variables, functions, datas, returns, v) && (boolean)getRight().tryInterpret(variables, functions, datas, returns, v);
          }
          return false;
       }

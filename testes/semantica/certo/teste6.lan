@@ -25,7 +25,7 @@ printP(p :: Ponto){
 printV( v :: Ponto[], n :: Int){
    print '{';
    if(0 < n){
-       printP( v[0]); 
+       printP(v[0]); 
        i = 1;
        iterate(n-1){
            print ',';

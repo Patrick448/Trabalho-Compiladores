@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import visitors.Visitor;
-
 import java.util.List;
+
+import visitors.ScopeVisitor;
+import visitors.Visitor;
 
 public class CmdList extends Node {
     
@@ -29,19 +30,22 @@ public class CmdList extends Node {
     }
 
     @Override
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+        v.addLevel();
         for(Node n : list) {
-            Object o = n.tryInterpret(variables, functions, datas, returns);
+            Object o = n.tryInterpret(variables, functions, datas, returns, v);
             try
             {
                 Boolean run_return = (Boolean)o;
                 if((n.getClass().getSimpleName().equals("ReturnCMD") || run_return) && !(n.getClass().getSimpleName().equals("Bool")))
                 {
+                    v.subLevel();
                     return true;
                 }
             }
             catch(Exception e){}
         }
+        v.subLevel();
         return false;
     }
 

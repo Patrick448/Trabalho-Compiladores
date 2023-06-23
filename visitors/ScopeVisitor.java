@@ -17,17 +17,46 @@ public class ScopeVisitor extends Visitor {
 	private static final String CMD = "CMD";
 
 	private HashMap<String, Integer> HashMapScope = new HashMap<String, Integer>();
-	private List<HashMap<String, String>> Variables = new ArrayList<HashMap<String, String>>();
+	private List<List<HashMap<String, String>>> Variables = new ArrayList<List<HashMap<String, String>>>();
 	private List<List<String>> Params = new ArrayList<List<String>>();
 	private List<List<String>> Returns = new ArrayList<List<String>>();
 	private HashMap<String, HashMap<String,String>> HashMapData = new HashMap<String, HashMap<String,String>>();
 	private int level;
+	private int scopeFunc;
 
 	private Stack<String> typeStack = new Stack<String>();
 
+	public ScopeVisitor() {}
 
-	public ScopeVisitor() {
+	public Integer getScopeFunc()
+	{
+		return scopeFunc;
+	}
 
+	public void setScopeFuncByName(String name){
+		Integer scope = HashMapScope.get(name);
+		scopeFunc = scope;
+	}
+
+	public void setScopeFunc(Integer i){
+		scopeFunc = i;
+	}
+
+	public Integer getLevel()
+	{
+		return level;
+	}
+
+	public void setLevel(Integer i){
+		level = i;
+	}
+
+	public void addLevel(){
+		level = level+1;
+	}
+
+	public void subLevel(){
+		level = level-1;
 	}
 
 	public Stack<String> getStack()
@@ -74,13 +103,34 @@ public class ScopeVisitor extends Visitor {
 	public void visit(FuncList f) {
 
 		List<Func> list = f.getList();
+		List<HashMap<String,String>> scopeList;
+
 		int scope_value = 0;
 		HashMap<String,String> HashMapVariables;
 
 		for (Func func : list) {
 			scope_value = HashMapScope.size();
-			HashMapScope.put(func.getId().getName(), scope_value);
+			Integer i = 0;
+			String s_p = "(";
+			if(func.getParams()!=null)
+			{
+				for(Param parameter : func.getParams().getParamsList())
+				{
+					if(i>0)
+					{
+						s_p = s_p + "," + parameter.getType().getFullName();
+					}
+					else
+					{
+						s_p = s_p + parameter.getType().getFullName();
+					}
+					i = i+1;
+				}
+			}
+			s_p = s_p + ")";
+			HashMapScope.put(func.getId().getName()+s_p, scope_value);
 
+			scopeList = new ArrayList<HashMap<String,String>>();
 			HashMapVariables = new HashMap<String,String>();
 
 			List<String> ListParams = new ArrayList<String>();
@@ -98,7 +148,8 @@ public class ScopeVisitor extends Visitor {
 			}
 
 			Params.add(ListParams);
-			Variables.add(HashMapVariables);
+			scopeList.add(HashMapVariables);
+			Variables.add(scopeList);
 
 			List<String> ListReturn = new ArrayList<String>();
 
@@ -126,9 +177,9 @@ public class ScopeVisitor extends Visitor {
 			}
 		}
 
-		if(HashMapScope.containsKey("main"))
+		if(HashMapScope.containsKey("main()"))
 		{
-			int scope_main = HashMapScope.get("main");
+			int scope_main = HashMapScope.get("main()");
 			if(Params.get(scope_main).size() != 0)
 			{
 				typeStack.push(ERROR);
@@ -197,7 +248,26 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Func f) {
-		level = HashMapScope.get(f.getId().getName());
+		Integer i = 0;
+		String s_p = "(";
+		if(f.getParams()!=null)
+		{
+			for(Param parameter : f.getParams().getParamsList())
+			{
+				if(i>0)
+				{
+					s_p = s_p + "," + parameter.getType().getFullName();
+				}
+				else
+				{
+					s_p = s_p + parameter.getType().getFullName();
+				}
+				i = i+1;
+			}
+		}
+		s_p = s_p + ")";
+		scopeFunc = HashMapScope.get(f.getId().getName()+s_p);
+		level = 0;
 		CmdList cmds = f.getCmdList();
 		cmds.accept(this); 
 	}
@@ -205,6 +275,11 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(CmdList c) {
+
+		HashMap<String,String> scopeCMD = (HashMap<String,String>) Variables.get(scopeFunc).get(level).clone();
+		Variables.get(scopeFunc).add(scopeCMD);
+		level = level + 1;
+
 		List<Node> list = c.getList();
 		boolean hasError = false;
 		for (Node n : list) {
@@ -220,6 +295,8 @@ public class ScopeVisitor extends Visitor {
 		} else {
 			typeStack.push(CMD);
 		}
+
+		level = level - 1;
 	}
 
 	@Override
@@ -622,14 +699,14 @@ public class ScopeVisitor extends Visitor {
 		String e_type = typeStack.pop();
 
 		if(l.isSingleID()){
-			if(Variables.get(level).containsKey(a.getLValue().getID().getName()))
+			if(Variables.get(scopeFunc).get(level).containsKey(a.getLValue().getID().getName()))
 			{
-				if(!e_type.equals(Variables.get(level).get(a.getLValue().getID().getName())) && !e_type.equals(ERROR))	
+				if(!e_type.equals(Variables.get(scopeFunc).get(level).get(a.getLValue().getID().getName())) && !e_type.equals(ERROR))	
 				{
 					typeStack.push(ERROR);
 					System.out.println(
 						"Error at line " + a.getLine() + ":" + a.getCol() + ": Attempted to attibute value of type " + e_type + 
-						" to variable of type " + Variables.get(level).get(a.getLValue().getID().getName()) + ".");
+						" to variable of type " + Variables.get(scopeFunc).get(level).get(a.getLValue().getID().getName()) + ".");
 					return;
 				}
 				else if(e_type.equals(ERROR))
@@ -638,7 +715,7 @@ public class ScopeVisitor extends Visitor {
 					return;
 				}
 			}
-			Variables.get(level).put(a.getLValue().getID().getName(), e_type);
+			Variables.get(scopeFunc).get(level).put(a.getLValue().getID().getName(), e_type);
 			if(e_type.equals(ERROR))
 			{
 				typeStack.push(ERROR);
@@ -736,7 +813,7 @@ public class ScopeVisitor extends Visitor {
 		}
 		
 		else{
-			String type = Variables.get(level).get(i.getName());
+			String type = Variables.get(scopeFunc).get(level).get(i.getName());
 			if(type == null){
 				typeStack.push(ERROR);
 				System.out.println("Error at line " + l.getLine() + ":" + l.getCol() + ": Variable " + i.getName() + " was not inicialized.");
@@ -748,7 +825,7 @@ public class ScopeVisitor extends Visitor {
 
 	public void visit(ID i)
 	{
-		typeStack.push(Variables.get(level).get(i.getName()));
+		typeStack.push(Variables.get(scopeFunc).get(level).get(i.getName()));
 	}
 
 	public void visit(New n) {
@@ -786,21 +863,21 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(Read i) {
 		LValue lv = i.getLValue();
-		Variables.get(level).put(lv.getID().getName(), CHAR);
+		Variables.get(scopeFunc).get(level).put(lv.getID().getName(), CHAR);
 		typeStack.push(CMD);		
 	}
 
 	public void visit(ReturnCMD r) {
 		ExprList e_list = r.getList();
 
-		if(Returns.get(level).size() == e_list.getList().size())
+		if(Returns.get(scopeFunc).size() == e_list.getList().size())
 		{
 			Integer i=0;
 			for(Expr e : e_list.getList())
 			{
 				e.accept(this);
 				String e_type = typeStack.pop();
-				String expected = Returns.get(level).get(i);
+				String expected = Returns.get(scopeFunc).get(i);
 				if(!e_type.equals(expected) && !e_type.equals(ERROR))
 				{
 					typeStack.push(ERROR);
@@ -822,15 +899,35 @@ public class ScopeVisitor extends Visitor {
 		{
 			typeStack.push(ERROR);
 			 	System.out.println(
-					"Error at line " + r.getLine() + ":" + r.getCol() + ": The function expected " + Returns.get(level).size() + " returns but received " + e_list.getList().size() + ".");
+					"Error at line " + r.getLine() + ":" + r.getCol() + ": The function expected " + Returns.get(scopeFunc).size() + " returns but received " + e_list.getList().size() + ".");
 			return;
 		}
 	}
 
 	public void visit(CallFunction c) {
-		if(HashMapScope.containsKey(c.getId().getName()))
+		Integer count = 0;
+		String s_p = "(";
+			if(c.getExpList()!=null)
+			{
+				for(Expr e : c.getExpList().getList())
+				{
+					e.accept(this);
+					String e_type = typeStack.pop();
+					if(count>0)
+					{
+						s_p = s_p + "," + e_type;
+					}
+					else
+					{
+						s_p = s_p + e_type;
+					}
+					count = count+1;
+				}
+			}
+		s_p = s_p + ")";
+		if(HashMapScope.containsKey(c.getId().getName()+s_p))
 		{
-			Integer scope = HashMapScope.get(c.getId().getName());
+			Integer scope = HashMapScope.get(c.getId().getName()+s_p);
 			ExprList e_list = c.getExpList();
 			
 			if(e_list != null)
@@ -879,18 +976,18 @@ public class ScopeVisitor extends Visitor {
 						Integer j = 0;
 						for(LValue lv : lv_list.getList())
 						{
-							if(Variables.get(level).containsKey(lv.getID().getName()))
+							if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 							{
-								if(!Returns.get(scope).get(j).equals(Variables.get(level).get(lv.getID().getName())))	
+								if(!Returns.get(scope).get(j).equals(Variables.get(scopeFunc).get(level).get(lv.getID().getName())))	
 								{
 									typeStack.push(ERROR);
 									System.out.println(
 										"Error at line " + c.getLine() + ":" + c.getCol() + ": Attempted to attibute value of type " + Returns.get(scope).get(j) + 
-										" to variable of type " + Variables.get(level).get(lv.getID().getName()) + ".");
+										" to variable of type " + Variables.get(scopeFunc).get(level).get(lv.getID().getName()) + ".");
 									return;
 								}
 							}
-							Variables.get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
+							Variables.get(scopeFunc).get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
 							j= j+1;
 						}
 						typeStack.push(CMD);
@@ -925,15 +1022,34 @@ public class ScopeVisitor extends Visitor {
 		{
 			typeStack.push(ERROR);
 			System.out.println(
-				"Error at line " + c.getLine() + ":" + c.getCol() + ": The function " + c.getId().getName() + " is not defined.");
+				"Error at line " + c.getLine() + ":" + c.getCol() + ": The function " + c.getId().getName()+s_p + " is not defined.");
 			return;
 		}
 	}
 
 	public void visit(CallFunctionVet c) {
-		if(HashMapScope.containsKey(c.getId().getName()))
+		Integer count = 0;
+		String s_p = "(";
+		if(c.getExpList()!=null)
 		{
-			Integer scope = HashMapScope.get(c.getId().getName());
+			for(Expr e : c.getExpList().getList())
+				{
+					e.accept(this);
+					String e_type = typeStack.pop();
+					if(count>0)
+					{
+						s_p = s_p + "," + e_type;
+					}
+					else{
+						s_p = s_p + e_type;
+					}
+					count = count+1;
+				}
+			}
+		s_p = s_p + ")";
+		if(HashMapScope.containsKey(c.getId().getName()+s_p))
+		{
+			Integer scope = HashMapScope.get(c.getId().getName()+s_p);
 			ExprList e_list = c.getExpList();
 			
 			if(e_list!=null)
@@ -1010,7 +1126,7 @@ public class ScopeVisitor extends Visitor {
 		{
 			typeStack.push(ERROR);
 				System.out.println(
-					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function " + c.getId().getName() + " is not defined.");
+					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function " + c.getId().getName()+s_p + " is not defined.");
 			return;
 		}
 	}

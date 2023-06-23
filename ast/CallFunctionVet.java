@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -57,44 +58,61 @@ public class CallFunctionVet extends Expr {
         return s;
     }
 
-    private void put_params_value(Func f, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
+    private void put_params_value(Func f, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v)
     {
         int i=0;
         if(f.getParams() != null)
         {
             for(Param n : f.getParams().getParamsList())
             {
-                f.getValuesParams().put(n.getId().getName(),le.getList().get(i).tryInterpret(variables, functions, datas, returns));
+                f.getValuesParams().put(n.getId().getName(),le.getList().get(i).tryInterpret(variables, functions, datas, returns, v));
                 i++;
             }
         }
     }
       
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
         for(Func f : functions)
         {
             if(f.getId().getName().equals(id.getName()))
             {
                 if(f.getParams()!=null)
                 {
-                    if(f.getParams().getParamsList().size()==le.getList().size()){
-                        put_params_value(f, variables, functions, datas, returns);
-                        f.tryInterpret(variables, functions, datas, returns);
-                        int max = returns.peek().size();
-                        if((Integer)e.tryInterpret(variables, functions, datas, returns)<max)
+                    Boolean t_parameters_equal = true;
+                    int count = 0;
+                    if(f.getParams().getParamsList().size()==le.getList().size())
+                    {
+                        while(count<f.getParams().getParamsList().size())
                         {
-                            return returns.peek().get((Integer)e.tryInterpret(variables, functions, datas, returns));
+                            le.getList().get(count).accept(v);
+                            String e_type = v.getStack().pop();
+                            if(!e_type.equals(f.getParams().getParamsList().get(count).getType().getFullName()))
+                            {
+                                t_parameters_equal = false;
+                                break;
+                            }
+                            count = count+1;
+                        }
+                        if(t_parameters_equal)
+                        {
+                            put_params_value(f, variables, functions, datas, returns, v);
+                            f.tryInterpret(variables, functions, datas, returns, v);
+                            int max = returns.peek().size();
+                            if((Integer)e.tryInterpret(variables, functions, datas, returns, v)<max)
+                            {
+                                return returns.peek().get((Integer)e.tryInterpret(variables, functions, datas, returns, v));
+                            }
                         }
                     }
                 }
-            }
-            else if(e==null)
-            {
-                f.tryInterpret(variables, functions, datas, returns);
-                int max = returns.peek().size();
-                if((Integer)e.tryInterpret(variables, functions, datas, returns)<max)
+                else if(e==null)
                 {
-                    return returns.peek().get((Integer)e.tryInterpret(variables, functions, datas, returns));
+                    f.tryInterpret(variables, functions, datas, returns, v);
+                    int max = returns.peek().size();
+                    if((Integer)e.tryInterpret(variables, functions, datas, returns, v)<max)
+                    {
+                        return returns.peek().get((Integer)e.tryInterpret(variables, functions, datas, returns, v));
+                    }
                 }
             }
         }

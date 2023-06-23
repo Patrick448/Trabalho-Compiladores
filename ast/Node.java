@@ -1,10 +1,9 @@
 package ast;
 
+import visitors.*;
+
 import java.util.HashMap;
 import java.util.Stack;
-
-import visitors.Visitable;
-import visitors.Visitor;
 
 import java.util.List;
 
@@ -28,9 +27,9 @@ public abstract class Node implements Visitable{
       public int getLine(){ return line;}
       public int getCol(){ return col;}  
       public int getUid(){ return uid;}
-      public Object tryInterpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns){
+      public Object tryInterpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns, ScopeVisitor v){
             try{
-                  return this.interpret(variables, functions, datas, returns);
+                  return this.interpret(variables, functions, datas, returns, v);
             }
             catch(Exception e){
                   System.out.println("Error at line " + this.getLine() + ":" + this.getCol());
@@ -45,6 +44,6 @@ public abstract class Node implements Visitable{
       @Override
       public abstract void accept(Visitor v);
 
-      public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns);
+      public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns, ScopeVisitor v);
       
 }

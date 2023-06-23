@@ -1,7 +1,5 @@
 package ast;
 
-import java.nio.file.FileAlreadyExistsException;
-
 /*
  * Esta classe representa um comando de atribuição.
  * ID = Expr
@@ -10,6 +8,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap; 
 import java.util.Stack;
 
+import visitors.ScopeVisitor;
 import visitors.Visitor;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class Attr extends Node {
         return s;
     }
 
-    public List findDataInstace(LValue aux, Boolean vet, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
+    public List findDataInstace(LValue aux, Boolean vet, Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v)
     {
           Stack<LValue> stack_aux = new Stack<LValue>();
           stack_aux.push(aux);
@@ -58,16 +57,16 @@ public class Attr extends Node {
           {
                if((stack_aux.size() != 1 || vet))
                {
-                    lt = (List)lt.get((Integer)stack_aux.peek().getExpr().tryInterpret(variables, functions, datas, returns));
+                    lt = (List)lt.get((Integer)stack_aux.peek().getExpr().tryInterpret(variables, functions, datas, returns, v));
                }
                stack_aux.pop();
           }
           return lt;
     }
 
-     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-          Object value = e.interpret(variables, functions, datas, returns); 
-          lValue.attribute(value, variables);
+     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+          Object value = e.interpret(variables, functions, datas, returns, v); 
+          lValue.attribute(value, variables, v);
           return 0;
      }
 

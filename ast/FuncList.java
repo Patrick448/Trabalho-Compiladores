@@ -1,14 +1,14 @@
 package ast;
 
-import visitors.Visitable;
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.List;
 
-public class FuncList extends Node implements Visitable{
+public class FuncList extends Node{
     
     private List<Func> list;
 
@@ -28,7 +28,7 @@ public class FuncList extends Node implements Visitable{
     }
 
     @Override
-    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+    public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
         if(functions.size()==0)
         {
             for(Func n : list)
@@ -40,7 +40,7 @@ public class FuncList extends Node implements Visitable{
         {
             if(n.getId().getName().equals("main") && n.getParams()==null && n.getReturns()==null)
             {
-                n.tryInterpret(variables, functions, datas, returns);
+                n.tryInterpret(variables, functions, datas, returns, v);
                 break;
             }
         }

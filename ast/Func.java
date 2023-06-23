@@ -5,14 +5,14 @@ package ast;
  * Expr
  */
 
-import visitors.Visitable;
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.List;
 
-public class Func extends Node implements Visitable{
+public class Func extends Node{
 
       private ID id;
       private ParamsList params;
@@ -50,16 +50,42 @@ public class Func extends Node implements Visitable{
       }
 
       @Override
-      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+            Integer count = 0;
+		    String s_p = "(";
+		    if(params!=null)
+		    {
+	    		for(Param p : params.getParamsList())
+		    	{
+			    	String p_type = p.getType().getFullName();
+				    if(count>0)
+				    {
+					    s_p = s_p + "," + p_type;
+					}
+                    else
+                    {
+				        s_p = s_p + p_type;
+                    }
+				    count = count+1;
+			    }
+			}
+		    s_p = s_p + ")";
+
+            int scopeFunc_before = v.getScopeFunc();
+            int level_before = v.getLevel();
+            v.setLevel(0);
+            v.setScopeFuncByName(id.getName()+s_p);
             HashMap<String, Object> valuesParamsUnique = new HashMap<String, Object>(valuesParams);
             variables.push(valuesParamsUnique);
             Object o = 0;
             if(cmdList != null) 
             {
-                o = cmdList.tryInterpret(variables, functions, datas, returns);
+                o = cmdList.tryInterpret(variables, functions, datas, returns, v);
             };
             variables.pop();
             valuesParams.clear();
+            v.setLevel(level_before);
+            v.setScopeFunc(scopeFunc_before);
             return o;
       }
 

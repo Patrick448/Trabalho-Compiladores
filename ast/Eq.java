@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -39,9 +40,9 @@ public class Eq extends BinOP {
          return s;
       }
       
-      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         Object ol = getLeft().tryInterpret(variables, functions, datas, returns);
-         Object or = getRight().tryInterpret(variables, functions, datas, returns);
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+         Object ol = getLeft().tryInterpret(variables, functions, datas, returns, v);
+         Object or = getRight().tryInterpret(variables, functions, datas, returns, v);
 
          if(ol.getClass().getSimpleName().equals("Integer"))
          {
@@ -55,15 +56,15 @@ public class Eq extends BinOP {
          {
             return ((String)ol).equals((String)or);
          }
-         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("boolean"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("boolean"))
          {
             return (boolean)ol == (boolean)or;
          }
-         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("ArrayList"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("ArrayList"))
          {
             return (List)ol == (List)or;
          }
-         else if(getLeft().tryInterpret(variables, functions, datas, returns).getClass().getSimpleName().equals("DataInstance"))
+         else if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("DataInstance"))
          {
             return (DataInstance)ol == (DataInstance)or;
          }

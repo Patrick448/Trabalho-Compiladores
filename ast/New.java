@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 public class New extends Expr {
     private Type type;
@@ -26,8 +27,7 @@ public class New extends Expr {
     }
     
     @Override
-    public Object interpret(Stack<HashMap<String, Object>> variables, List<Func> functions, HashMap<String, Data> datas,
-            Stack<List<Object>> returns) {
+    public Object interpret(Stack<HashMap<String, Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v) {
 
         HashMap<String, Object> attributes = new HashMap<String, Object>();
         if(type.getName().equals("Int") || type.getName().equals("Float") || type.getName().equals("Char") || type.getName().equals("Bool"))
@@ -39,7 +39,7 @@ public class New extends Expr {
             else{
                 int i=0;
                 List<Object> instance_list= new ArrayList<Object>();
-                while(i < (Integer)e.tryInterpret(variables, functions, datas, returns))
+                while(i < (Integer)e.tryInterpret(variables, functions, datas, returns, v))
                 {
                     instance_list.add(null);
                     i++;
@@ -59,7 +59,7 @@ public class New extends Expr {
             else{
                 int i=0;
                 List<DataInstance> instance_list= new ArrayList<DataInstance>();
-                while(i < (Integer)e.tryInterpret(variables, functions, datas, returns))
+                while(i < (Integer)e.tryInterpret(variables, functions, datas, returns, v))
                 {
                     instance_list.add(null);
                     i++;

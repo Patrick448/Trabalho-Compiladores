@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -36,9 +37,9 @@ public class Sub extends BinOP {
          return s;
      }
       
-     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-         Object ol = getLeft().tryInterpret(variables, functions, datas, returns);
-         Object or = getRight().tryInterpret(variables, functions, datas, returns);
+     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+         Object ol = getLeft().tryInterpret(variables, functions, datas, returns, v);
+         Object or = getRight().tryInterpret(variables, functions, datas, returns, v);
          if(ol.getClass().getSimpleName().equals("Integer") && or.getClass().getSimpleName().equals("Integer"))
          {
             

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import visitors.Visitor;
+import visitors.ScopeVisitor;
 
 import java.util.List;
 
@@ -75,13 +76,13 @@ public class If extends Node {
          return els;
       }
       
-      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns){
-        boolean n = (boolean)teste.tryInterpret(variables, functions, datas, returns);  
+      public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
+        boolean n = (boolean)teste.tryInterpret(variables, functions, datas, returns, v);  
         if(n){
-              return thn.tryInterpret(variables, functions, datas, returns);
+              return thn.tryInterpret(variables, functions, datas, returns, v);
         }
         else if(els !=null){
-            return els.tryInterpret(variables, functions, datas, returns);
+            return els.tryInterpret(variables, functions, datas, returns, v);
         }
         return n;
       }
