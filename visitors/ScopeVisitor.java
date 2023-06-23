@@ -1099,7 +1099,15 @@ public class ScopeVisitor extends Visitor {
 					{
 						Int i_value = (Int)e;
 						int value = i_value.getValue();
-						typeStack.push(Returns.get(scope).get(value));
+						if(Returns.get(scope).size()>value)
+						{
+							typeStack.push(Returns.get(scope).get(value));
+						}
+						else
+						{
+							System.out.println("Error at line " + c.getLine() + ":" + c.getCol() + ": Attempt to access invalid return.");
+							typeStack.push(ERROR);
+						}
 						return;
 					}
 				}

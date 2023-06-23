@@ -44,11 +44,17 @@ public class Intepretador {
 		// tell ANTLR to does not automatically build an AST
 		parser.setBuildParseTree(false);
 
+		Node ast = null;
 		try
 		{
-			Node ast = parser.prog().ast;
+			ast = parser.prog().ast;
+		}
+		catch(Exception e){
+			System.out.println("aki");
+			System.exit(0);
+	  	}
+		if (ast != null) {
 			writeToFile("ast.dot", ast.dotString());
-		
 			ScopeVisitor scope = new ScopeVisitor();
 			((Prog)ast).accept(scope);
 			String analise = scope.getStack().pop();
@@ -57,8 +63,5 @@ public class Intepretador {
 				ast.tryInterpret(null, null, null, null, scope);
 			}
 		}
-		catch(Exception e){
-			System.exit(0);
-	  	}
 	}	
 }

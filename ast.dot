@@ -1,119 +1,173 @@
 graph program {
-58 [label=Prog]
-58--24
-24 [label=FuncList]
-24--23
-23 [label="Func"]
-23--22
-22 [label="ID<f>"]
-23--16
-16 [label=CmdList]
-16--15
-15 [label= "="]
-15--8
-8 [label="LValue"]
+86 [label=Prog]
+86--9
+9 [label=DataList]
+9--8
+8 [label= "Data"]
 8--7
-7 [label="ID<y>"]
-15--14
-14 [label= "+"]
-14--12
-12 [label= "*"]
-12--9
-9 [label="Int<2>"]
-12--11
-11 [label="LValue"]
-11--10
-10 [label="ID<x>"]
-14--13
-13 [label="Int<1>"]
-16--21
-21 [label="ReturnCMD"]
-21--19
-19 [label=ExprList]
-19--18
-18 [label="LValue"]
-18--17
-17 [label="ID<y>"]
-19--20
-20 [label="Float<1.5>"]
-23--3
-3 [label="ParamsList"]
+7 [label="Type<Racional>"]
+8--3
+3 [label=DeclList]
 3--2
-2 [label="Param"]
+2 [label="Decl"]
 2--1
-1 [label="ID<x>"]
+1 [label="ID<numerador>"]
 2--0
 0 [label="Type<Int>"]
-23--5
-5 [label="TypeList"]
-5--4
+3--6
+6 [label="Decl"]
+6--5
+5 [label="ID<denominador>"]
+6--4
 4 [label="Type<Int>"]
-5--6
-6 [label="Type<Float>"]
-24--57
-57 [label="Func"]
-57--56
-56 [label="ID<main>"]
-57--29
+86--36
+36 [label=FuncList]
+36--35
+35 [label="Func"]
+35--34
+34 [label="ID<main>"]
+35--29
 29 [label=CmdList]
 29--28
 28 [label= "="]
-28--26
-26 [label="LValue"]
-26--25
-25 [label="ID<z>"]
+28--18
+18 [label="LValue"]
+18--17
+17 [label="ID<res>"]
 28--27
-27 [label="Int<10>"]
-29--47
-47 [label= "="]
-47--31
+27 [label= "/"]
+27--22
+22 [label="LValue"]
+22--20
+20 [label="LValue"]
+20--19
+19 [label="ID<r>"]
+22--21
+21 [label="ID<numerador>"]
+27--26
+26 [label="LValue"]
+26--24
+24 [label="LValue"]
+24--23
+23 [label="ID<r>"]
+26--25
+25 [label="ID<denominador>"]
+29--33
+33 [label="ReturnCMD"]
+33--32
+32 [label=ExprList]
+32--31
 31 [label="LValue"]
 31--30
-30 [label="ID<h>"]
-47--46
-46 [label= "+"]
-46--39
-39 [label= "*"]
-39--32
-32 [label="Int<2>"]
-39--38
-38 [label= "CallFunction"]
-38--37
-37 [label="ID<f>"]
-38--35
-35 [label=ExprList]
-35--34
-34 [label="LValue"]
-34--33
-33 [label="ID<z>"]
-38--36
-36 [label="Int<0>"]
-46--45
-45 [label= "CallFunction"]
-45--44
-44 [label="ID<f>"]
-45--42
-42 [label=ExprList]
-42--41
-41 [label="LValue"]
-41--40
-40 [label="ID<z>"]
-45--43
-43 [label="Int<1>"]
-29--55
-55 [label="Print"]
-55--54
-54 [label= "CallFunction"]
-54--53
-53 [label="ID<f>"]
-54--50
-50 [label=ExprList]
+30 [label="ID<res>"]
+35--14
+14 [label="ParamsList"]
+14--13
+13 [label="Param"]
+13--12
+12 [label="ID<r>"]
+13--11
+11 [label="Type<Racional>"]
+35--16
+16 [label="TypeList"]
+16--15
+15 [label="Type<Int>"]
+36--56
+56 [label="Func"]
+56--55
+55 [label="ID<main>"]
+56--50
+50 [label=CmdList]
 50--49
-49 [label="LValue"]
+49 [label= "="]
+49--44
+44 [label="LValue"]
+44--43
+43 [label="ID<res>"]
 49--48
-48 [label="ID<z>"]
-54--52
+48 [label= "/"]
+48--46
+46 [label="LValue"]
+46--45
+45 [label="ID<i>"]
+48--47
+47 [label="Int<4>"]
+50--54
+54 [label="ReturnCMD"]
+54--53
+53 [label=ExprList]
+53--52
 52 [label="LValue"]
 52--51
-51 [label="ID<h>"]
+51 [label="ID<res>"]
+56--40
+40 [label="ParamsList"]
+40--39
+39 [label="Param"]
+39--38
+38 [label="ID<i>"]
+39--37
+37 [label="Type<Int>"]
+56--42
+42 [label="TypeList"]
+42--41
+41 [label="Type<Int>"]
+36--85
+85 [label="Func"]
+85--84
+84 [label="ID<main>"]
+85--62
+62 [label=CmdList]
+62--61
+61 [label= "="]
+61--58
+58 [label="LValue"]
+58--57
+57 [label="ID<r>"]
+61--60
+60 [label= "New"]
+60--59
+59 [label="Type<Racional>"]
+62--68
+68 [label= "="]
+68--66
+66 [label="LValue"]
+66--64
+64 [label="LValue"]
+64--63
+63 [label="ID<r>"]
+66--65
+65 [label="ID<numerador>"]
+68--67
+67 [label="Int<4>"]
+62--74
+74 [label= "="]
+74--72
+72 [label="LValue"]
+72--70
+70 [label="LValue"]
+70--69
+69 [label="ID<r>"]
+72--71
+71 [label="ID<denominador>"]
+74--73
+73 [label="Int<2>"]
+62--83
+83 [label="Print"]
+83--82
+82 [label= "CallFunction"]
+82--81
+81 [label="ID<main>"]
+82--79
+79 [label=ExprList]
+79--78
+78 [label="LValue"]
+78--76
+76 [label="LValue"]
+76--75
+75 [label="ID<r>"]
+78--77
+77 [label="ID<numerador>"]
+82--80
+80 [label="Int<0>"]
 }
