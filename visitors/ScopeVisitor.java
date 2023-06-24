@@ -327,7 +327,7 @@ public class ScopeVisitor extends Visitor {
 		else
 		{
 			typeStack.push(ERROR);
-			System.out.println("Error at line " + t.getLine() + ":" + t.getCol() + ": Type " + t.getFullName() + " not exist");
+			System.out.println("Error at line " + t.getLine() + ":" + t.getCol() + ": Type " + t.getFullName() + " does not exist");
 		}
 
 	}
@@ -768,7 +768,7 @@ public class ScopeVisitor extends Visitor {
 					typeStack.push(ERROR);
 					{
 						System.out.println(
-							"Error at line " + l.getLine() + ":" + l.getCol() + ": The attribute " + i.getName() + " not exist in data " + type + ".");
+							"Error at line " + l.getLine() + ":" + l.getCol() + ": The attribute " + i.getName() + " does not exist in data " + type + ".");
 					}
 				}
 			}
@@ -816,7 +816,7 @@ public class ScopeVisitor extends Visitor {
 			String type = Variables.get(scopeFunc).get(level).get(i.getName());
 			if(type == null){
 				typeStack.push(ERROR);
-				System.out.println("Error at line " + l.getLine() + ":" + l.getCol() + ": Variable " + i.getName() + " was not inicialized.");
+				System.out.println("Error at line " + l.getLine() + ":" + l.getCol() + ": Variable " + i.getName() + " was not initialized.");
 			}else{
 				typeStack.push(type);
 			}
