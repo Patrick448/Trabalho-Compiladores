@@ -223,9 +223,9 @@ lvalues returns [LValueList ast]:
 lvalue returns [LValue ast]:
   ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), null, null);}
   |
-  l=lvalue '[' exp ']' {$ast = new LValue($ID.line, $ID.pos, null, $l.ast, $exp.ast);}
+  l=lvalue '[' exp ']' {$ast = new LValue($l.ast.getLine(), $l.ast.getCol(), null, $l.ast, $exp.ast);}
   |
-  l=lvalue '.' ID {$ast = new LValue($ID.line, $ID.pos, new ID($ID.line, $ID.pos, $ID.text), $l.ast, null);}
+  l=lvalue '.' ID {$ast = new LValue($l.ast.getLine(), $l.ast.getCol(), new ID($ID.line, $ID.pos, $ID.text), $l.ast, null);}
 ;
 
 

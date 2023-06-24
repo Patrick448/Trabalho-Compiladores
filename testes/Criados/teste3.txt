@@ -1,6 +1,6 @@
 data Racional{numerador :: Int; denominador :: Int;}
 
-f(r :: Racional): Float{
+f(r :: Racional): Int{
     res = r.numerador / r.denominador;
     return res;
 }

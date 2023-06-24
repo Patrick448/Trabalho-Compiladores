@@ -1,13 +1,13 @@
-data Racional{numerador :: Racional; denominador :: Int;}
+data Teste{numerador :: Teste; denominador :: Int;}
 
 main (){
-    r = new Racional;
-    r.numerador = new Racional;
-    r.numerador.numerador = 35;
+    r = new Teste;
+    r.numerador = new Teste;
+    r.numerador.denominador = 35;
 
    
 
-    s = new Racional[3];
+    s = new Teste[3];
 
     s[0] = r;
     print s;

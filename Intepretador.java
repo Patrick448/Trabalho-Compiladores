@@ -33,6 +33,10 @@ public class Intepretador {
 		}
 	}
 	public static void main(String args[]) throws Exception {
+
+		if(args.length >=2 && args[1].equals("-v"))
+			System.out.println("\nFile: " + args[0]);
+
 		// Create a ANTLR CharStream from a file
 		CharStream stream = CharStreams.fromFileName(args[0]);
 		// create a lexer that feeds off of stream
@@ -50,7 +54,7 @@ public class Intepretador {
 			ast = parser.prog().ast;
 		}
 		catch(Exception e){
-			System.out.println("aki");
+			//System.out.println(e);
 			System.exit(0);
 	  	}
 		if (ast != null) {

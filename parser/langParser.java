@@ -2093,7 +2093,7 @@ public class langParser extends Parser {
 						((LvalueContext)_localctx).exp = exp(0);
 						setState(412);
 						match(T__10);
-						((LvalueContext)_localctx).ast =  new LValue((((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getLine():0), (((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getCharPositionInLine():0), null, ((LvalueContext)_localctx).l.ast, ((LvalueContext)_localctx).exp.ast);
+						((LvalueContext)_localctx).ast =  new LValue(((LvalueContext)_localctx).l.ast.getLine(), ((LvalueContext)_localctx).l.ast.getCol(), null, ((LvalueContext)_localctx).l.ast, ((LvalueContext)_localctx).exp.ast);
 						}
 						break;
 					case 2:
@@ -2108,7 +2108,7 @@ public class langParser extends Parser {
 						match(T__37);
 						setState(417);
 						((LvalueContext)_localctx).ID = match(ID);
-						((LvalueContext)_localctx).ast =  new LValue((((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getLine():0), (((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getCharPositionInLine():0), new ID((((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getLine():0), (((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getCharPositionInLine():0), (((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getText():null)), ((LvalueContext)_localctx).l.ast, null);
+						((LvalueContext)_localctx).ast =  new LValue(((LvalueContext)_localctx).l.ast.getLine(), ((LvalueContext)_localctx).l.ast.getCol(), new ID((((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getLine():0), (((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getCharPositionInLine():0), (((LvalueContext)_localctx).ID!=null?((LvalueContext)_localctx).ID.getText():null)), ((LvalueContext)_localctx).l.ast, null);
 						}
 						break;
 					}
