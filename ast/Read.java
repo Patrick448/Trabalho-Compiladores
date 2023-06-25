@@ -39,12 +39,12 @@ public class Read extends Node {
         return s;
     }
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
-        System.out.println("---");
+        //System.out.println("---");
         Scanner keyboard = new Scanner(System.in);
         String read = keyboard.next();
         keyboard.close();
         String type = v.getCurrentScope().get(vl.getID().getName());
-        System.out.println(type);
+        //System.out.println(type);
         Object readObject = null;
        
 
@@ -73,7 +73,7 @@ public class Read extends Node {
         }else{
             readObject = (String)read.substring(0,1);
         }
-        System.out.println("---");
+        //System.out.println("---");
         variables.peek().put((String)vl.getID().getName(), readObject);
         return read;
     }
