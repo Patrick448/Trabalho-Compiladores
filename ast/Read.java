@@ -41,7 +41,7 @@ public class Read extends Node {
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
         //System.out.println("---");
         Scanner keyboard = new Scanner(System.in);
-        String read = keyboard.next();
+        String read = keyboard.nextLine();
         //keyboard.close();
         vl.accept(v);
         String type = v.getStack().pop();
@@ -51,7 +51,12 @@ public class Read extends Node {
 
         if(type.equals("Bool")){
             try{
-                readObject = Integer.parseInt(read);
+                readObject = (String)read;
+                if(!readObject.equals("true")&&!readObject.equals("false"))
+                {
+                    System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unable to convert read value to "+ type);
+                    System.exit(0);
+                }
             }catch(Exception e){
                 System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unable to convert read value to "+ type);
                 System.exit(0);
