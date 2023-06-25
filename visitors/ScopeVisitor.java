@@ -870,7 +870,7 @@ public class ScopeVisitor extends Visitor {
 		lv.accept(this);
 		String l_type = typeStack.pop();
 
-		if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
+		/*if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 		{
 			String t_read = Variables.get(scopeFunc).get(level).get(lv.getID().getName());
 
@@ -885,7 +885,7 @@ public class ScopeVisitor extends Visitor {
 				return;
 			}
 		}
-		else if(l_type.equals(ERROR) && !Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
+		else */if(l_type.equals(ERROR) /*&& !Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName())*/)
 		{
 			typeStack.push(ERROR);
 			return;

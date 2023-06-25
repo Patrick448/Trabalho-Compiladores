@@ -43,7 +43,8 @@ public class Read extends Node {
         Scanner keyboard = new Scanner(System.in);
         String read = keyboard.next();
         //keyboard.close();
-        String type = v.getCurrentScope().get(vl.getID().getName());
+        vl.accept(v);
+        String type = v.getStack().pop();
         //System.out.println(v.getCurrentScope());
         Object readObject = null;
        
@@ -73,9 +74,7 @@ public class Read extends Node {
         }else{
             readObject = (String)read.substring(0,1);
         }
-        //System.out.println("---");
         vl.attribute(readObject, variables, v);
-        //variables.peek().put((String)vl.getID().getName(), readObject);
         return read;
     }
 
