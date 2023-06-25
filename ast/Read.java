@@ -53,7 +53,7 @@ public class Read extends Node {
             try{
                 readObject = Integer.parseInt(read);
             }catch(Exception e){
-                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
+                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unable to convert read value to "+ type);
                 System.exit(0);
             }
 
@@ -61,14 +61,14 @@ public class Read extends Node {
             try{
                 readObject = Integer.parseInt(read);
             }catch(Exception e){
-                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
+                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unable to convert read value to "+ type);
                 System.exit(0);
             }
         }else if(type.equals("Float")){
             try{
                 readObject = Float.parseFloat(read);
             }catch(Exception e){
-                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
+                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unable to convert read value to "+ type);
                 System.exit(0);
             }
         }else{

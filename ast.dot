@@ -1,6 +1,6 @@
 graph program {
-99 [label=Prog]
-99--6
+44 [label=Prog]
+44--6
 6 [label=DataList]
 6--5
 5 [label= "Data"]
@@ -14,15 +14,13 @@ graph program {
 1 [label="ID<x>"]
 2--0
 0 [label="Type<Int>"]
-99--98
-98 [label=FuncList]
-98--97
-97 [label="Func"]
-97--96
-96 [label="ID<main>"]
-97--95
-95 [label=CmdList]
-95--13
+44--43
+43 [label=FuncList]
+43--42
+42 [label="Func"]
+42--41
+41 [label="ID<main>"]
+42--13
 13 [label=CmdList]
 13--12
 12 [label= "="]
@@ -78,122 +76,14 @@ graph program {
 34 [label="LValue"]
 34--33
 33 [label="ID<i>"]
-13--39
-39 [label= "="]
+13--40
+40 [label="Read"]
+40--39
+39 [label="LValue"]
 39--37
 37 [label="LValue"]
 37--36
-36 [label="ID<a>"]
+36 [label="ID<t>"]
 39--38
-38 [label="Int<0>"]
-13--43
-43 [label= "="]
-43--41
-41 [label="LValue"]
-41--40
-40 [label="ID<y>"]
-43--42
-42 [label="Bool<true>"]
-13--47
-47 [label= "="]
-47--45
-45 [label="LValue"]
-45--44
-44 [label="ID<z>"]
-47--46
-46 [label="Float<1.0>"]
-13--51
-51 [label= "="]
-51--49
-49 [label="LValue"]
-49--48
-48 [label="ID<w>"]
-51--50
-50 [label="Char<a>"]
-13--54
-54 [label="Read"]
-54--53
-53 [label="LValue"]
-53--52
-52 [label="ID<a>"]
-13--57
-57 [label="Read"]
-57--56
-56 [label="LValue"]
-56--55
-55 [label="ID<y>"]
-13--60
-60 [label="Read"]
-60--59
-59 [label="LValue"]
-59--58
-58 [label="ID<z>"]
-13--63
-63 [label="Read"]
-63--62
-62 [label="LValue"]
-62--61
-61 [label="ID<w>"]
-13--66
-66 [label="Print"]
-66--65
-65 [label="LValue"]
-65--64
-64 [label="ID<a>"]
-13--69
-69 [label="Print"]
-69--68
-68 [label="LValue"]
-68--67
-67 [label="ID<y>"]
-13--72
-72 [label="Print"]
-72--71
-71 [label="LValue"]
-71--70
-70 [label="ID<z>"]
-13--75
-75 [label="Print"]
-75--74
-74 [label="LValue"]
-74--73
-73 [label="ID<w>"]
-13--79
-79 [label= "="]
-79--77
-77 [label="LValue"]
-77--76
-76 [label="ID<x>"]
-79--78
-78 [label="Int<0>"]
-13--83
-83 [label= "="]
-83--81
-81 [label="LValue"]
-81--80
-80 [label="ID<a>"]
-83--82
-82 [label="Int<1>"]
-13--88
-88 [label=CmdList]
-88--87
-87 [label= "="]
-87--85
-85 [label="LValue"]
-85--84
-84 [label="ID<b>"]
-87--86
-86 [label="Int<2>"]
-88--91
-91 [label="Print"]
-91--90
-90 [label="LValue"]
-90--89
-89 [label="ID<b>"]
-13--94
-94 [label="Print"]
-94--93
-93 [label="LValue"]
-93--92
-92 [label="ID<a>"]
+38 [label="ID<y>"]
 }
