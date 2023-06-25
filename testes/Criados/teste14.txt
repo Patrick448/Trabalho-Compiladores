@@ -1,14 +1,25 @@
 main (){
-    {
+    {   a=0;
+        y=true;
+        z = 1.0;
+        w = 'a';
+        read a;
+        read y;
+        read z;
+        read w;
+        print a;
+        print y;
+        print z;
+        print w;
         x=0;
-        read x;
+        --read x;
         a=1;
         {
             b=2;
             print b;
         }
         print a;
-        print b;
+       -- print b;
     }
-    print a;
+    --print a;
 }

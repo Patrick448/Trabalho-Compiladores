@@ -38,6 +38,10 @@ public class ScopeVisitor extends Visitor {
 		scopeFunc = scope;
 	}
 
+	public HashMap<String, String> getCurrentScope(){
+		return Variables.get(scopeFunc).get(level);
+	}
+
 	public void setScopeFunc(Integer i){
 		scopeFunc = i;
 	}
@@ -863,17 +867,13 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(Read i) {
 		LValue lv = i.getLValue();
+		lv.accept(this);
+		String l_type = typeStack.pop();
+
 		if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 		{
 			String t_read = Variables.get(scopeFunc).get(level).get(lv.getID().getName());
-			if(!t_read.equals(CHAR) && !t_read.equals(ERROR))
-			{
-				System.out.println(
-					"Error at line " + i.getLine() + ":" + i.getCol() + ": Attempted to attibute value of type " + CHAR + 
-					" to variable of type " + t_read + ".");
-				typeStack.push(ERROR);
-				return;
-			}
+
 			if(t_read.equals(ERROR))
 			{
 				typeStack.push(ERROR);
@@ -885,12 +885,14 @@ public class ScopeVisitor extends Visitor {
 				return;
 			}
 		}
-		else
+		else if(l_type.equals(ERROR) && !Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 		{
-			Variables.get(scopeFunc).get(level).put(lv.getID().getName(), CHAR);
-			typeStack.push(CMD);
+			typeStack.push(ERROR);
 			return;
-		}		
+		}
+		else{
+			typeStack.push(CMD);
+		}	
 	}
 
 	public void visit(ReturnCMD r) {

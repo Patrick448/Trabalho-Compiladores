@@ -39,12 +39,42 @@ public class Read extends Node {
         return s;
     }
     public Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns, ScopeVisitor v){
-
+        System.out.println("---");
         Scanner keyboard = new Scanner(System.in);
-        String read = keyboard.next().substring(0,1);
-        variables.peek().put((String)vl.getID().getName(), read);
+        String read = keyboard.next();
         keyboard.close();
+        String type = v.getCurrentScope().get(vl.getID().getName());
+        System.out.println(type);
+        Object readObject = null;
+       
 
+        if(type.equals("Bool")){
+            try{
+                readObject = Integer.parseInt(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
+                System.exit(0);
+            }
+
+        }else if(type.equals("Int")){
+            try{
+                readObject = Integer.parseInt(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
+                System.exit(0);
+            }
+        }else if(type.equals("FloatAst")){
+            try{
+                readObject = Float.parseFloat(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
+                System.exit(0);
+            }
+        }else{
+            readObject = (String)read.substring(0,1);
+        }
+        System.out.println("---");
+        variables.peek().put((String)vl.getID().getName(), readObject);
         return read;
     }
 
