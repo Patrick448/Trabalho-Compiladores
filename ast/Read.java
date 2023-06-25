@@ -42,9 +42,9 @@ public class Read extends Node {
         //System.out.println("---");
         Scanner keyboard = new Scanner(System.in);
         String read = keyboard.next();
-        keyboard.close();
+        //keyboard.close();
         String type = v.getCurrentScope().get(vl.getID().getName());
-        //System.out.println(type);
+        //System.out.println(v.getCurrentScope());
         Object readObject = null;
        
 
@@ -63,7 +63,7 @@ public class Read extends Node {
                 System.out.println("Error at line " + vl.getLine() + ":" + vl.getCol() + ": Unnable to convert read value to "+ type);
                 System.exit(0);
             }
-        }else if(type.equals("FloatAst")){
+        }else if(type.equals("Float")){
             try{
                 readObject = Float.parseFloat(read);
             }catch(Exception e){
@@ -74,7 +74,8 @@ public class Read extends Node {
             readObject = (String)read.substring(0,1);
         }
         //System.out.println("---");
-        variables.peek().put((String)vl.getID().getName(), readObject);
+        vl.attribute(readObject, variables, v);
+        //variables.peek().put((String)vl.getID().getName(), readObject);
         return read;
     }
 
