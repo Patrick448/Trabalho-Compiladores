@@ -276,6 +276,21 @@ public class ScopeVisitor extends Visitor {
 		cmds.accept(this); 
 	}
 
+	@Override
+	public void visit(TypeList t) {
+
+	}
+
+	@Override
+	public void visit(ParamsList p) {
+
+	}
+
+	@Override
+	public void visit(Param p) {
+
+	}
+
 
 	@Override
 	public void visit(CmdList c) {

@@ -15,9 +15,17 @@ funclist(funcs) ::= <<
 <funcs; separator="\n\n">
 >>
 
-func(name) ::= <<
-static void <name>() {
-    //hello
+paramslist(params) ::= <<
+<params; separator=", ">
+>>
+
+cmdlist(cmds) ::= <<
+<cmds; separator=";\n">
+>>
+
+func(returntypes, name, paramslist, cmdlist) ::= <<
+static <returntypes> <name>(<paramslist>) {
+    <cmdlist>;
 }
 >>
 
@@ -28,12 +36,13 @@ static <type> <name>(<params; separator=", ">) {
 }
 >>
 
-param(type, name) ::= "<type> <name>"
-
+param(type, id) ::= "<type> _<id>"
+multiple_returns() ::= "ArrayList\<Object>"
 array_type(type) ::= "<type>[]"
 int_type() ::= "int"
 float_type() ::= "float"
 boolean_type() ::= "boolean"
+string_type() ::= "String"
 
 print(expr) ::= "System.out.println(<expr>);"
 return(expr) ::= "return <expr>;"
