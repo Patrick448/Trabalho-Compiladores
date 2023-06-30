@@ -1,6 +1,11 @@
 package visitors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import ast.Add;
 import ast.And;
@@ -38,24 +43,62 @@ import ast.SubUni;
 import ast.Type;
 
 public class JavaGenVisitor extends Visitor{
-    private Stack<String> codeStack = new Stack<String>();
+    private STGroup groupTemplate;
+    private ST type, stmt, expr;
+    //private List<ST> funcs, params;
 
-    @Override
-    public void visit(Prog p) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    private Stack<ST> codeStack = new Stack<>();
+    private String fileName;
+    private ScopeVisitor scopeVisitor;
+
+    public JavaGenVisitor(ScopeVisitor scopeVisitor, String filename){
+        this.scopeVisitor = scopeVisitor;
+        groupTemplate = new STGroupFile("./template/java.stg");
+        this.fileName = fileName;
     }
 
     @Override
+    public void visit(Prog p) {
+        ST template = groupTemplate.getInstanceOf("prog");
+        fileName = "Testando";
+        template.add("name", fileName);
+        //funcs = new ArrayList<ST>();
+
+        p.getFuncList().accept(this);
+        ST result = codeStack.pop();
+       /* for(Func f : p.getFuncList().getList()) {
+            f.accept(this);
+        }
+        template.add("funcs", funcs);*/
+
+        template.add("funclist", result);
+
+        System.out.println(template.render());
+
+    }
+
+
+    @Override
     public void visit(FuncList f) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        ST template = groupTemplate.getInstanceOf("funclist");
+        List<ST> funcs = new ArrayList<ST>();
+
+        for(Func func : f.getList()) {
+            func.accept(this);
+            funcs.add(codeStack.pop());
+        }
+
+        template.add("funcs", funcs);
+        codeStack.push(template);
+
     }
 
     @Override
     public void visit(Func f) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        ST template = groupTemplate.getInstanceOf("func");
+        String name = f.getId().getName();
+        template.add("name", "_"+name);
+        codeStack.push(template);
     }
 
     @Override

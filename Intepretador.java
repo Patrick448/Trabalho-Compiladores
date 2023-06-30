@@ -32,13 +32,10 @@ public class Intepretador {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String args[]) throws Exception {
 
-		if(args.length >=2 && args[1].equals("-v"))
-			System.out.println("\nFile: " + args[0]);
-
+	public static langParser parseFile(String filename) throws IOException {
 		// Create a ANTLR CharStream from a file
-		CharStream stream = CharStreams.fromFileName(args[0]);
+		CharStream stream = CharStreams.fromFileName(filename);
 		// create a lexer that feeds off of stream
 		langLexer lex = new langLexer(stream);
 		// create a buffer of tokens pulled from the lexer
@@ -48,24 +45,80 @@ public class Intepretador {
 		// tell ANTLR to does not automatically build an AST
 		parser.setBuildParseTree(false);
 
+		//System.out.println(parser.getNumberOfSyntaxErrors());
+		//todo: ver como fazer checagem de erros sintáticos e léxicos.
+		if(parser.getNumberOfSyntaxErrors()>0){
+			System.out.println("The program contains syntax errors. Aborting.");
+			System.exit(0);
+		}
+
+		return parser;
+	}
+
+	public static Node getAST(langParser lp){
 		Node ast = null;
 		try
 		{
-			ast = parser.prog().ast;
+			ast = lp.prog().ast;
+			if(ast == null){
+				System.out.println("Error generating abstract syntax tree.");
+				System.exit(0);
+			}
+
 		}
 		catch(Exception e){
 			//System.out.println(e);
 			System.exit(0);
-	  	}
-		if (ast != null) {
+		}
+
+		return ast;
+	}
+
+	public static ScopeVisitor semanticAnalysis(Node ast){
+		ScopeVisitor scope = new ScopeVisitor();
+		((Prog)ast).accept(scope);
+		String analise = scope.getStack().pop();
+
+		if(analise.equals("Error"))
+		{
+			System.out.println("The program contains semantic errors. Aborting.");
+			System.exit(0);
+		}
+		return scope;
+	}
+
+
+
+	public static void main(String args[]) throws Exception {
+
+		if(args.length >=2){
+			langParser parser = parseFile(args[0]);
+			Node ast = getAST(parser);
 			writeToFile("ast.dot", ast.dotString());
-			ScopeVisitor scope = new ScopeVisitor();
-			((Prog)ast).accept(scope);
-			String analise = scope.getStack().pop();
-			if(!analise.equals("Error"))
-			{
+			ScopeVisitor scope = semanticAnalysis(ast);
+
+			if(args[1].equals("-o")){
 				ast.tryInterpret(null, null, null, null, scope);
 			}
+			else if(args[1].equals("-s")){
+				String[] splitName = args[0].split("/");
+				String fileName = splitName[splitName.length-1];
+				JavaGenVisitor javaGenVisitor = new JavaGenVisitor(scope, fileName);
+				ast.accept(javaGenVisitor);
+			}
+			else if(args[1].equals("-j")){
+				System.out.println("GENERATE JASMIN CODE");
+			}
+			else if(args.length >=3 && args[1].equals("-v")){
+				System.out.println("\nFile: " + args[0]);
+			}
+
 		}
-	}	
+
+
+
+
+	}
+
+
 }
