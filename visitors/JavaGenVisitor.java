@@ -346,7 +346,7 @@ public class JavaGenVisitor extends Visitor {
     public void visit(If a) {
         codeStack.push(new ST("//if cmd"));
 
-    }
+    }/**/
 
     @Override
     public void visit(Data a) {
