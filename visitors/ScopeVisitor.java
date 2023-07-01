@@ -229,6 +229,16 @@ public class ScopeVisitor extends Visitor {
 	}
 
 	@Override
+	public void visit(DeclList a) {
+
+	}
+
+	@Override
+	public void visit(Decl a) {
+
+	}
+
+	@Override
 	public void visit(Data d) {
 		DeclList decls = d.getDeclList();
 		if(HashMapData.containsKey(d.getId().getName()))

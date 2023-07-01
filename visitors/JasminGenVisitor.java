@@ -173,6 +173,16 @@ public class JasminGenVisitor extends Visitor{
     }
 
     @Override
+    public void visit(DeclList a) {
+
+    }
+
+    @Override
+    public void visit(Decl a) {
+
+    }
+
+    @Override
     public void visit(Type t) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visit'");

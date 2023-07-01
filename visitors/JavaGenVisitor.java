@@ -29,16 +29,12 @@ public class JavaGenVisitor extends Visitor {
         ST template = groupTemplate.getInstanceOf("prog");
         fileName = "Testando";
         template.add("name", fileName);
-        //funcs = new ArrayList<ST>();
 
         p.getFuncList().accept(this);
-        ST result = codeStack.pop();
-       /* for(Func f : p.getFuncList().getList()) {
-            f.accept(this);
-        }
-        template.add("funcs", funcs);*/
+        template.add("funclist", codeStack.pop());
 
-        template.add("funclist", result);
+        p.getDataList().accept(this);
+        template.add("datalist", codeStack.pop());
 
         System.out.println(template.render());
 
@@ -146,7 +142,7 @@ public class JavaGenVisitor extends Visitor {
         } else if (t.getName().equals("Float")) {
             typeTemplate = groupTemplate.getInstanceOf("float_type");
         } else {
-
+            typeTemplate = new ST(t.getName());
         }
 
         codeStack.push(typeTemplate);
@@ -371,14 +367,51 @@ public class JavaGenVisitor extends Visitor {
 
     @Override
     public void visit(Data a) {
-        codeStack.push(new ST("//data type definition"));
+        ST template = groupTemplate.getInstanceOf("data");
+        a.getId().accept(this);
+        a.getDeclList().accept(this);
+        template.add("declist", codeStack.pop());
+        template.add("name", codeStack.pop());
 
+        codeStack.push(template);
     }
 
     @Override
     public void visit(DataList a) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        ST template = groupTemplate.getInstanceOf("datalist");
+        List<ST> datas = new ArrayList<ST>();
+
+        for(Data d:a.getList()){
+            d.accept(this);
+            datas.add(codeStack.pop());
+        }
+
+        template.add("datas", datas);
+        codeStack.push(template);
+    }
+
+    @Override
+    public void visit(DeclList a) {
+        ST template = groupTemplate.getInstanceOf("declist");
+        List<ST> decls = new ArrayList<ST>();
+
+        for(Decl d:a.getList()){
+            d.accept(this);
+            decls.add(codeStack.pop());
+        }
+
+        template.add("decls", decls);
+        codeStack.push(template);
+    }
+
+    @Override
+    public void visit(Decl a) {
+        ST template = groupTemplate.getInstanceOf("decl");
+        a.getId().accept(this);
+        a.getType().accept(this);
+        template.add("type", codeStack.pop());
+        template.add("name", codeStack.pop());
+        codeStack.push(template);
     }
 
     @Override
@@ -393,11 +426,48 @@ public class JavaGenVisitor extends Visitor {
 
     @Override
     public void visit(LValue l) {
-        ST template = null;
+        ST vectorAccess = groupTemplate.getInstanceOf("lvalue");
+        ST attrAccess = groupTemplate.getInstanceOf("lvalue_attribute");
+        LValue lvChild = l.getLValue();
+        Expr expr = l.getExpr();
+        ID id = l.getID();
 
-        if(l.getID() != null){
-            l.getID().accept(this);
+        if(lvChild != null && id != null){
+            lvChild.accept(this);
+            id.accept(this);
+            attrAccess.add("attr", codeStack.pop());
+            attrAccess.add("lvalue", codeStack.pop());
+            codeStack.push(attrAccess);
+
+        }else if(lvChild != null && expr != null){
+            lvChild.accept(this);
+            expr.accept(this);
+            vectorAccess.add("expr", codeStack.pop());
+            vectorAccess.add("lvalue", codeStack.pop());
+            codeStack.push(vectorAccess);
         }
+        else if(lvChild == null && id != null){
+            id.accept(this);
+            //attrAccess.add("id", codeStack.pop());
+            //codeStack.push(attrAccess);
+
+        }
+
+       /* if(lvChild != null){
+            lvChild.accept(this);
+            template.add("lvalue", codeStack.pop());
+
+            if(expr != null){
+                expr.accept(this);
+                template.add("expr", codeStack.pop());
+            }
+            codeStack.push(template);
+
+        }else{
+            id.accept(this);
+            attrAccess.add("id", codeStack.pop());
+            codeStack.push(attrAccess);
+        }*/
 
     }
 
@@ -422,7 +492,8 @@ public class JavaGenVisitor extends Visitor {
 
     @Override
     public void visit(ID i) {
-        codeStack.push(new ST(i.getName()));
+
+        codeStack.push(new ST("_"+ i.getName()));
     }
 
     @Override

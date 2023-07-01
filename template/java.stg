@@ -1,6 +1,8 @@
 group java;
 
-prog(name, funclist) ::= <<
+prog(name, funclist, datalist) ::= <<
+<datalist>
+
 public class <name> {
 
     Scanner input = new Scanner(System.in);
@@ -15,6 +17,24 @@ public class <name> {
 
 funclist(funcs) ::= <<
 <funcs; separator="\n\n">
+>>
+
+datalist(datas) ::= <<
+<datas; separator="\n\n">
+>>
+
+data(name, declist) ::= <<
+class <name>{
+    <declist>
+}
+>>
+
+declist(decls) ::=<<
+<decls; separator="\n">
+>>
+
+decl(type, name) ::=<<
+public <type> <name>;
 >>
 
 paramslist(params) ::= <<
@@ -38,7 +58,7 @@ static <type> <name>(<params; separator=", ">) {
 }
 >>
 
-param(type, id) ::= "<type> _<id>"
+param(type, id) ::= "<type> <id>"
 multiple_returns() ::= "ArrayList\<Object>"
 array_type(type) ::= "<type>[]"
 int_type() ::= "int"
@@ -73,9 +93,9 @@ stmt_list(stmt1, stmt2) ::= <<
 <stmt2>
 >>
 
-attr(id, expr) ::= "_<id> = <expr>;"
-lvalue_array(id, expr) ::= "<id>[<expr>]"
-lvalue_attribute(lvalue) ::= ".<lvalue>"
+attr(id, expr) ::= "<id> = <expr>;"
+lvalue(lvalue, expr) ::= "<lvalue><if(expr)>[<expr>]<endif>"
+lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
 
 boolean_expr(value) ::= "<value>"
 float_expr(value) ::= "<value>"

@@ -63,6 +63,10 @@ public abstract  class  Visitor {
      public abstract void visit(Data a);
 
      public abstract void visit(DataList a);
+     public abstract void visit(DeclList a);
+
+     public abstract void visit(Decl a);
+
 
      public abstract void visit(Type t);
 
