@@ -2,6 +2,8 @@ group java;
 
 prog(name, funclist) ::= <<
 public class <name> {
+
+    Scanner input = new Scanner(System.in);
     <funclist>
   
     public static void main(String args[]) {
@@ -44,8 +46,9 @@ float_type() ::= "float"
 boolean_type() ::= "boolean"
 string_type() ::= "String"
 
-print(expr) ::= "System.out.println(<expr>);"
-return(expr) ::= "return <expr>;"
+print(expr) ::= "System.out.print(<expr>)"
+return(expr) ::= "return <expr>"
+read(lvalue) ::= "read <lvalue>"
 
 while(expr, stmt) ::= <<
 while(<expr>) {
@@ -67,15 +70,16 @@ stmt_list(stmt1, stmt2) ::= <<
 <stmt2>
 >>
 
-attr(var, expr) ::= "<var> = <expr>;"
-lvalue(name, array) ::= "<name><array>"
-array_access(expr) ::= "[<expr>]"
+attr(id, expr) ::= "_<id> = <expr>"
+lvalue_array(id, expr) ::= "<id>[<expr>]"
+lvalue_attribute(lvalue) ::= ".<lvalue>"
 
 boolean_expr(value) ::= "<value>"
 float_expr(value) ::= "<value>"
 int_expr(value) ::= "<value>"
 
-new_array(var, type, expr) ::= "<var> = new <type>[<expr>];"
+new_array(type, expr) ::= "new <type>[<expr>]"
+new_object(type) ::= "new <type>()"
 
 call(name, args) ::= <<<name>(<args; separator=", ">)>>
 
@@ -86,6 +90,9 @@ add_expr(left_expr, right_expr) ::= "(<left_expr> + <right_expr>)"
 sub_expr(left_expr, right_expr) ::= "(<left_expr> - <right_expr>)"
 
 lt_expr(left_expr, right_expr) ::= "(<left_expr> \< <right_expr>)"
+gt_expr(left_expr, right_expr) ::= "(<left_expr> > <right_expr>)"
 equals_expr(left_expr, right_expr) ::= "(<left_expr> == <right_expr>)"
+diff_expr(left_expr, right_expr) ::= "(<left_expr> != <right_expr>)"
 and_expr(left_expr, right_expr) ::= "(<left_expr> && <right_expr>)"
 not_expr(expr) ::= "!<expr>"
+sub_uni_expr(expr) ::= "-<expr>"

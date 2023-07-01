@@ -9,5 +9,20 @@ return 1, 0.5;
 
 main(){
 print 'a';
+print true;
+print 1;
+print 5.55;
+print 1+2;
+print 1 * 2;
+print 1 / 2;
+print 1 - 2;
+print 1 + (-2);
+print 1 > 2;
+print 1 < 2;
+print 1 != 2;
+print 1 == 2;
+print false == !true;
+--a = new Int[5];
+--print a[0];
 
 }
