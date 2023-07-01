@@ -17,6 +17,7 @@ public class JavaGenVisitor extends Visitor {
     private Stack<ST> codeStack = new Stack<>();
     private String fileName;
     private ScopeVisitor scopeVisitor;
+    private int unique_id=0;
 
     public JavaGenVisitor(ScopeVisitor scopeVisitor, String filename) {
         this.scopeVisitor = scopeVisitor;
@@ -340,6 +341,8 @@ public class JavaGenVisitor extends Visitor {
         a.getCmd().accept(this);
         template.add("cmdlist", codeStack.pop());
         template.add("expr", codeStack.pop());
+        template.add("unique_id", unique_id);
+        unique_id++;
 
         codeStack.push(template);
 

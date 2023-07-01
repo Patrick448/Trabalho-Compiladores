@@ -70,12 +70,12 @@ print(expr) ::= "System.out.print(<expr>);"
 return(expr) ::= "return <expr>;"
 read(lvalue) ::= "read <lvalue>;"
 
-iterate(expr, cmdlist) ::= <<
+iterate(expr, cmdlist, unique_id) ::= <<
 
-int cont =0;
+int cont<unique_id> =0;
 while(cont \< <expr>) {
     <cmdlist>
-    cont++;
+    cont<unique_id>++;
 }
 >>
 
