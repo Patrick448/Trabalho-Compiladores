@@ -339,14 +339,35 @@ public class JavaGenVisitor extends Visitor {
 
     @Override
     public void visit(Iterate a) {
-        codeStack.push(new ST("//iterate cmd"));
+        ST template = groupTemplate.getInstanceOf("iterate");
+        a.getCondition().accept(this);
+        a.getCmd().accept(this);
+        template.add("cmdlist", codeStack.pop());
+        template.add("expr", codeStack.pop());
+
+        codeStack.push(template);
+
     }
 
     @Override
     public void visit(If a) {
-        codeStack.push(new ST("//if cmd"));
+        ST template = groupTemplate.getInstanceOf("if");
+        a.getTeste().accept(this);
+        template.add("expr", codeStack.pop());
 
-    }/**/
+        if(a.getThn() != null){
+            a.getThn().accept(this);
+            template.add("thn", codeStack.pop());
+        }
+
+        if(a.getEls() != null){
+            a.getEls().accept(this);
+            template.add("else", codeStack.pop());
+        }
+
+        codeStack.push(template);
+
+    }
 
     @Override
     public void visit(Data a) {

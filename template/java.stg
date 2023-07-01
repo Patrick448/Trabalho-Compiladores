@@ -22,12 +22,12 @@ paramslist(params) ::= <<
 >>
 
 cmdlist(cmds) ::= <<
-<cmds; separator=";\n">
+<cmds; separator="\n">
 >>
 
 func(returntypes, name, paramslist, cmdlist) ::= <<
 static <returntypes> <name>(<paramslist>) {
-    <cmdlist>;
+    <cmdlist>
 }
 >>
 
@@ -46,13 +46,16 @@ float_type() ::= "float"
 boolean_type() ::= "boolean"
 string_type() ::= "String"
 
-print(expr) ::= "System.out.print(<expr>)"
-return(expr) ::= "return <expr>"
-read(lvalue) ::= "read <lvalue>"
+print(expr) ::= "System.out.print(<expr>);"
+return(expr) ::= "return <expr>;"
+read(lvalue) ::= "read <lvalue>;"
 
-while(expr, stmt) ::= <<
-while(<expr>) {
-    <stmt>
+iterate(expr, cmdlist) ::= <<
+
+int cont =0;
+while(cont \< <expr>) {
+    <cmdlist>
+    cont++;
 }
 >>
 
@@ -70,7 +73,7 @@ stmt_list(stmt1, stmt2) ::= <<
 <stmt2>
 >>
 
-attr(id, expr) ::= "_<id> = <expr>"
+attr(id, expr) ::= "_<id> = <expr>;"
 lvalue_array(id, expr) ::= "<id>[<expr>]"
 lvalue_attribute(lvalue) ::= ".<lvalue>"
 
