@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-public class Intepretador {
+public class LangCompiler {
 
 	public static void writeToFile(String filename, String content) {
 		try {
@@ -34,7 +34,16 @@ public class Intepretador {
 	}
 	public static void main(String args[]) throws Exception {
 
-		if(args.length >=2 && args[1].equals("-v"))
+		if(args.length<3)
+		{
+			System.out.println("O sistema espera 2 argumetos obrigatorios sendo:");
+			System.out.println("O 1º: Arquivo a ser executado");
+			System.out.println("O 2º: Qual o metodo de compilação ou interpretação quer usar");
+			System.out.println("\t -i : intepretador");
+			System.out.println("\t -s : codigo em Java");
+			System.out.println("\t -j : cogido em Jasmin");
+		}
+		if(args.length >=3 && args[2].equals("-v"))
 			System.out.println("\nFile: " + args[0]);
 
 		// Create a ANTLR CharStream from a file
@@ -64,7 +73,20 @@ public class Intepretador {
 			String analise = scope.getStack().pop();
 			if(!analise.equals("Error"))
 			{
-				ast.tryInterpret(null, null, null, null, scope);
+				if(args[1] == "-i")
+				{
+					ast.tryInterpret(null, null, null, null, scope);
+				}
+				if(args[1] == "-s")
+				{
+					JavaGenVisitor javaVisitor = new JavaGenVisitor();
+					ast.accept(javaVisitor);
+				}
+				if(args[1] == "-j")
+				{
+					JasminGenVisitor jasminVisitor = new JasminGenVisitor();
+					ast.accept(jasminVisitor);
+				}
 			}
 		}
 	}	

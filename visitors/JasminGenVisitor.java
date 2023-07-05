@@ -38,7 +38,12 @@ import ast.SubUni;
 import ast.Type;
 
 public class JasminGenVisitor extends Visitor{
+
     private Stack<String> codeStack = new Stack<String>();
+    
+    public JasminGenVisitor(){
+
+    }
 
     @Override
     public void visit(Prog p) {

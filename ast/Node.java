@@ -43,7 +43,7 @@ public abstract class Node implements Visitable{
 
       @Override
       public abstract void accept(Visitor v);
-
+      
       public abstract Object interpret(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas,  Stack<List<Object>> returns, ScopeVisitor v);
       
 }
