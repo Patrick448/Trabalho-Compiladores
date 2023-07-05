@@ -1,0 +1,2 @@
+- fazer declarações de variáveis;
+- ver como criar ids unicos para os contadores do iterate -> acho que resolvi

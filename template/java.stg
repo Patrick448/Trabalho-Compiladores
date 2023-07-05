@@ -1,0 +1,121 @@
+group java;
+
+prog(name, funclist, datalist) ::= <<
+<datalist>
+
+public class <name> {
+
+    Scanner input = new Scanner(System.in);
+    <funclist>
+  
+    public static void main(String args[]) {
+        _main();
+    }
+}
+>>
+
+
+funclist(funcs) ::= <<
+<funcs; separator="\n\n">
+>>
+
+datalist(datas) ::= <<
+<datas; separator="\n\n">
+>>
+
+data(name, declist) ::= <<
+class <name>{
+    <declist>
+}
+>>
+
+declist(decls) ::=<<
+<decls; separator="\n">
+>>
+
+decl(type, name) ::=<<
+public <type> <name>;
+>>
+
+paramslist(params) ::= <<
+<params; separator=", ">
+>>
+
+cmdlist(cmds) ::= <<
+<cmds; separator="\n">
+>>
+
+func(returntypes, name, paramslist, cmdlist) ::= <<
+static <returntypes> <name>(<paramslist>) {
+    <cmdlist>
+}
+>>
+
+func2(type, name, params, decl, stmt) ::= <<
+static <type> <name>(<params; separator=", ">) {
+    <if(decl)><decl; separator=";\n">;<endif>
+    <stmt>
+}
+>>
+
+param(type, id) ::= "<type> <id>"
+multiple_returns() ::= "ArrayList\<Object>"
+array_type(type) ::= "<type>[]"
+int_type() ::= "int"
+float_type() ::= "float"
+boolean_type() ::= "boolean"
+string_type() ::= "String"
+
+print(expr) ::= "System.out.print(<expr>);"
+return(expr) ::= "return <expr>;"
+read(lvalue) ::= "read <lvalue>;"
+
+iterate(expr, cmdlist, unique_id) ::= <<
+
+int cont<unique_id> =0;
+while(cont \< <expr>) {
+    <cmdlist>
+    cont<unique_id>++;
+}
+>>
+
+if(expr, thn, els) ::= <<
+if(<expr>) {
+    <thn>
+} <if(els)>else {
+    <els>
+}
+<endif>
+>>
+
+stmt_list(stmt1, stmt2) ::= <<
+<stmt1>
+<stmt2>
+>>
+
+attr(id, expr) ::= "<id> = <expr>;"
+lvalue(lvalue, expr) ::= "<lvalue><if(expr)>[<expr>]<endif>"
+lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
+
+boolean_expr(value) ::= "<value>"
+float_expr(value) ::= "<value>"
+int_expr(value) ::= "<value>"
+
+new_array(type, expr) ::= "new <type>[<expr>]"
+new_object(type) ::= "new <type>()"
+
+call(name, args) ::= <<<name>(<args; separator=", ">)>>
+
+mul_expr(left_expr, right_expr) ::= "(<left_expr> * <right_expr>)"
+div_expr(left_expr, right_expr) ::= "(<left_expr> / <right_expr>)"
+mod_expr(left_expr, right_expr) ::= "(<left_expr> % <right_expr>)"
+add_expr(left_expr, right_expr) ::= "(<left_expr> + <right_expr>)"
+sub_expr(left_expr, right_expr) ::= "(<left_expr> - <right_expr>)"
+
+lt_expr(left_expr, right_expr) ::= "(<left_expr> \< <right_expr>)"
+gt_expr(left_expr, right_expr) ::= "(<left_expr> > <right_expr>)"
+equals_expr(left_expr, right_expr) ::= "(<left_expr> == <right_expr>)"
+diff_expr(left_expr, right_expr) ::= "(<left_expr> != <right_expr>)"
+and_expr(left_expr, right_expr) ::= "(<left_expr> && <right_expr>)"
+not_expr(expr) ::= "!<expr>"
+sub_uni_expr(expr) ::= "-<expr>"

@@ -13,6 +13,13 @@ public abstract  class  Visitor {
 
      public abstract void visit(Func f);
 
+
+
+     public abstract void visit(TypeList t);
+
+     public abstract void visit(ParamsList p);
+     public abstract void visit(Param p);
+
      public abstract void visit(CmdList c);
 
      public abstract void visit(Print p);
@@ -56,6 +63,10 @@ public abstract  class  Visitor {
      public abstract void visit(Data a);
 
      public abstract void visit(DataList a);
+     public abstract void visit(DeclList a);
+
+     public abstract void visit(Decl a);
+
 
      public abstract void visit(Type t);
 
