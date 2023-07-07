@@ -43,14 +43,18 @@ public class LValue extends Expr {
       public String toString(){
          String s = "";
 
-         if(lv != null){
-            s += lv.toString()+".";
+         if(id != null){
+            s += id.toString();
+         }
+         if(lv != null && e == null){
+            s += "."+lv.toString();
+         }
+         else if(lv != null && e != null)
+         {
+            s += lv.toString();
          }
          if(e != null){
-            s += e.toString()+".";
-         }
-         if(id != null){
-            s += id.toString()+".";
+            s += "["+e.toString()+"]";
          }
          return  s; 
       }

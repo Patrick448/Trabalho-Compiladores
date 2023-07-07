@@ -42,6 +42,10 @@ public class ScopeVisitor extends Visitor {
 		return Variables.get(scopeFunc).get(level);
 	}
 
+	public HashMap<String, String> getCurrentScopeBefore(){
+		return Variables.get(scopeFunc).get(level-1);
+	}
+
 	public void setScopeFunc(Integer i){
 		scopeFunc = i;
 	}

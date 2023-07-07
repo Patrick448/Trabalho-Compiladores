@@ -11,6 +11,6 @@ main (){
  
     myFunc(x,'a') <z,a>;
     a = myFunc(x,'a')[0];
-    read b;
-    print b;
+    --read b;
+    --print b;
 }

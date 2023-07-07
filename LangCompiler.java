@@ -34,7 +34,7 @@ public class LangCompiler {
 	}
 	public static void main(String args[]) throws Exception {
 
-		if(args.length<3)
+		if(args.length<2)
 		{
 			System.out.println("O sistema espera 2 argumetos obrigatorios sendo:");
 			System.out.println("O 1º: Arquivo a ser executado");
@@ -42,13 +42,17 @@ public class LangCompiler {
 			System.out.println("\t -i : intepretador");
 			System.out.println("\t -s : codigo em Java");
 			System.out.println("\t -j : cogido em Jasmin");
+			System.exit(0);
 		}
-		if(args.length >=3 && args[2].equals("-v"))
-			System.out.println("\nFile: " + args[0]);
-
-	public static langParser parseFile(String filename) throws IOException {
+		if(args.length >=3)
+		{
+			if(args[2].equals("-v"))
+			{
+				System.out.println("\nFile: " + args[0]);
+			}
+		}
 		// Create a ANTLR CharStream from a file
-		CharStream stream = CharStreams.fromFileName(filename);
+		CharStream stream = CharStreams.fromFileName(args[0]);
 		// create a lexer that feeds off of stream
 		langLexer lex = new langLexer(stream);
 		// create a buffer of tokens pulled from the lexer
@@ -58,102 +62,40 @@ public class LangCompiler {
 		// tell ANTLR to does not automatically build an AST
 		parser.setBuildParseTree(false);
 
-		//System.out.println(parser.getNumberOfSyntaxErrors());
-		//todo: ver como fazer checagem de erros sintáticos e léxicos.
-		if(parser.getNumberOfSyntaxErrors()>0){
-			System.out.println("The program contains syntax errors. Aborting.");
-			System.exit(0);
-		}
-
-		return parser;
-	}
-
-	public static Node getAST(langParser lp){
 		Node ast = null;
 		try
 		{
-			ast = lp.prog().ast;
-			if(ast == null){
-				System.out.println("Error generating abstract syntax tree.");
-				System.exit(0);
-			}
-
+			ast = parser.prog().ast;
 		}
 		catch(Exception e){
 			//System.out.println(e);
 			System.exit(0);
-		}
-
-		return ast;
-	}
-
-	public static ScopeVisitor semanticAnalysis(Node ast){
-		ScopeVisitor scope = new ScopeVisitor();
-		((Prog)ast).accept(scope);
-		String analise = scope.getStack().pop();
-
-		if(analise.equals("Error"))
-		{
-			System.out.println("The program contains semantic errors. Aborting.");
-			System.exit(0);
-		}
-		return scope;
-	}
-
-
-
-	public static void main(String args[]) throws Exception {
-
-		if(args.length >=2){
-			langParser parser = parseFile(args[0]);
-			Node ast = getAST(parser);
+	  	}
+		if (ast != null) {
 			writeToFile("ast.dot", ast.dotString());
-<<<<<<< HEAD:LangCompiler.java
 			ScopeVisitor scope = new ScopeVisitor();
 			((Prog)ast).accept(scope);
 			String analise = scope.getStack().pop();
 			if(!analise.equals("Error"))
 			{
-				if(args[1] == "-i")
+				System.out.println(args[1]);
+				if(args[1].equals("-i"))
 				{
 					ast.tryInterpret(null, null, null, null, scope);
 				}
-				if(args[1] == "-s")
+				if(args[1].equals("-s"))
 				{
-					JavaGenVisitor javaVisitor = new JavaGenVisitor();
-					ast.accept(javaVisitor);
+					String[] filename = args[0].split("\\/");
+					int i = filename.length;
+					filename = filename[i-1].split("\\.");
+					JavaGenVisitor java_compiler = new JavaGenVisitor(scope, filename[0]);
+					((Prog)ast).accept(java_compiler);
 				}
-				if(args[1] == "-j")
+				if(args[1].equals("-j"))
 				{
-					JasminGenVisitor jasminVisitor = new JasminGenVisitor();
-					ast.accept(jasminVisitor);
+
 				}
-=======
-			ScopeVisitor scope = semanticAnalysis(ast);
-
-			if(args[1].equals("-o")){
-				ast.tryInterpret(null, null, null, null, scope);
->>>>>>> 6fa90b6fb46009f8048316bd2c73a65572487a27:Intepretador.java
 			}
-			else if(args[1].equals("-s")){
-				String[] splitName = args[0].split("/");
-				String fileName = splitName[splitName.length-1];
-				JavaGenVisitor javaGenVisitor = new JavaGenVisitor(scope, fileName);
-				ast.accept(javaGenVisitor);
-			}
-			else if(args[1].equals("-j")){
-				System.out.println("GENERATE JASMIN CODE");
-			}
-			else if(args.length >=3 && args[1].equals("-v")){
-				System.out.println("\nFile: " + args[0]);
-			}
-
 		}
-
-
-
-
-	}
-
-
+	}	
 }

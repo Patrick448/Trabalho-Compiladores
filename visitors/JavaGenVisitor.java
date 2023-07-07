@@ -1,8 +1,15 @@
 package visitors;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import ast.*;
 import org.stringtemplate.v4.ST;
@@ -22,27 +29,36 @@ public class JavaGenVisitor extends Visitor {
     public JavaGenVisitor(ScopeVisitor scopeVisitor, String filename) {
         this.scopeVisitor = scopeVisitor;
         groupTemplate = new STGroupFile("./template/java.stg");
-        this.fileName = fileName;
+        this.fileName = filename;
     }
 
-    @Override
     public void visit(Prog p) {
         ST template = groupTemplate.getInstanceOf("prog");
-        fileName = "Testando";
+        fileName = this.fileName;
         template.add("name", fileName);
 
-        p.getFuncList().accept(this);
-        template.add("funclist", codeStack.pop());
+        if(p.getFuncList()!=null)
+        {
+            p.getFuncList().accept(this);
+            template.add("funclist", codeStack.pop());
+        }
+        if(p.getDataList()!=null)
+        {
+            p.getDataList().accept(this);
+            template.add("datalist", codeStack.pop());
+        }
 
-        p.getDataList().accept(this);
-        template.add("datalist", codeStack.pop());
-
-        System.out.println(template.render());
-
+        String filePath = "JavaCodes/" + fileName + ".java";
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(template.render());
+            System.out.println("Successfully wrote the java file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file: " + e.getMessage());
+        }
     }
 
 
-    @Override
     public void visit(FuncList f) {
         ST template = groupTemplate.getInstanceOf("funclist");
         List<ST> funcs = new ArrayList<ST>();
@@ -57,8 +73,32 @@ public class JavaGenVisitor extends Visitor {
 
     }
 
-    @Override
     public void visit(Func f) {
+        Integer count = 0;
+		String s_p = "(";
+		if(f.getParams()!=null)
+		{
+	    	for(Param p : f.getParams().getParamsList())
+		    {
+			    String p_type = p.getType().getFullName();
+				if(count>0)
+				{
+					s_p = s_p + "," + p_type;
+				}
+                else
+                {
+			        s_p = s_p + p_type;
+                }
+			    count = count+1;
+			}
+		}
+	    s_p = s_p + ")";
+
+        int scopeFunc_before = scopeVisitor.getScopeFunc();
+        int level_before = scopeVisitor.getLevel();
+        scopeVisitor.setLevel(0);
+        scopeVisitor.setScopeFuncByName(f.getId().getName()+s_p);
+
         ST template = groupTemplate.getInstanceOf("func");
         String name = f.getId().getName();
 
@@ -66,6 +106,10 @@ public class JavaGenVisitor extends Visitor {
         if (typeList != null) {
             typeList.accept(this);
             template.add("returntypes", codeStack.pop());
+        }
+        else
+        {
+            template.add("returntypes", "void");
         }
 
         ParamsList params = f.getParams();
@@ -83,23 +127,18 @@ public class JavaGenVisitor extends Visitor {
 
         template.add("name", "_" + name);
         codeStack.push(template);
+
+        scopeVisitor.setLevel(level_before);
+        scopeVisitor.setScopeFunc(scopeFunc_before);
     }
 
-    @Override
     public void visit(TypeList tl) {
         List<Type> list = tl.getReturnTypes();
 
-
-        if (list.size() == 1) {
-            list.get(0).accept(this);
-        } else {
-            ST template = groupTemplate.getInstanceOf("multiple_returns");
-            codeStack.push(template);
-        }
-
+        ST template = groupTemplate.getInstanceOf("multiple_returns");
+        codeStack.push(template);
     }
 
-    @Override
     public void visit(ParamsList pl) {
 
         ST template = groupTemplate.getInstanceOf("paramslist");
@@ -117,7 +156,6 @@ public class JavaGenVisitor extends Visitor {
 
     }
 
-    @Override
     public void visit(Param p) {
         ST template = groupTemplate.getInstanceOf("param");
         p.getType().accept(this);
@@ -130,7 +168,6 @@ public class JavaGenVisitor extends Visitor {
     }
 
 
-    @Override
     public void visit(Type t) {
         ST typeTemplate = null;
 
@@ -143,29 +180,122 @@ public class JavaGenVisitor extends Visitor {
         } else if (t.getName().equals("Float")) {
             typeTemplate = groupTemplate.getInstanceOf("float_type");
         } else {
-            typeTemplate = new ST(t.getName());
+            typeTemplate = new ST("_" + t.getName());
         }
 
         codeStack.push(typeTemplate);
     }
 
-    @Override
     public void visit(CmdList c) {
+        scopeVisitor.addLevel();
         ST template = groupTemplate.getInstanceOf("cmdlist");
 
         List<Node> cmdlist = c.getList();
         List<ST> cmdlistST = new ArrayList<>();
+        List<ST> variableslistST = new ArrayList<>();
 
+        Iterator bKeyIterator = scopeVisitor.getCurrentScope().keySet().iterator();
+        String key;
+        String value;
+        HashMap<String, String> difference = new HashMap<String, String>();
+
+        while (bKeyIterator.hasNext()) {
+            key = (String)bKeyIterator.next();
+            if (!scopeVisitor.getCurrentScopeBefore().containsKey(key)) {
+                value = scopeVisitor.getCurrentScope().get(key);
+                difference.put(key, value);
+            }
+        }
+
+        Iterator dKeyIterator = difference.keySet().iterator();
+        while(dKeyIterator.hasNext())
+        {
+            key = (String) dKeyIterator.next();
+            String s = (String) difference.get(key);
+            ST typeTemplate = null;
+
+            if(s.equals("Int"))
+            {
+                typeTemplate = groupTemplate.getInstanceOf("int_type");
+                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
+            }
+            else if(s.equals("Float"))
+            {
+                typeTemplate = groupTemplate.getInstanceOf("float_type");
+                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
+            }
+            else if(s.equals("Bool"))
+            {
+                typeTemplate = groupTemplate.getInstanceOf("boolean_type");
+                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
+            }
+            else if(s.equals("Char"))
+            {
+                typeTemplate = groupTemplate.getInstanceOf("string_type");
+                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
+            }
+            else if(s.contains("[]"))
+            {
+                int counter = s.split("\\[]", -1).length - 1;
+                String v_s = "";
+                int i = counter;
+                while(i > 0)
+                {
+                    v_s = v_s + "Vector\\<";
+                    i=i-1;
+                }
+                if(s.contains("Int"))
+                {
+                    typeTemplate = groupTemplate.getInstanceOf("int_type");
+                    v_s = v_s+ typeTemplate.render();
+                }
+                else if(s.contains("Float"))
+                {
+                    typeTemplate = groupTemplate.getInstanceOf("float_type");
+                    v_s = v_s+ typeTemplate.render();
+                }
+                else if(s.contains("Bool"))
+                {
+                    typeTemplate = groupTemplate.getInstanceOf("boolean_type");
+                    v_s = v_s+ typeTemplate.render();
+                }
+                else if(s.contains("Char"))
+                {
+                    typeTemplate = groupTemplate.getInstanceOf("string_type");
+                    v_s = v_s+ typeTemplate.render();
+                }
+                else
+                {
+                    int index = s.indexOf('[');
+					String type = s.substring(0, index);
+                    v_s = v_s + " _" + type;
+                }
+                i = counter;
+                while(i > 0)
+                {
+                    v_s = v_s + ">";
+                    i=i-1;
+                }
+                v_s = v_s+ " _" + key + ";";
+                variableslistST.add(new ST(v_s));
+            }
+            else
+            {
+                variableslistST.add(new ST("_" + s + " _" + key + ";"));
+            }
+        }
+        
         for (Node cmd : cmdlist) {
             cmd.accept(this);
             cmdlistST.add(codeStack.pop());
         }
-
         template.add("cmds", cmdlistST);
+        template.add("variables", variableslistST);
         codeStack.push(template);
+        scopeVisitor.subLevel();
     }
 
-    @Override
+
     public void visit(Print p) {
         ST template = groupTemplate.getInstanceOf("print");
         p.getExpr().accept(this);
@@ -173,7 +303,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Add a) {
         ST template = groupTemplate.getInstanceOf("add_expr");
         a.getLeft().accept(this);
@@ -185,7 +315,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Sub a) {
         ST template = groupTemplate.getInstanceOf("sub_expr");
         a.getLeft().accept(this);
@@ -197,7 +327,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Div a) {
         ST template = groupTemplate.getInstanceOf("div_expr");
         a.getLeft().accept(this);
@@ -209,7 +339,6 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
     public void visit(Mul a) {
         ST template = groupTemplate.getInstanceOf("mul_expr");
         a.getLeft().accept(this);
@@ -221,7 +350,6 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
     public void visit(Rest a) {
         ST template = groupTemplate.getInstanceOf("mod_expr");
         a.getLeft().accept(this);
@@ -233,7 +361,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(And a) {
         ST template = groupTemplate.getInstanceOf("and_expr");
         a.getLeft().accept(this);
@@ -245,7 +373,8 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
+    
     public void visit(GreaterThan a) {
         ST template = groupTemplate.getInstanceOf("gt_expr");
         a.getLeft().accept(this);
@@ -257,7 +386,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(LessThan a) {
         ST template = groupTemplate.getInstanceOf("lt_expr");
         a.getLeft().accept(this);
@@ -269,7 +398,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Diff a) {
         ST template = groupTemplate.getInstanceOf("diff_expr");
         a.getLeft().accept(this);
@@ -281,7 +410,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(SubUni a) {
         ST template = groupTemplate.getInstanceOf("sub_uni_expr");
         a.getExpr().accept(this);
@@ -291,7 +420,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Neg a) {
         ST template = groupTemplate.getInstanceOf("not_expr");
         a.getExpr().accept(this);
@@ -301,7 +430,6 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
     public void visit(Eq a) {
         ST template = groupTemplate.getInstanceOf("equals_expr");
         a.getLeft().accept(this);
@@ -313,28 +441,28 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Int a) {
         codeStack.push(new ST(String.valueOf(a.getValue())));
 
     }
 
-    @Override
+
     public void visit(Char a) {
         codeStack.push(new ST("\"" + a.getValue() + "\""));
     }
 
-    @Override
+
     public void visit(Bool a) {
         codeStack.push(new ST(String.valueOf(a.getValue())));
     }
 
-    @Override
+
     public void visit(FloatAst a) {
         codeStack.push(new ST(String.valueOf(a.getValue())));
     }
 
-    @Override
+
     public void visit(Iterate a) {
         ST template = groupTemplate.getInstanceOf("iterate");
         a.getCondition().accept(this);
@@ -348,7 +476,7 @@ public class JavaGenVisitor extends Visitor {
 
     }
 
-    @Override
+
     public void visit(If a) {
         ST template = groupTemplate.getInstanceOf("if");
         a.getTeste().accept(this);
@@ -368,18 +496,20 @@ public class JavaGenVisitor extends Visitor {
 
     }
 
-    @Override
+
     public void visit(Data a) {
         ST template = groupTemplate.getInstanceOf("data");
         a.getId().accept(this);
-        a.getDeclList().accept(this);
-        template.add("declist", codeStack.pop());
+        if(a.getDeclList()!=null)
+        {
+            a.getDeclList().accept(this);
+            template.add("declist", codeStack.pop());
+        }
         template.add("name", codeStack.pop());
 
         codeStack.push(template);
     }
 
-    @Override
     public void visit(DataList a) {
         ST template = groupTemplate.getInstanceOf("datalist");
         List<ST> datas = new ArrayList<ST>();
@@ -393,7 +523,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+ 
     public void visit(DeclList a) {
         ST template = groupTemplate.getInstanceOf("declist");
         List<ST> decls = new ArrayList<ST>();
@@ -407,7 +537,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Decl a) {
         ST template = groupTemplate.getInstanceOf("decl");
         a.getId().accept(this);
@@ -417,17 +547,77 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(Attr a) {
         ST template = groupTemplate.getInstanceOf("attr");
         a.getLValue().accept(this);
         a.getExp().accept(this);
         template.add("expr", codeStack.pop());
         template.add("id", codeStack.pop());
+        String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName());
+        String type_t="";
+        if(type.equals("Int"))
+        {
+            type_t = "int";
+        }
+        else if(type.equals("Float"))
+        {
+            type_t = "float";
+        }
+        else if(type.equals("Bool"))
+        {
+            type_t = "boolean";
+        }
+        else if(type.equals("Char"))
+        {
+            type_t = "String";
+        }
+        else if(type.contains("["))
+        {
+            int counter = type.split("\\[]", -1).length - 1;
+            String v_s = "";
+            int i = counter;
+            while(i > 0)
+            {
+                v_s = v_s + "Vector\\<";
+                i=i-1;
+            }
+            if(type.contains("Int"))
+            {
+                v_s += "int";
+            }
+            else if(type.contains("Float"))
+            {
+                v_s += "float";
+            }
+            else if(type.contains("Bool"))
+            {
+                v_s += "boolean";
+            }
+            else if(type.equals("Char"))
+            {
+                v_s += "String";
+            }
+            else
+            {
+                type_t = "_"+type;
+            }
+            i = 0;
+            while(i > 0)
+            {
+                v_s = v_s + ">";
+                i=i-1;
+            }
+            type_t = v_s;
+        }
+        else
+        {
+            type_t = "_"+type;
+        }
+        template.add("type", type_t);
         codeStack.push(template);
     }
 
-    @Override
     public void visit(LValue l) {
         ST vectorAccess = groupTemplate.getInstanceOf("lvalue");
         ST attrAccess = groupTemplate.getInstanceOf("lvalue_attribute");
@@ -451,31 +641,11 @@ public class JavaGenVisitor extends Visitor {
         }
         else if(lvChild == null && id != null){
             id.accept(this);
-            //attrAccess.add("id", codeStack.pop());
-            //codeStack.push(attrAccess);
-
         }
-
-       /* if(lvChild != null){
-            lvChild.accept(this);
-            template.add("lvalue", codeStack.pop());
-
-            if(expr != null){
-                expr.accept(this);
-                template.add("expr", codeStack.pop());
-            }
-            codeStack.push(template);
-
-        }else{
-            id.accept(this);
-            attrAccess.add("id", codeStack.pop());
-            codeStack.push(attrAccess);
-        }*/
 
     }
 
 
-    @Override
     public void visit(New n) {
         ST template = null;
         n.getType().accept(this);
@@ -493,13 +663,12 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(ID i) {
 
         codeStack.push(new ST("_"+ i.getName()));
     }
 
-    @Override
     public void visit(Read i) {
         ST template = groupTemplate.getInstanceOf("read");
         i.getLValue().accept(this);
@@ -507,22 +676,135 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(template);
     }
 
-    @Override
+
     public void visit(ReturnCMD r) {
-        codeStack.push(new ST("//return cmd"));
+        List<Expr> returns = r.getList().getList();
+        if(returns.size() >= 1)
+        {
+            String s = "List\\<Object> arr = new ArrayList\\<Object>(); \n";
+            int i = 0;
+            for(Expr e: returns)
+            {
+                e.accept(this);
+                s = s + "arr.add(" + codeStack.pop().render() + "); \n";
+            }
+            s = s + "return arr;"; 
+            codeStack.push(new ST(s));
+        }
+        else if(returns.size() == 0)
+        {
+            codeStack.push(new ST("return;"));
+        }
 
     }
 
-    @Override
+
     public void visit(CallFunction c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        List<ST> argsST = new ArrayList<>();
+        List<ST> returnST = new ArrayList<>();
+
+        ExprList args = c.getExpList();
+        for(Node e: args.getList())
+        {
+            e.accept(this);
+            argsST.add(codeStack.pop());
+        }
+        LValueList ret = c.getLValueList();
+        int j = 0;
+        ST template_r = null;
+        for(LValue r: ret.getList())
+        {
+            template_r = groupTemplate.getInstanceOf("attrReturn");
+            r.accept(this);
+            template_r.add("name", codeStack.pop());
+            String type = scopeVisitor.getCurrentScope().get(r.getID().getName());
+            String type_t="";
+            if(type.equals("Int"))
+            {
+                type_t = "int";
+            }
+            else if(type.equals("Float"))
+            {
+                type_t = "float";
+            }
+            else if(type.equals("Bool"))
+            {
+                type_t = "boolean";
+            }
+            else if(type.equals("Char"))
+            {
+                type_t = "String";
+            }
+            else if(type.contains("["))
+            {
+                int counter = type.split("\\[]", -1).length - 1;
+                String v_s = "";
+                int i = counter;
+                while(i > 0)
+                {
+                    v_s = v_s + "Vector\\<";
+                    i=i-1;
+                }
+                if(type.contains("Int"))
+                {
+                    v_s += "int";
+                }
+                else if(type.contains("Float"))
+                {
+                    v_s += "float";
+                }
+                else if(type.contains("Bool"))
+                {
+                    v_s += "boolean";
+                }
+                else if(type.equals("Char"))
+                {
+                    v_s += "String";
+                }
+                else
+                {
+                    type_t = "_"+type;
+                }
+                i = 0;
+                while(i > 0)
+                {
+                    v_s = v_s + ">";
+                    i=i-1;
+                }
+                type_t = v_s;
+            }
+            else
+            {
+                type_t = "_"+type;
+            }
+            template_r.add("type", type_t);
+            template_r.add("expr", j);
+            returnST.add(template_r);
+        }
+        ST template = groupTemplate.getInstanceOf("call");
+        template.add("args", argsST);
+        template.add("return", returnST);
+        template.add("name", "_" + c.getId().getName());
+        codeStack.push(template);
     }
 
-    @Override
+
     public void visit(CallFunctionVet c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+
+        List<ST> argsST = new ArrayList<>();
+
+        ExprList args = c.getExpList();
+        for(Node e: args.getList())
+        {
+            e.accept(this);
+            argsST.add(codeStack.pop());
+        }
+        ST template = groupTemplate.getInstanceOf("callvet");
+        template.add("args", argsST);
+        template.add("name", "_" + c.getId().getName());
+        c.getLExp().accept(this);
+        template.add("expr", codeStack.pop());
+        codeStack.push(template);
     }
 
 }
