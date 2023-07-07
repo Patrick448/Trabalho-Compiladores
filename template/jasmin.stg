@@ -1,29 +1,17 @@
-group java;
+group jasmin;
 
 prog(name, funclist, datalist) ::= <<
-import java.util.List;
-import java.util.Vector;
-import java.util.ArrayList;
-import java.util.Scanner;
+.source <name>
+.class public <name>
+.super java/lang/Object
 
-<datalist>
-
-public class <name> {
-
-    Scanner input = new Scanner(System.in);
     <funclist>
 
-     public static \<T> ArrayList\<T> initialize(int n, ArrayList\<T> a){
-             for(int j=0; j\<n; j++){
-                a.add(null);
-            }
-            return a;
-        }
-
-    public static void main(String args[]) {
-        _main();
-    }
-}
+    .method public static main([Ljava/lang/String;)V
+        .limit stack 1
+        invokestatic <name>/_main()I
+        return
+    .end method
 >>
 
 
@@ -36,9 +24,8 @@ datalist(datas) ::= <<
 >>
 
 data(name, declist) ::= <<
-class <name>{
-    <declist>
-}
+.class public <name>
+.super java/lang/Object
 >>
 
 declist(decls) ::=<<
@@ -63,11 +50,12 @@ cmdlist(cmds, variables) ::= <<
 <cmds; separator="\n">
 >>
 
-func(returntypes, name, paramslist, cmdlist) ::= <<
-public static <returntypes> <name>(<paramslist>)
-{
+func(returntypes, name, paramslist, cmdlist, stack, decls) ::= <<
+.method static <name>(<paramslist>)<returntypes>
+    .limit stack <stack>
+    .limit locals <decls>
     <cmdlist>
-}
+.end method
 >>
 
 func2(type, name, params, decl, stmt) ::= <<
@@ -123,7 +111,7 @@ new_object(type) ::= "new <type>()"
 array(type) ::= "ArrayList\<<type>>"
 
 call(name, args, return) ::= <<
-List\<Object> arr = new ArrayList\<Object>(); 
+List\<Object> arr = new ArrayList\<Object>();
 arr = <name>(<args; separator=", ">);
 <return; separator="\n">
 >>

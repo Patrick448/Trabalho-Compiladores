@@ -56,15 +56,15 @@ public class Eq extends BinOP {
          {
             return ((String)ol).equals((String)or);
          }
-         else if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("boolean"))
+         else if(ol.getClass().getSimpleName().equals("Boolean"))
          {
             return (boolean)ol == (boolean)or;
          }
-         else if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("ArrayList"))
+         else if(ol.getClass().getSimpleName().equals("ArrayList"))
          {
             return (List)ol == (List)or;
          }
-         else if(getLeft().tryInterpret(variables, functions, datas, returns, v).getClass().getSimpleName().equals("DataInstance"))
+         else if(ol.getClass().getSimpleName().equals("DataInstance"))
          {
             return (DataInstance)ol == (DataInstance)or;
          }

@@ -5,11 +5,7 @@ import java.util.Stack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Collection;
 import java.util.Iterator;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import ast.*;
 import org.stringtemplate.v4.ST;
@@ -26,10 +22,17 @@ public class JavaGenVisitor extends Visitor {
     private ScopeVisitor scopeVisitor;
     private int unique_id=0;
 
+    private String generatedCode;
+
     public JavaGenVisitor(ScopeVisitor scopeVisitor, String filename) {
         this.scopeVisitor = scopeVisitor;
         groupTemplate = new STGroupFile("./template/java.stg");
         this.fileName = filename;
+    }
+
+
+    public String getGeneratedCode() {
+        return generatedCode;
     }
 
     public void visit(Prog p) {
@@ -48,14 +51,7 @@ public class JavaGenVisitor extends Visitor {
             template.add("datalist", codeStack.pop());
         }
 
-        String filePath = "JavaCodes/" + fileName + ".java";
-        
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write(template.render());
-            System.out.println("Successfully wrote the java file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred while writing to the file: " + e.getMessage());
-        }
+       generatedCode = template.render();
     }
 
 
@@ -186,7 +182,7 @@ public class JavaGenVisitor extends Visitor {
         codeStack.push(typeTemplate);
     }
 
-    public void visit(CmdList c) {
+    /*public void visit2(CmdList c) {
         scopeVisitor.addLevel();
         ST template = groupTemplate.getInstanceOf("cmdlist");
 
@@ -285,6 +281,81 @@ public class JavaGenVisitor extends Visitor {
             }
         }
         
+        for (Node cmd : cmdlist) {
+            cmd.accept(this);
+            cmdlistST.add(codeStack.pop());
+        }
+        template.add("cmds", cmdlistST);
+        template.add("variables", variableslistST);
+        codeStack.push(template);
+        scopeVisitor.subLevel();
+    }*/
+
+    private ST templateFromTypeStr(String type){
+        ST typeTemplate=null;
+
+        if(type.contains("[]")){
+            ST vectorTemplate = groupTemplate.getInstanceOf("array");
+            String typeSubstring = type.substring(0, type.length()-2);
+            vectorTemplate.add("type", templateFromTypeStr(typeSubstring));
+            return vectorTemplate;
+        }
+        else if(type.equals("Int"))
+        {
+            typeTemplate = groupTemplate.getInstanceOf("int_type");
+        }
+        else if(type.equals("Float"))
+        {
+            typeTemplate = groupTemplate.getInstanceOf("float_type");
+        }
+        else if(type.equals("Bool"))
+        {
+            typeTemplate = groupTemplate.getInstanceOf("boolean_type");
+        }
+        else if(type.equals("Char"))
+        {
+            typeTemplate = groupTemplate.getInstanceOf("string_type");
+        }
+        else
+        {
+            typeTemplate = new ST("_" + type);
+        }
+
+        return typeTemplate;
+    }
+
+    public void visit(CmdList c) {
+        scopeVisitor.addLevel();
+        ST template = groupTemplate.getInstanceOf("cmdlist");
+
+        List<Node> cmdlist = c.getList();
+        List<ST> cmdlistST = new ArrayList<>();
+        List<ST> variableslistST = new ArrayList<>();
+
+        Iterator<String> bKeyIterator = scopeVisitor.getCurrentScope().keySet().iterator();
+        String key, value;
+        HashMap<String, String> difference = new HashMap<String, String>();
+
+        while (bKeyIterator.hasNext()) {
+            key = bKeyIterator.next();
+            if (!scopeVisitor.getCurrentScopeBefore().containsKey(key)) {
+                value = scopeVisitor.getCurrentScope().get(key);
+                difference.put(key, value);
+            }
+        }
+
+        Iterator<String> dKeyIterator = difference.keySet().iterator();
+        while(dKeyIterator.hasNext())
+        {
+            key = dKeyIterator.next();
+            String s = difference.get(key);
+            ST typeTemplate = templateFromTypeStr(s);
+            ST varDeclTemplate = groupTemplate.getInstanceOf("var_decl");
+            varDeclTemplate.add("type", typeTemplate);
+            varDeclTemplate.add("name", "_"+key);
+            variableslistST.add(varDeclTemplate);
+        }
+
         for (Node cmd : cmdlist) {
             cmd.accept(this);
             cmdlistST.add(codeStack.pop());
@@ -555,18 +626,19 @@ public class JavaGenVisitor extends Visitor {
         template.add("expr", codeStack.pop());
         template.add("id", codeStack.pop());
         String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName());
-        String type_t="";
+        /*String type_t="";
+
         if(type.equals("Int"))
         {
-            type_t = "int";
+            type_t = "Integer";
         }
         else if(type.equals("Float"))
         {
-            type_t = "float";
+            type_t = "Float";
         }
         else if(type.equals("Bool"))
         {
-            type_t = "boolean";
+            type_t = "Boolean";
         }
         else if(type.equals("Char"))
         {
@@ -579,20 +651,20 @@ public class JavaGenVisitor extends Visitor {
             int i = counter;
             while(i > 0)
             {
-                v_s = v_s + "Vector\\<";
+                v_s = v_s + "Vector<";
                 i=i-1;
             }
             if(type.contains("Int"))
             {
-                v_s += "int";
+                v_s += "Integer";
             }
             else if(type.contains("Float"))
             {
-                v_s += "float";
+                v_s += "Float";
             }
             else if(type.contains("Bool"))
             {
-                v_s += "boolean";
+                v_s += "Boolean";
             }
             else if(type.equals("Char"))
             {
@@ -614,7 +686,7 @@ public class JavaGenVisitor extends Visitor {
         {
             type_t = "_"+type;
         }
-        template.add("type", type_t);
+        template.add("type", type_t);*/
         codeStack.push(template);
     }
 
@@ -721,15 +793,15 @@ public class JavaGenVisitor extends Visitor {
             String type_t="";
             if(type.equals("Int"))
             {
-                type_t = "int";
+                type_t = "Integer";
             }
             else if(type.equals("Float"))
             {
-                type_t = "float";
+                type_t = "Float";
             }
             else if(type.equals("Bool"))
             {
-                type_t = "boolean";
+                type_t = "Boolean";
             }
             else if(type.equals("Char"))
             {
@@ -747,15 +819,15 @@ public class JavaGenVisitor extends Visitor {
                 }
                 if(type.contains("Int"))
                 {
-                    v_s += "int";
+                    v_s += "Integer";
                 }
                 else if(type.contains("Float"))
                 {
-                    v_s += "float";
+                    v_s += "Float";
                 }
                 else if(type.contains("Bool"))
                 {
-                    v_s += "boolean";
+                    v_s += "Boolean";
                 }
                 else if(type.equals("Char"))
                 {
