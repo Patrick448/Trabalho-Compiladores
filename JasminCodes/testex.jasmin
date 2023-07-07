@@ -2,10 +2,10 @@
 .class public testex
 .super java/lang/Object
 
-    .method static _func(String _c)List<Object>
+    .method static _func(Ljava/lang/String _c)List<Object>
         .limit stack 
         .limit locals 
-        Integer _x;
+        I _x;
         _x = 2;
         List<Object> arr = new ArrayList<Object>(); 
         arr.add(_x); 
@@ -24,7 +24,7 @@
     .method static _main()void
         .limit stack 
         .limit locals 
-        ArrayList<Integer> _a;
+        ArrayList<I> _a;
         _Teste _t;
         System.out.print("a");
         System.out.print(true);
@@ -40,7 +40,7 @@
         System.out.print((1 != 2));
         System.out.print((1 == 2));
         System.out.print((false == !true));
-        _a = initialize(5,new ArrayList<Integer>(5));
+        _a = initialize(5,new ArrayList<I>(5));
         System.out.print(_a.get(0));
         _t = new _Teste();
         _t._denominador = 10;
@@ -59,3 +59,8 @@
         invokestatic testex/_main()I
         return
     .end method
+
+.class public _Teste
+.super java/lang/Object
+.field public _numerador _Teste
+.field public _denominador I

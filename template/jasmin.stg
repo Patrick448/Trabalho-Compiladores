@@ -12,7 +12,10 @@ prog(name, funclist, datalist) ::= <<
         invokestatic <name>/_main()I
         return
     .end method
+
+<datalist>
 >>
+
 
 
 funclist(funcs) ::= <<
@@ -26,14 +29,15 @@ datalist(datas) ::= <<
 data(name, declist) ::= <<
 .class public <name>
 .super java/lang/Object
+<declist>
 >>
 
 declist(decls) ::=<<
 <decls; separator="\n">
 >>
 
-decl(type, name) ::=<<
-public <type> <name>;
+decl(classname, type, name) ::=<<
+.field public <name> <type>
 >>
 
 var_decl(type, name) ::=<<
@@ -66,11 +70,11 @@ static <type> <name>(<params; separator=", ">)
 
 param(type, id) ::= "<type> <id>"
 multiple_returns() ::= "List\<Object>"
-array_type(type) ::= "<type>[]"
-int_type() ::= "Integer"
-float_type() ::= "Float"
-boolean_type() ::= "Boolean"
-string_type() ::= "String"
+array_type(type) ::= "[<type>"
+int_type() ::= "I"
+float_type() ::= "F"
+boolean_type() ::= "Z"
+string_type() ::= "Ljava/lang/String"
 
 print(expr) ::= "System.out.print(<expr>);"
 return(expr) ::= "return <expr>;"
