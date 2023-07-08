@@ -1,2 +1,5 @@
-- fazer declarações de variáveis;
-- ver como criar ids unicos para os contadores do iterate -> acho que resolvi
+- geração de Java ignora quando existem escopos aninhados, colocando todas as variáveis no mesmo escopo
+- possível problema no visit(CallFunction c) do Java na linha:
+            String type = scopeVisitor.getCurrentScope().get(r.getID().getName());
+- CallFunctionVet está sendo interpretado pelo semântico como sendo tipo CMD, ao
+    invés do tipo que a função retorna

@@ -1,7 +1,7 @@
 group jasmin;
 
 prog(name, funclist, datalist, tam) ::= <<
-.source <name>
+.source <name>.j
 .class public <name>
 .super java/lang/Object
 
@@ -11,7 +11,7 @@ prog(name, funclist, datalist, tam) ::= <<
 
     .method public static main([Ljava/lang/String;)V
         .limit stack 1
-        invokestatic <name>/_main()I
+        invokestatic <name>/_main()V
         return
     .end method
 >>
@@ -53,10 +53,11 @@ cmdlist(cmds, variables) ::= <<
 >>
 
 func(returntypes, name, paramslist, cmdlist, stack, decls) ::= <<
-.method static <name>(<paramslist>)<returntypes>
+.method public static <name>(<paramslist>)<returntypes>
     .limit stack <stack>
     .limit locals <decls>
     <cmdlist>
+    return
 .end method
 >>
 
@@ -74,7 +75,14 @@ float_type() ::= "F"
 boolean_type() ::= "Z"
 string_type() ::= "Ljava/lang/String"
 
-print(expr) ::= "System.out.print(<expr>);"
+print2(expr) ::= "System.out.print(<expr>);"
+
+print(expr, type) ::= <<
+getstatic java/lang/System/out Ljava/io/PrintStream;
+<expr>
+invokevirtual java/io/PrintStream/print(<type>)V
+>>
+
 return(expr) ::= "return <expr>;"
 read(lvalue) ::= "read <lvalue>;"
 
@@ -86,13 +94,17 @@ while(cont<unique_id> \< <expr>){
 }
 >>
 
-if(expr, thn, els) ::= <<
-if(<expr>) {
+if(unique_id, expr, thn, els) ::= <<
+<expr>
+iconst_1
+if_icmpeq #THEN<unique_id>
+goto #ELSE<unique_id>
+#THEN<unique_id>:
     <thn>
-} <if(els)>else {
+    goto #ENDIF<unique_id>
+#ELSE<unique_id>:
     <els>
-}
-<endif>
+#ENDIF<unique_id>:
 >>
 
 stmt_list(stmt1, stmt2) ::= <<
@@ -122,16 +134,90 @@ callvet(name, args, expr) ::= <<<name>(<args; separator=", ">).get(<expr>)>>
 
 attrReturn(name, expr, type) ::= << <name> = (<type>)arr.get(<expr>);>>
 
-mul_expr(left_expr, right_expr) ::= "(<left_expr> * <right_expr>)"
-div_expr(left_expr, right_expr) ::= "(<left_expr> / <right_expr>)"
-mod_expr(left_expr, right_expr) ::= "(<left_expr> % <right_expr>)"
-add_expr(left_expr, right_expr) ::= "(<left_expr> + <right_expr>)"
-sub_expr(left_expr, right_expr) ::= "(<left_expr> - <right_expr>)"
+mul_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>mul
+>>
 
-lt_expr(left_expr, right_expr) ::= "(<left_expr> \< <right_expr>)"
-gt_expr(left_expr, right_expr) ::= "(<left_expr> > <right_expr>)"
-equals_expr(left_expr, right_expr) ::= "(<left_expr> == <right_expr>)"
-diff_expr(left_expr, right_expr) ::= "(<left_expr> != <right_expr>)"
-and_expr(left_expr, right_expr) ::= "(<left_expr> && <right_expr>)"
-not_expr(expr) ::= "!<expr>"
-sub_uni_expr(expr) ::= "-<expr>"
+div_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>div
+>>
+
+mod_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>rem
+>>
+
+add_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>add
+>>
+
+sub_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>sub
+>>
+
+sub_uni_expr(prefix, expr) ::= <<
+<prefix>const_0
+<expr>
+<prefix>sub
+>>
+
+comparison(unique_id, left_expr, right_expr, name) ::= <<
+<left_expr>
+<right_expr>
+<name> #THEN<unique_id>
+goto #ELSE<unique_id>
+#THEN<unique_id>:
+    iconst_1
+    goto #ENDIF<unique_id>
+#ELSE<unique_id>:
+    iconst_0
+#ENDIF<unique_id>:
+>>
+
+lt_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmplt")>
+>>
+
+gt_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmpgt")>
+>>
+
+equals_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmpeq")>
+>>
+
+diff_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmpne")>
+>>
+
+
+and_expr(left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+imul
+>>
+
+not_expr(unique_id, expr) ::=<<
+<expr>
+iconst_1
+if_icmpeq #THEN<unique_id>
+goto #ELSE<unique_id>
+#THEN<unique_id>:
+    iconst_0
+    goto #ENDIF<unique_id>
+#ELSE<unique_id>:
+    iconst_1
+#ENDIF<unique_id>:
+>>
+
+push_stack(value) ::= "ldc <value>"
+iconst(value) ::= "iconst_<value>"

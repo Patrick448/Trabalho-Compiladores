@@ -121,7 +121,7 @@ public class LangCompiler {
 				JasminGenVisitor jasminGenVisitor = new JasminGenVisitor(scope, fileName);
 				ast.accept(jasminGenVisitor);
 
-				String outputPath = "JasminCodes/" + fileName + ".jasmin";
+				String outputPath = "JasminCodes/" + fileName + ".j";
 				writeToFile(outputPath, jasminGenVisitor.getGeneratedCode());
 			}
 			else if(args.length >=3 && args[1].equals("-v")){

@@ -1,63 +1,43 @@
 graph program {
-30 [label=Prog]
-30--29
-29 [label=FuncList]
-29--28
-28 [label="Func"]
-28--27
-27 [label="ID<main>"]
-28--4
-4 [label=CmdList]
+20 [label=Prog]
+20--5
+5 [label=FuncList]
+5--4
+4 [label="Func"]
 4--3
-3 [label= "="]
-3--1
-1 [label="LValue"]
+3 [label="ID<myFunction>"]
+4--2
+2 [label=CmdList]
+2--1
+1 [label="Print"]
 1--0
-0 [label="ID<a>"]
-3--2
-2 [label="Int<3>"]
-4--8
-8 [label= "="]
-8--6
-6 [label="LValue"]
-6--5
-5 [label="ID<b>"]
-8--7
-7 [label="Int<2>"]
-4--18
-18 [label= "="]
-18--10
-10 [label="LValue"]
+0 [label="Int<3654>"]
+5--19
+19 [label="Func"]
+19--18
+18 [label="ID<main>"]
+19--10
+10 [label=CmdList]
 10--9
-9 [label="ID<s>"]
-18--17
-17 [label= "New"]
-17--11
-11 [label="Type<Int>[]"]
+9 [label= "="]
+9--7
+7 [label="LValue"]
+7--6
+6 [label="ID<a>"]
+9--8
+8 [label="Int<55>"]
+10--12
+12 [label="Print"]
+12--11
+11 [label="Int<22222>"]
+10--17
+17 [label=CmdList]
 17--16
-16 [label= "+"]
-16--13
-13 [label="LValue"]
-13--12
-12 [label="ID<a>"]
+16 [label= "="]
+16--14
+14 [label="LValue"]
+14--13
+13 [label="ID<b>"]
 16--15
-15 [label="LValue"]
-15--14
-14 [label="ID<b>"]
-4--26
-26 [label="Print"]
-26--25
-25 [label="LValue"]
-25--20
-20 [label="LValue"]
-20--19
-19 [label="ID<s>"]
-25--24
-24 [label= "-"]
-24--23
-23 [label="Int<1>"]
-24--22
-22 [label="LValue"]
-22--21
-21 [label="ID<a>"]
+15 [label="Int<3>"]
 }

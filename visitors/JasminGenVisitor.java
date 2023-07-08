@@ -105,7 +105,7 @@ public class JasminGenVisitor extends Visitor {
         }
         else
         {
-            template.add("returntypes", "void");
+            template.add("returntypes", "V");
         }
 
         ParamsList params = f.getParams();
@@ -121,6 +121,8 @@ public class JasminGenVisitor extends Visitor {
         }
 
 
+        template.add("stack", 32);
+        template.add("decls", 32);
         template.add("name", "_" + name);
         codeStack.push(template);
 
@@ -169,7 +171,7 @@ public class JasminGenVisitor extends Visitor {
 
         if (t.getName().equals("Int")) {
             typeTemplate = groupTemplate.getInstanceOf("int_type");
-        } else if (t.getName().equals("Boolean")) {
+        } else if (t.getName().equals("Bool")) {
             typeTemplate = groupTemplate.getInstanceOf("boolean_type");
         } else if (t.getName().equals("Char")) {
             typeTemplate = groupTemplate.getInstanceOf("string_type");
@@ -180,6 +182,24 @@ public class JasminGenVisitor extends Visitor {
         }
 
         codeStack.push(typeTemplate);
+    }
+
+    public ST convertTypeName(String name) {
+        ST typeTemplate = null;
+
+        if (name.equals("Int")) {
+            typeTemplate = groupTemplate.getInstanceOf("int_type");
+        } else if (name.equals("Bool")) {
+            typeTemplate = groupTemplate.getInstanceOf("boolean_type");
+        } else if (name.equals("Char")) {
+            typeTemplate = groupTemplate.getInstanceOf("string_type");
+        } else if (name.equals("Float")) {
+            typeTemplate = groupTemplate.getInstanceOf("float_type");
+        } else {
+            typeTemplate = new ST("_" + name);
+        }
+
+        return typeTemplate;
     }
 
     /*public void visit2(CmdList c) {
@@ -370,16 +390,35 @@ public class JasminGenVisitor extends Visitor {
     public void visit(Print p) {
         ST template = groupTemplate.getInstanceOf("print");
         p.getExpr().accept(this);
+
+        p.getExpr().accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
+        template.add("type", convertTypeName(type));
         template.add("expr", codeStack.pop());
         codeStack.push(template);
     }
 
+    private String getPrefix(String type){
+        String prefix = "";
+        if(type.equals("Int")){
+            prefix = "i";
+        }else if(type.equals("Float")){
+            prefix = "f";
+        }
+        return prefix;
+    }
 
     public void visit(Add a) {
+
+        a.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
         ST template = groupTemplate.getInstanceOf("add_expr");
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("prefix", getPrefix(type));
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
 
@@ -388,10 +427,14 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(Sub a) {
+        a.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
         ST template = groupTemplate.getInstanceOf("sub_expr");
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("prefix", getPrefix(type));
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
 
@@ -400,10 +443,14 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(Div a) {
+        a.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
         ST template = groupTemplate.getInstanceOf("div_expr");
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("prefix", getPrefix(type));
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
 
@@ -411,10 +458,14 @@ public class JasminGenVisitor extends Visitor {
     }
 
     public void visit(Mul a) {
+        a.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
         ST template = groupTemplate.getInstanceOf("mul_expr");
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("prefix", getPrefix(type));
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
 
@@ -422,10 +473,14 @@ public class JasminGenVisitor extends Visitor {
     }
 
     public void visit(Rest a) {
+        a.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
         ST template = groupTemplate.getInstanceOf("mod_expr");
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("prefix", getPrefix(type));
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
 
@@ -440,6 +495,7 @@ public class JasminGenVisitor extends Visitor {
 
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
+        unique_id++;
 
         codeStack.push(template);
     }
@@ -451,8 +507,10 @@ public class JasminGenVisitor extends Visitor {
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("unique_id", unique_id);
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
+        unique_id++;
 
         codeStack.push(template);
     }
@@ -463,8 +521,10 @@ public class JasminGenVisitor extends Visitor {
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("unique_id", unique_id);
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
+        unique_id++;
 
         codeStack.push(template);
     }
@@ -475,17 +535,23 @@ public class JasminGenVisitor extends Visitor {
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("unique_id", unique_id);
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
+        unique_id++;
 
         codeStack.push(template);
     }
 
 
     public void visit(SubUni a) {
+        a.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
         ST template = groupTemplate.getInstanceOf("sub_uni_expr");
         a.getExpr().accept(this);
 
+        template.add("prefix", getPrefix(type));
         template.add("expr", codeStack.pop());
 
         codeStack.push(template);
@@ -496,7 +562,9 @@ public class JasminGenVisitor extends Visitor {
         ST template = groupTemplate.getInstanceOf("not_expr");
         a.getExpr().accept(this);
 
+        template.add("unique_id", unique_id);
         template.add("expr", codeStack.pop());
+        unique_id++;
 
         codeStack.push(template);
     }
@@ -506,31 +574,41 @@ public class JasminGenVisitor extends Visitor {
         a.getLeft().accept(this);
         a.getRight().accept(this);
 
+        template.add("unique_id", unique_id);
         template.add("right_expr", codeStack.pop());
         template.add("left_expr", codeStack.pop());
+        unique_id++;
 
         codeStack.push(template);
     }
 
 
     public void visit(Int a) {
-        codeStack.push(new ST(String.valueOf(a.getValue())));
-
+        ST template = groupTemplate.getInstanceOf("push_stack");
+        template.add("value", a.getValue());
+        codeStack.push(template);
     }
 
 
     public void visit(Char a) {
-        codeStack.push(new ST("\"" + a.getValue() + "\""));
+        ST template = groupTemplate.getInstanceOf("push_stack");
+        template.add("value","\"" + a.getValue() + "\"");
+        codeStack.push(template);
     }
 
 
     public void visit(Bool a) {
-        codeStack.push(new ST(String.valueOf(a.getValue())));
+        int boolVal = a.getValue() ? 1 : 0;
+        ST template = groupTemplate.getInstanceOf("iconst");
+        template.add("value", boolVal);
+        codeStack.push(template);
     }
 
 
     public void visit(FloatAst a) {
-        codeStack.push(new ST(String.valueOf(a.getValue())));
+        ST template = groupTemplate.getInstanceOf("push_stack");
+        template.add("value", a.getValue());
+        codeStack.push(template);
     }
 
 
@@ -560,9 +638,11 @@ public class JasminGenVisitor extends Visitor {
 
         if(a.getEls() != null){
             a.getEls().accept(this);
-            template.add("else", codeStack.pop());
+            template.add("els", codeStack.pop());
         }
 
+        template.add("unique_id", unique_id);
+        unique_id++;
         codeStack.push(template);
 
     }

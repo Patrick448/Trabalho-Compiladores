@@ -169,7 +169,7 @@ public class JavaGenVisitor extends Visitor {
 
         if (t.getName().equals("Int")) {
             typeTemplate = groupTemplate.getInstanceOf("int_type");
-        } else if (t.getName().equals("Boolean")) {
+        } else if (t.getName().equals("Bool")) {
             typeTemplate = groupTemplate.getInstanceOf("boolean_type");
         } else if (t.getName().equals("Char")) {
             typeTemplate = groupTemplate.getInstanceOf("string_type");
@@ -560,7 +560,7 @@ public class JavaGenVisitor extends Visitor {
 
         if(a.getEls() != null){
             a.getEls().accept(this);
-            template.add("else", codeStack.pop());
+            template.add("els", codeStack.pop());
         }
 
         codeStack.push(template);
@@ -776,11 +776,14 @@ public class JavaGenVisitor extends Visitor {
         List<ST> returnST = new ArrayList<>();
 
         ExprList args = c.getExpList();
-        for(Node e: args.getList())
-        {
-            e.accept(this);
-            argsST.add(codeStack.pop());
+        if(args!=null){
+            for(Node e: args.getList())
+            {
+                e.accept(this);
+                argsST.add(codeStack.pop());
+            }
         }
+
         LValueList ret = c.getLValueList();
         int j = 0;
         ST template_r = null;
@@ -866,11 +869,15 @@ public class JavaGenVisitor extends Visitor {
         List<ST> argsST = new ArrayList<>();
 
         ExprList args = c.getExpList();
-        for(Node e: args.getList())
-        {
-            e.accept(this);
-            argsST.add(codeStack.pop());
+
+        if(args!=null){
+            for(Node e: args.getList())
+            {
+                e.accept(this);
+                argsST.add(codeStack.pop());
+            }
         }
+
         ST template = groupTemplate.getInstanceOf("callvet");
         template.add("args", argsST);
         template.add("name", "_" + c.getId().getName());
