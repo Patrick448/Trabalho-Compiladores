@@ -1,9 +1,11 @@
 group jasmin;
 
-prog(name, funclist, datalist) ::= <<
+prog(name, funclist, datalist, tam) ::= <<
 .source <name>
 .class public <name>
 .super java/lang/Object
+
+    <datalist>
 
     <funclist>
 
@@ -12,11 +14,7 @@ prog(name, funclist, datalist) ::= <<
         invokestatic <name>/_main()I
         return
     .end method
-
-<datalist>
 >>
-
-
 
 funclist(funcs) ::= <<
 <funcs; separator="\n\n">

@@ -23,6 +23,7 @@ public class ScopeVisitor extends Visitor {
 	private HashMap<String, HashMap<String,String>> HashMapData = new HashMap<String, HashMap<String,String>>();
 	private int level;
 	private int scopeFunc;
+	private boolean have_return;
 
 	private Stack<String> typeStack = new Stack<String>();
 
@@ -266,6 +267,7 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Func f) {
+		have_return = false;
 		Integer i = 0;
 		String s_p = "(";
 		if(f.getParams()!=null)
@@ -288,6 +290,23 @@ public class ScopeVisitor extends Visitor {
 		level = 0;
 		CmdList cmds = f.getCmdList();
 		cmds.accept(this); 
+		if(f.getReturns()!=null)
+		{
+			if(!have_return)
+			{	
+				typeStack.push(ERROR);
+				System.out.println("Error at line " + f.getLine() + ":" + f.getCol() + ": The function " + f.getId() + " can return nothing");
+				return;
+			}
+		}
+		if(typeStack.pop().equals(ERROR))
+		{
+			typeStack.push(ERROR);
+		}
+		else
+		{
+			typeStack.push(CMD);
+		}
 	}
 
 	@Override
@@ -320,6 +339,13 @@ public class ScopeVisitor extends Visitor {
 			String test = typeStack.pop();
 			if (test.equals(ERROR)) {
 				hasError = true;
+			}
+			if(n.getClass().getSimpleName().equals("ReturnCMD"))
+			{
+				if(level==1)
+				{
+					have_return=true;
+				}
 			}
 		}
 
