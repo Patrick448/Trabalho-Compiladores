@@ -628,10 +628,11 @@ public class JavaGenVisitor extends Visitor {
         a.getExp().accept(this);
         template.add("expr", codeStack.pop());
         template.add("id", codeStack.pop());
-        if(a.getLValue().getID()!=null)
-        {
-            String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName()).first();
-        }
+
+        a.getLValue().accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+
+        template.add("type", templateFromTypeStr(type));
         codeStack.push(template);
         is_attr = false;
     }
