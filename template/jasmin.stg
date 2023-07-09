@@ -13,7 +13,7 @@ prog(name, funclist, datalist, tam) ::= <<
     .method public static main([Ljava/lang/String;)V
         .limit stack 1
         invokestatic <name>/_main()V
-        ireturn
+        return
     .end method
 >>
 
@@ -66,15 +66,15 @@ float_type() ::= "F"
 boolean_type() ::= "Z"
 string_type() ::= "Ljava/lang/String"
 
-iload(expr) ::= << iload <expr> >>
+iload(expr) ::= << iload_<expr> >>
 
-fload(expr) ::= << fload <expr> >>
+fload(expr) ::= << fload_<expr> >>
 
-aload(expr) ::= << aload <expr> >>
+aload(expr) ::= << aload_<expr> >>
 
 print(expr, type) ::= <<
-<expr>
 getstatic java/lang/System/out Ljava/io/PrintStream;
+<expr>
 invokevirtual java/io/PrintStream/print(<type>)V
 >>
 
@@ -131,14 +131,15 @@ stmt_list(stmt1, stmt2) ::= <<
 
 attrint(num, expr) ::= <<
 <expr> 
-istore<num>;
+istore_<num>
 >>
 attrfloat(num, expr) ::= <<
 <expr> 
-fstore<num>;>>
+fstore_<num>
+>>
 attrobj(num, expr) ::= <<
 <expr> 
-astore<num>;
+astore_<num>
 >>
 
 lvalue(lvalue, expr) ::= "<lvalue><if(expr)>.get(<expr>)<endif>"

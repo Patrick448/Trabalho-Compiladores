@@ -4,3 +4,12 @@
 
 (RESOLVIDO) - CallFunctionVet está sendo interpretado pelo semântico como sendo tipo CMD, ao
     invés do tipo que a função retorna
+
+__________________________________________JASMIN__________________________________________________
+
+- data
+- acesso de vetor e data
+- while
+- chamada de função vetor
+- chamada de função normal
+- polimorfismo
