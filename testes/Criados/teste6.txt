@@ -1,6 +1,7 @@
 main (){
     print 1 + 2;
-
+    a = new Int;
+    read a;
     iterate(2){
         print 'b';
         if(true){

@@ -4,28 +4,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class teste1 {
+public class teste1eMeio {
 
     Scanner input = new Scanner(System.in);
     public static void _main()
     {
         Integer _q;
-        Integer _res;
-        Integer _quo;
+        Integer _w;
+        Integer _z;
         Integer _n;
         _n = 13;
         _q = 5;
-        List<Object> arr = new ArrayList<Object>(); 
-        arr = _divMod(_n, _q);
-         _quo = (Integer)arr.get(0);
-         _res = (Integer)arr.get(0);
-        System.out.print("Q");
+        _w = _divMod(_n, _q).get(1);
+        _z = ((2 * _w) + 1);
+        System.out.print("Z");
         System.out.print(":");
-        System.out.print(_quo);
-        System.out.print("\n");
-        System.out.print("R");
-        System.out.print(":");
-        System.out.print(_res);
+        System.out.print(_z);
         System.out.print("\n");
     }
 

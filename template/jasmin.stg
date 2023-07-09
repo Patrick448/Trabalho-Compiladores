@@ -2,17 +2,18 @@ group jasmin;
 
 prog(name, funclist, datalist, tam) ::= <<
 .source <name>.j
+
+<datalist>
+
 .class public <name>
 .super java/lang/Object
-
-    <datalist>
 
     <funclist>
 
     .method public static main([Ljava/lang/String;)V
         .limit stack 1
         invokestatic <name>/_main()V
-        return
+        ireturn
     .end method
 >>
 
@@ -27,7 +28,7 @@ datalist(datas) ::= <<
 data(name, declist) ::= <<
 .class public <name>
 .super java/lang/Object
-<declist>
+    <declist>
 >>
 
 declist(decls) ::=<<
@@ -38,17 +39,12 @@ decl(classname, type, name) ::=<<
 .field public <name> <type>
 >>
 
-var_decl(type, name) ::=<<
-<type> <name>;
->>
-
 paramslist(params) ::= <<
 <params; separator=", ">
 >>
 
 
-cmdlist(cmds, variables) ::= <<
-<variables; separator="\n">
+cmdlist(cmds) ::= <<
 <cmds; separator="\n">
 >>
 
@@ -61,30 +57,51 @@ func(returntypes, name, paramslist, cmdlist, stack, decls) ::= <<
 .end method
 >>
 
-func2(type, name, params, decl, stmt) ::= <<
-static <type> <name>(<params; separator=", ">)
-    <if(decl)><decl; separator=";\n">;<endif>
-    <stmt>
->>
+param(type) ::= "<type>"
 
-param(type, id) ::= "<type> <id>"
-multiple_returns() ::= "List\<Object>"
+multiple_returns() ::= "java/util/ArrayList"
 array_type(type) ::= "[<type>"
 int_type() ::= "I"
 float_type() ::= "F"
 boolean_type() ::= "Z"
 string_type() ::= "Ljava/lang/String"
 
-print2(expr) ::= "System.out.print(<expr>);"
+iload(expr) ::= << iload <expr> >>
+
+fload(expr) ::= << fload <expr> >>
+
+aload(expr) ::= << aload <expr> >>
 
 print(expr, type) ::= <<
-getstatic java/lang/System/out Ljava/io/PrintStream;
 <expr>
+getstatic java/lang/System/out Ljava/io/PrintStream;
 invokevirtual java/io/PrintStream/print(<type>)V
 >>
 
-return(expr) ::= "return <expr>;"
-read(lvalue) ::= "read <lvalue>;"
+invocateScannerint(num) ::= <<
+invokevirtual java/util/Scanner/nextInt()I
+istore_<num>
+>>
+invocateScannerfloat(num) ::= <<
+invokevirtual java/util/Scanner/nextFloat()F"
+fstore_<num>
+>>
+invocateScannerLine(num) ::= <<
+invokevirtual java/util/Scanner/nextLine()Ljava/lang/String
+astore_<num>
+>>
+
+return(expr) ::= "areturn <expr>;"
+
+read(scanner, num) ::= <<
+new java/util/Scanner
+dup
+getstatic java/lang/System/in Ljava/io/InputStream;
+invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V
+astore_<num>
+aload_<num>
+<scanner>
+>>
 
 iterate(expr, cmdlist, unique_id) ::= <<
 int cont<unique_id> =0;
@@ -112,7 +129,18 @@ stmt_list(stmt1, stmt2) ::= <<
 <stmt2>
 >>
 
-attr(id, expr, type) ::= "<id> = <if(type)>(<type>)<endif><expr>;"
+attrint(num, expr) ::= <<
+<expr> 
+istore<num>;
+>>
+attrfloat(num, expr) ::= <<
+<expr> 
+fstore<num>;>>
+attrobj(num, expr) ::= <<
+<expr> 
+astore<num>;
+>>
+
 lvalue(lvalue, expr) ::= "<lvalue><if(expr)>.get(<expr>)<endif>"
 lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
 

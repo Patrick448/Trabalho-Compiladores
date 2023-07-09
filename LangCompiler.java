@@ -71,7 +71,6 @@ public class LangCompiler {
 
 		}
 		catch(Exception e){
-			//System.out.println(e);
 			System.exit(0);
 		}
 
@@ -124,7 +123,7 @@ public class LangCompiler {
 				String outputPath = "JasminCodes/" + fileName + ".j";
 				writeToFile(outputPath, jasminGenVisitor.getGeneratedCode());
 			}
-			else if(args.length >=3 && args[1].equals("-v")){
+			else if(args.length >=3 && args[2].equals("-v")){
 				System.out.println("\nFile: " + args[0]);
 			}
 

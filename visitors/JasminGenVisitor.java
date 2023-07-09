@@ -121,8 +121,8 @@ public class JasminGenVisitor extends Visitor {
         }
 
 
-        template.add("stack", 32);
-        template.add("decls", 32);
+        template.add("stack", scopeVisitor.getTamStack(scopeVisitor.getScopeFunc()));
+        template.add("decls", scopeVisitor.getTamLocal(scopeVisitor.getScopeFunc()));
         template.add("name", "_" + name);
         codeStack.push(template);
 
@@ -158,9 +158,6 @@ public class JasminGenVisitor extends Visitor {
         ST template = groupTemplate.getInstanceOf("param");
         p.getType().accept(this);
         template.add("type", codeStack.pop());
-
-        p.getId().accept(this);
-        template.add("id", codeStack.pop());
 
         codeStack.push(template);
     }
@@ -202,115 +199,6 @@ public class JasminGenVisitor extends Visitor {
         return typeTemplate;
     }
 
-    /*public void visit2(CmdList c) {
-        scopeVisitor.addLevel();
-        ST template = groupTemplate.getInstanceOf("cmdlist");
-
-        List<Node> cmdlist = c.getList();
-        List<ST> cmdlistST = new ArrayList<>();
-        List<ST> variableslistST = new ArrayList<>();
-
-        Iterator bKeyIterator = scopeVisitor.getCurrentScope().keySet().iterator();
-        String key;
-        String value;
-        HashMap<String, String> difference = new HashMap<String, String>();
-
-        while (bKeyIterator.hasNext()) {
-            key = (String)bKeyIterator.next();
-            if (!scopeVisitor.getCurrentScopeBefore().containsKey(key)) {
-                value = scopeVisitor.getCurrentScope().get(key);
-                difference.put(key, value);
-            }
-        }
-
-        Iterator dKeyIterator = difference.keySet().iterator();
-        while(dKeyIterator.hasNext())
-        {
-            key = (String) dKeyIterator.next();
-            String s = (String) difference.get(key);
-            ST typeTemplate = null;
-
-            if(s.equals("Int"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("int_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.equals("Float"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("float_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.equals("Bool"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("boolean_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.equals("Char"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("string_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.contains("[]"))
-            {
-                int counter = s.split("\\[]", -1).length - 1;
-                String v_s = "";
-                int i = counter;
-                while(i > 0)
-                {
-                    v_s = v_s + "Vector\\<";
-                    i=i-1;
-                }
-                if(s.contains("Int"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("int_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else if(s.contains("Float"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("float_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else if(s.contains("Bool"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("boolean_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else if(s.contains("Char"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("string_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else
-                {
-                    int index = s.indexOf('[');
-					String type = s.substring(0, index);
-                    v_s = v_s + " _" + type;
-                }
-                i = counter;
-                while(i > 0)
-                {
-                    v_s = v_s + ">";
-                    i=i-1;
-                }
-                v_s = v_s+ " _" + key + ";";
-                variableslistST.add(new ST(v_s));
-            }
-            else
-            {
-                variableslistST.add(new ST("_" + s + " _" + key + ";"));
-            }
-        }
-
-        for (Node cmd : cmdlist) {
-            cmd.accept(this);
-            cmdlistST.add(codeStack.pop());
-        }
-        template.add("cmds", cmdlistST);
-        template.add("variables", variableslistST);
-        codeStack.push(template);
-        scopeVisitor.subLevel();
-    }*/
-
     private ST templateFromTypeStr(String type){
         ST typeTemplate=null;
 
@@ -350,7 +238,6 @@ public class JasminGenVisitor extends Visitor {
 
         List<Node> cmdlist = c.getList();
         List<ST> cmdlistST = new ArrayList<>();
-        List<ST> variableslistST = new ArrayList<>();
 
         Iterator<String> bKeyIterator = scopeVisitor.getCurrentScope().keySet().iterator();
         String key, value;
@@ -359,7 +246,7 @@ public class JasminGenVisitor extends Visitor {
         while (bKeyIterator.hasNext()) {
             key = bKeyIterator.next();
             if (!scopeVisitor.getCurrentScopeBefore().containsKey(key)) {
-                value = scopeVisitor.getCurrentScope().get(key);
+                value = scopeVisitor.getCurrentScope().get(key).first();
                 difference.put(key, value);
             }
         }
@@ -370,18 +257,14 @@ public class JasminGenVisitor extends Visitor {
             key = dKeyIterator.next();
             String s = difference.get(key);
             ST typeTemplate = templateFromTypeStr(s);
-            ST varDeclTemplate = groupTemplate.getInstanceOf("var_decl");
-            varDeclTemplate.add("type", typeTemplate);
-            varDeclTemplate.add("name", "_"+key);
-            variableslistST.add(varDeclTemplate);
         }
 
         for (Node cmd : cmdlist) {
+            System.out.println(cmd);
             cmd.accept(this);
             cmdlistST.add(codeStack.pop());
         }
         template.add("cmds", cmdlistST);
-        template.add("variables", variableslistST);
         codeStack.push(template);
         scopeVisitor.subLevel();
     }
@@ -394,8 +277,42 @@ public class JasminGenVisitor extends Visitor {
         p.getExpr().accept(scopeVisitor);
         String type = scopeVisitor.getStack().pop();
 
+        ST templateLoad;
+        if(type.equals("Int") && p.getExpr().getClass().getSimpleName().equals("LValue"))
+        {
+            templateLoad = groupTemplate.getInstanceOf("iload");
+            templateLoad.add("expr", codeStack.pop());
+            template.add("expr", templateLoad.render());
+        }
+        else if(type.equals("Bool")  && p.getExpr().getClass().getSimpleName().equals("LValue"))
+        {
+            templateLoad = groupTemplate.getInstanceOf("iload");
+            templateLoad.add("expr", codeStack.pop());
+            template.add("expr", templateLoad.render());
+        }
+        else if(type.equals("Char")  && p.getExpr().getClass().getSimpleName().equals("LValue"))
+        {
+            templateLoad = groupTemplate.getInstanceOf("iload");
+            templateLoad.add("expr", codeStack.pop());
+            template.add("expr", templateLoad.render());
+        }
+        else if(type.equals("Float")  && p.getExpr().getClass().getSimpleName().equals("LValue"))
+        {
+            templateLoad = groupTemplate.getInstanceOf("fload");
+            templateLoad.add("expr", codeStack.pop());
+            template.add("expr", templateLoad.render());
+        }
+        else if(p.getExpr().getClass().getSimpleName().equals("LValue"))
+        {
+            templateLoad = groupTemplate.getInstanceOf("aload");
+            templateLoad.add("expr", codeStack.pop());
+            template.add("expr", templateLoad.render());
+        }
+        else
+        {
+            template.add("expr", codeStack.pop());
+        }
         template.add("type", convertTypeName(type));
-        template.add("expr", codeStack.pop());
         codeStack.push(template);
     }
 
@@ -700,73 +617,40 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(Attr a) {
-        ST template = groupTemplate.getInstanceOf("attr");
+
+        ST template = null;
         a.getLValue().accept(this);
         a.getExp().accept(this);
-        template.add("expr", codeStack.pop());
-        template.add("id", codeStack.pop());
-        String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName());
-        /*String type_t="";
-
-        if(type.equals("Int"))
+        LValue l = a.getLValue();
+        while(l.getID()==null)
         {
-            type_t = "Integer";
+            l = l.getLValue();
         }
-        else if(type.equals("Float"))
+        if(scopeVisitor.getCurrentScope().get(l.getID().getName()).first().equals("Int"))
         {
-            type_t = "Float";
+            template = groupTemplate.getInstanceOf("attrint");
         }
-        else if(type.equals("Bool"))
+        else if(scopeVisitor.getCurrentScope().get(l.getID().getName()).first().equals("Char"))
         {
-            type_t = "Boolean";
+            template = groupTemplate.getInstanceOf("attrint");
         }
-        else if(type.equals("Char"))
+        else if(scopeVisitor.getCurrentScope().get(l.getID().getName()).first().equals("Float"))
         {
-            type_t = "String";
+            template = groupTemplate.getInstanceOf("attrfloat");
         }
-        else if(type.contains("["))
+        else if(scopeVisitor.getCurrentScope().get(l.getID().getName()).first().equals("Bool"))
         {
-            int counter = type.split("\\[]", -1).length - 1;
-            String v_s = "";
-            int i = counter;
-            while(i > 0)
-            {
-                v_s = v_s + "Vector<";
-                i=i-1;
-            }
-            if(type.contains("Int"))
-            {
-                v_s += "Integer";
-            }
-            else if(type.contains("Float"))
-            {
-                v_s += "Float";
-            }
-            else if(type.contains("Bool"))
-            {
-                v_s += "Boolean";
-            }
-            else if(type.equals("Char"))
-            {
-                v_s += "String";
-            }
-            else
-            {
-                type_t = "_"+type;
-            }
-            i = 0;
-            while(i > 0)
-            {
-                v_s = v_s + ">";
-                i=i-1;
-            }
-            type_t = v_s;
+            template = groupTemplate.getInstanceOf("attrint");
         }
         else
         {
-            type_t = "_"+type;
+            template = groupTemplate.getInstanceOf("attrobj");
         }
-        template.add("type", type_t);*/
+        
+        template.add("expr", codeStack.pop());
+        int value_var = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName()).second();
+        template.add("num", value_var);
+        String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName()).first();
         codeStack.push(template);
     }
 
@@ -817,14 +701,35 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(ID i) {
-
-        codeStack.push(new ST("_"+ i.getName()));
+        if(scopeVisitor.getCurrentScope().containsKey(i.getName()))
+            codeStack.push(new ST(Integer.toString(scopeVisitor.getCurrentScope().get(i.getName()).second())));
     }
 
     public void visit(Read i) {
         ST template = groupTemplate.getInstanceOf("read");
-        i.getLValue().accept(this);
-        template.add("lvalue", codeStack.pop());
+        ST templateS = null;
+        if(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).first().equals("Int"))
+        {
+            templateS = groupTemplate.getInstanceOf("invocateScannerint");
+            templateS.add("num", Integer.toString(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).second()));
+        }
+        else if(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).first().equals("Char"))
+        {
+            templateS = groupTemplate.getInstanceOf("invocateScannerLine");
+            templateS.add("num", Integer.toString(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).second()));
+        }
+        else if(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).first().equals("Float"))
+        {
+            templateS = groupTemplate.getInstanceOf("invocateScannerfloat");
+            templateS.add("num", Integer.toString(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).second()));
+        }
+        else
+        {
+            templateS = groupTemplate.getInstanceOf("invocateScannerint");
+            templateS.add("num", Integer.toString(scopeVisitor.getCurrentScope().get(i.getLValue().getID().getName()).second()));
+        }
+        template.add("scanner", templateS.render());
+        template.add("num",Integer.toString(scopeVisitor.getCurrentScope().size()));
         codeStack.push(template);
     }
 
@@ -833,12 +738,15 @@ public class JasminGenVisitor extends Visitor {
         List<Expr> returns = r.getList().getList();
         if(returns.size() >= 1)
         {
-            String s = "List\\<Object> arr = new ArrayList\\<Object>(); \n";
+            String s = "new java/util/ArrayList \n dup \n invokespecial java/util/ArrayList/<init>()V \n astore_" + scopeVisitor.getCurrentScope().size();
             int i = 0;
             for(Expr e: returns)
             {
                 e.accept(this);
-                s = s + "arr.add(" + codeStack.pop().render() + "); \n";
+                s += "\n aload_" + scopeVisitor.getCurrentScope().size();
+                s += "\n iload_" + codeStack.pop().render();
+                s += "\n invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;";
+                s += "\n invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z \n pop";
             }
             s = s + "return arr;";
             codeStack.push(new ST(s));
@@ -869,7 +777,7 @@ public class JasminGenVisitor extends Visitor {
             template_r = groupTemplate.getInstanceOf("attrReturn");
             r.accept(this);
             template_r.add("name", codeStack.pop());
-            String type = scopeVisitor.getCurrentScope().get(r.getID().getName());
+            String type = scopeVisitor.getCurrentScope().get(r.getID().getName()).first();
             String type_t="";
             if(type.equals("Int"))
             {

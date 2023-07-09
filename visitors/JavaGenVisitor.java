@@ -24,6 +24,8 @@ public class JavaGenVisitor extends Visitor {
 
     private String generatedCode;
 
+    private boolean is_attr=false;
+
     public JavaGenVisitor(ScopeVisitor scopeVisitor, String filename) {
         this.scopeVisitor = scopeVisitor;
         groupTemplate = new STGroupFile("./template/java.stg");
@@ -339,7 +341,7 @@ public class JavaGenVisitor extends Visitor {
         while (bKeyIterator.hasNext()) {
             key = bKeyIterator.next();
             if (!scopeVisitor.getCurrentScopeBefore().containsKey(key)) {
-                value = scopeVisitor.getCurrentScope().get(key);
+                value = scopeVisitor.getCurrentScope().get(key).first();
                 difference.put(key, value);
             }
         }
@@ -620,74 +622,18 @@ public class JavaGenVisitor extends Visitor {
 
 
     public void visit(Attr a) {
+        is_attr = true;
         ST template = groupTemplate.getInstanceOf("attr");
         a.getLValue().accept(this);
         a.getExp().accept(this);
         template.add("expr", codeStack.pop());
         template.add("id", codeStack.pop());
-        String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName());
-        /*String type_t="";
-
-        if(type.equals("Int"))
+        if(a.getLValue().getID()!=null)
         {
-            type_t = "Integer";
+            String type = scopeVisitor.getCurrentScope().get(a.getLValue().getID().getName()).first();
         }
-        else if(type.equals("Float"))
-        {
-            type_t = "Float";
-        }
-        else if(type.equals("Bool"))
-        {
-            type_t = "Boolean";
-        }
-        else if(type.equals("Char"))
-        {
-            type_t = "String";
-        }
-        else if(type.contains("["))
-        {
-            int counter = type.split("\\[]", -1).length - 1;
-            String v_s = "";
-            int i = counter;
-            while(i > 0)
-            {
-                v_s = v_s + "Vector<";
-                i=i-1;
-            }
-            if(type.contains("Int"))
-            {
-                v_s += "Integer";
-            }
-            else if(type.contains("Float"))
-            {
-                v_s += "Float";
-            }
-            else if(type.contains("Bool"))
-            {
-                v_s += "Boolean";
-            }
-            else if(type.equals("Char"))
-            {
-                v_s += "String";
-            }
-            else
-            {
-                type_t = "_"+type;
-            }
-            i = 0;
-            while(i > 0)
-            {
-                v_s = v_s + ">";
-                i=i-1;
-            }
-            type_t = v_s;
-        }
-        else
-        {
-            type_t = "_"+type;
-        }
-        template.add("type", type_t);*/
         codeStack.push(template);
+        is_attr = false;
     }
 
     public void visit(LValue l) {
@@ -714,7 +660,6 @@ public class JavaGenVisitor extends Visitor {
         else if(lvChild == null && id != null){
             id.accept(this);
         }
-
     }
 
 
@@ -792,7 +737,7 @@ public class JavaGenVisitor extends Visitor {
             template_r = groupTemplate.getInstanceOf("attrReturn");
             r.accept(this);
             template_r.add("name", codeStack.pop());
-            String type = scopeVisitor.getCurrentScope().get(r.getID().getName());
+            String type = scopeVisitor.getCurrentScope().get(r.getID().getName()).first();
             String type_t="";
             if(type.equals("Int"))
             {

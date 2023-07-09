@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.HashMap;
+import util.Pair;
 
 import ast.*;
 
@@ -17,15 +18,19 @@ public class ScopeVisitor extends Visitor {
 	private static final String CMD = "CMD";
 
 	private HashMap<String, Integer> HashMapScope = new HashMap<String, Integer>();
-	private List<List<HashMap<String, String>>> Variables = new ArrayList<List<HashMap<String, String>>>();
+	private List<List<HashMap<String, Pair<String, Integer>>>> Variables = new ArrayList<List<HashMap<String, Pair<String, Integer>>>>();
 	private List<List<String>> Params = new ArrayList<List<String>>();
 	private List<List<String>> Returns = new ArrayList<List<String>>();
 	private HashMap<String, HashMap<String,String>> HashMapData = new HashMap<String, HashMap<String,String>>();
 	private int level;
 	private int scopeFunc;
 	private boolean have_return;
-
+	private List<Boolean> have_return_all_cmd;
+	private List<Integer> tam_stack = new ArrayList<Integer>();
+	private List<Integer> tam_local = new ArrayList<Integer>();
 	private Stack<String> typeStack = new Stack<String>();
+	private int max_stack;
+	private int stack_current;
 
 	public ScopeVisitor() {}
 
@@ -39,11 +44,11 @@ public class ScopeVisitor extends Visitor {
 		scopeFunc = scope;
 	}
 
-	public HashMap<String, String> getCurrentScope(){
+	public HashMap<String,Pair<String, Integer>> getCurrentScope(){
 		return Variables.get(scopeFunc).get(level);
 	}
 
-	public HashMap<String, String> getCurrentScopeBefore(){
+	public HashMap<String,Pair<String, Integer>> getCurrentScopeBefore(){
 		return Variables.get(scopeFunc).get(level-1);
 	}
 
@@ -71,6 +76,16 @@ public class ScopeVisitor extends Visitor {
 	public Stack<String> getStack()
 	{
 		return typeStack;
+	}
+
+	public Integer getTamLocal(Integer i)
+	{
+		return tam_local.get(i);
+	}
+
+	public Integer getTamStack(Integer i)
+	{
+		return tam_stack.get(i);
 	}
 
 	@Override
@@ -112,13 +127,15 @@ public class ScopeVisitor extends Visitor {
 	public void visit(FuncList f) {
 
 		List<Func> list = f.getList();
-		List<HashMap<String,String>> scopeList;
+		List<HashMap<String,Pair<String, Integer>>> scopeList;
 
 		int scope_value = 0;
-		HashMap<String,String> HashMapVariables;
+		HashMap<String,Pair<String, Integer>> HashMapVariables;
 
 		for (Func func : list) {
 			scope_value = HashMapScope.size();
+			tam_local.add(0);
+			tam_stack.add(0);
 			Integer i = 0;
 			String s_p = "(";
 			if(func.getParams()!=null)
@@ -139,8 +156,8 @@ public class ScopeVisitor extends Visitor {
 			s_p = s_p + ")";
 			HashMapScope.put(func.getId().getName()+s_p, scope_value);
 
-			scopeList = new ArrayList<HashMap<String,String>>();
-			HashMapVariables = new HashMap<String,String>();
+			scopeList = new ArrayList<HashMap<String,Pair<String, Integer>>>();
+			HashMapVariables = new HashMap<String,Pair<String, Integer>>();
 
 			List<String> ListParams = new ArrayList<String>();
 			ParamsList params = func.getParams();
@@ -151,7 +168,9 @@ public class ScopeVisitor extends Visitor {
 				{
 					p.getType().accept(this);
 					String type = typeStack.pop();
-					HashMapVariables.put(p.getId().getName(), type);
+					Pair<String, Integer> pair = new Pair(type, HashMapVariables.size()); 
+					HashMapVariables.put(p.getId().getName(), pair);
+					tam_local.set(scope_value, tam_local.get(scope_value)+1);
 					ListParams.add(type);
 				}
 			}
@@ -268,6 +287,9 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(Func f) {
 		have_return = false;
+		have_return_all_cmd = new ArrayList<Boolean>();
+		max_stack = 0;
+		stack_current = 0;
 		Integer i = 0;
 		String s_p = "(";
 		if(f.getParams()!=null)
@@ -292,13 +314,22 @@ public class ScopeVisitor extends Visitor {
 		cmds.accept(this); 
 		if(f.getReturns()!=null)
 		{
-			if(!have_return)
-			{	
-				typeStack.push(ERROR);
-				System.out.println("Error at line " + f.getLine() + ":" + f.getCol() + ": The function " + f.getId() + " can return nothing");
-				return;
+			for(Boolean b : have_return_all_cmd)
+			{
+				if(!b)
+				{
+					if(!have_return)
+					{	
+						typeStack.push(ERROR);
+						System.out.println("Error at line " + f.getLine() + ":" + f.getCol() + ": The function " + f.getId() + " can return nothing");
+						return;
+					}
+				}
 			}
 		}
+
+		tam_stack.set(scopeFunc, max_stack);
+
 		if(typeStack.pop().equals(ERROR))
 		{
 			typeStack.push(ERROR);
@@ -328,12 +359,16 @@ public class ScopeVisitor extends Visitor {
 	@Override
 	public void visit(CmdList c) {
 
-		HashMap<String,String> scopeCMD = (HashMap<String,String>) Variables.get(scopeFunc).get(level).clone();
+		HashMap<String,Pair<String, Integer>> scopeCMD = (HashMap<String,Pair<String, Integer>>) Variables.get(scopeFunc).get(level).clone();
 		Variables.get(scopeFunc).add(scopeCMD);
 		level = level + 1;
 
 		List<Node> list = c.getList();
 		boolean hasError = false;
+		if(level>1)
+		{
+			have_return_all_cmd.add(false);
+		}
 		for (Node n : list) {
 			n.accept(this);
 			String test = typeStack.pop();
@@ -345,6 +380,10 @@ public class ScopeVisitor extends Visitor {
 				if(level==1)
 				{
 					have_return=true;
+				}
+				else if(level>1)
+				{
+					have_return_all_cmd.set(have_return_all_cmd.size() - 1, true);
 				}
 			}
 		}
@@ -360,6 +399,11 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Print p) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr e = p.getExpr();
 		e.accept(this);
 		String type = typeStack.pop();
@@ -369,7 +413,11 @@ public class ScopeVisitor extends Visitor {
 		} else {
 			typeStack.push(CMD);
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
@@ -393,6 +441,11 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Add a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -411,11 +464,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": invalid operation between "
 					+ l_type + " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(Mul a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -434,11 +496,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": attempted to operate " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(Rest a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -457,11 +528,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": attempted to operate " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(Div a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -480,11 +560,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": attempted to operate " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(Sub a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -503,11 +592,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": attempted to operate " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(SubUni a) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr e = a.getExpr();
 		e.accept(this);
 
@@ -528,6 +626,11 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Neg a) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr e = a.getExpr();
 		e.accept(this);
 
@@ -546,6 +649,11 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(And a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -562,12 +670,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol()
 					+ ": invalid logical operation between " + l_type + " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(GreaterThan a) {
-
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -586,12 +702,21 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": invalid comparison between " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(LessThan a) {
 
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -610,11 +735,20 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": invalid comparison between " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(Diff a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
@@ -633,17 +767,32 @@ public class ScopeVisitor extends Visitor {
 			System.out.println("Error at line " + a.getLine() + ":" + a.getCol() + ": invalid comparison between " + l_type
 					+ " and " + r_type + ".");
 		}
-
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 	}
 
 	@Override
 	public void visit(Eq a) {
+		stack_current += 2;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr l = a.getLeft();
 		l.accept(this);
 		Expr r = a.getRight();
 		r.accept(this);
 		String r_type = typeStack.pop();
 		String l_type = typeStack.pop();
+
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 
 		if (r_type.equals(ERROR) || l_type.equals(ERROR)) {
 			typeStack.push(ERROR);
@@ -680,6 +829,11 @@ public class ScopeVisitor extends Visitor {
 	}
 
 	public void visit(Iterate i) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr e = i.getCondition();
 		e.accept(this);
 		Boolean have_error = false;
@@ -699,6 +853,12 @@ public class ScopeVisitor extends Visitor {
 
 		String c_type = typeStack.pop();
 
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
+
 		if (c_type.equals(ERROR)||have_error) {
 			typeStack.push(ERROR);
 			return;
@@ -710,6 +870,11 @@ public class ScopeVisitor extends Visitor {
 	}
 
 	public void visit(If i) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr e = (Expr) i.getTeste();
 		e.accept(this);
 		Boolean have_error = false;
@@ -734,6 +899,12 @@ public class ScopeVisitor extends Visitor {
 			else_type = typeStack.pop();
 		}
 
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
+
 		if(have_error)
 		{
 			typeStack.push(ERROR);
@@ -752,20 +923,30 @@ public class ScopeVisitor extends Visitor {
 
 
 	public void visit(Attr a) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		Expr e = a.getExp();
 		LValue l = a.getLValue();
 		e.accept(this);
 		String e_type = typeStack.pop();
 
+		stack_current -= 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		if(l.isSingleID()){
 			if(Variables.get(scopeFunc).get(level).containsKey(a.getLValue().getID().getName()))
 			{
-				if(!e_type.equals(Variables.get(scopeFunc).get(level).get(a.getLValue().getID().getName())) && !e_type.equals(ERROR))	
+				if(!e_type.equals(Variables.get(scopeFunc).get(level).get(a.getLValue().getID().getName()).first()) && !e_type.equals(ERROR))	
 				{
 					typeStack.push(ERROR);
 					System.out.println(
 						"Error at line " + a.getLine() + ":" + a.getCol() + ": Attempted to attibute value of type " + e_type + 
-						" to variable of type " + Variables.get(scopeFunc).get(level).get(a.getLValue().getID().getName()) + ".");
+						" to variable of type " + Variables.get(scopeFunc).get(level).get(a.getLValue().getID().getName()).first() + ".");
 					return;
 				}
 				else if(e_type.equals(ERROR))
@@ -774,7 +955,9 @@ public class ScopeVisitor extends Visitor {
 					return;
 				}
 			}
-			Variables.get(scopeFunc).get(level).put(a.getLValue().getID().getName(), e_type);
+			Pair<String, Integer> pair = new Pair(e_type, Variables.get(scopeFunc).get(level).size());
+			Variables.get(scopeFunc).get(level).put(a.getLValue().getID().getName(), pair);
+			tam_local.set(scopeFunc, tam_local.get(scopeFunc)+1);
 			if(e_type.equals(ERROR))
 			{
 				typeStack.push(ERROR);
@@ -872,19 +1055,21 @@ public class ScopeVisitor extends Visitor {
 		}
 		
 		else{
-			String type = Variables.get(scopeFunc).get(level).get(i.getName());
-			if(type == null){
+			if(Variables.get(scopeFunc).get(level).containsKey(i.getName()))
+			{
+				String type = Variables.get(scopeFunc).get(level).get(i.getName()).first();
+				typeStack.push(type);
+			}
+			else{
 				typeStack.push(ERROR);
 				System.out.println("Error at line " + l.getLine() + ":" + l.getCol() + ": Variable " + i.getName() + " was not initialized.");
-			}else{
-				typeStack.push(type);
 			}
 		}
 	}
 
 	public void visit(ID i)
 	{
-		typeStack.push(Variables.get(scopeFunc).get(level).get(i.getName()));
+		typeStack.push(Variables.get(scopeFunc).get(level).get(i.getName()).first());
 	}
 
 	public void visit(New n) {
@@ -892,6 +1077,11 @@ public class ScopeVisitor extends Visitor {
 		Type type = n.getType();
 		if(e!=null)
 		{
+			stack_current += 1;
+			if(max_stack<stack_current)
+			{
+				max_stack = stack_current;
+			}
 			e.accept(this);
 			String e_type = typeStack.pop();
 			if(!e_type.equals(INT) && !e_type.equals(ERROR))
@@ -913,6 +1103,11 @@ public class ScopeVisitor extends Visitor {
 		}
 		else
 		{
+			stack_current += 1;
+			if(max_stack<stack_current)
+			{
+				max_stack = stack_current;
+			}
 			type.accept(this);
 			String t_type = typeStack.pop();
 			typeStack.push(t_type);
@@ -921,6 +1116,11 @@ public class ScopeVisitor extends Visitor {
 
 	@Override
 	public void visit(Read i) {
+		stack_current += 1;
+		if(max_stack<stack_current)
+		{
+			max_stack = stack_current;
+		}
 		LValue lv = i.getLValue();
 		lv.accept(this);
 		String l_type = typeStack.pop();
@@ -976,6 +1176,11 @@ public class ScopeVisitor extends Visitor {
 		String s_p = "(";
 			if(c.getExpList()!=null)
 			{
+				stack_current += c.getExpList().getList().size();
+				if(max_stack<stack_current)
+				{
+					max_stack = stack_current;
+				}
 				for(Expr e : c.getExpList().getList())
 				{
 					e.accept(this);
@@ -1008,16 +1213,18 @@ public class ScopeVisitor extends Visitor {
 					{
 						if(Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 						{
-							if(!Returns.get(scope).get(j).equals(Variables.get(scopeFunc).get(level).get(lv.getID().getName())))	
+							if(!Returns.get(scope).get(j).equals(Variables.get(scopeFunc).get(level).get(lv.getID().getName()).first()))	
 							{
 								typeStack.push(ERROR);
 								System.out.println(
 									"Error at line " + c.getLine() + ":" + c.getCol() + ": Attempted to attibute value of type " + Returns.get(scope).get(j) + 
-									" to variable of type " + Variables.get(scopeFunc).get(level).get(lv.getID().getName()) + ".");
+									" to variable of type " + Variables.get(scopeFunc).get(level).get(lv.getID().getName()).first() + ".");
 								return;
 							}
 						}
-						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), Returns.get(scope).get(j));
+						Pair<String, Integer> pair = new Pair(Returns.get(scope).get(j), Variables.get(scopeFunc).get(level).size());
+						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), pair);
+						tam_local.set(scopeFunc, tam_local.get(scopeFunc)+1);
 						j= j+1;
 					}
 					typeStack.push(CMD);
@@ -1029,7 +1236,9 @@ public class ScopeVisitor extends Visitor {
 					{
 						if(!Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 						{
-							Variables.get(scopeFunc).get(level).put(lv.getID().getName(), ERROR);
+							Pair<String, Integer> pair = new Pair(ERROR, Variables.get(scopeFunc).get(level).size());
+							Variables.get(scopeFunc).get(level).put(lv.getID().getName(), pair);
+							tam_local.set(scopeFunc, tam_local.get(scopeFunc)+1);
 						}
 					}
 					typeStack.push(ERROR);
@@ -1040,6 +1249,11 @@ public class ScopeVisitor extends Visitor {
 			}
 			else if(Returns.get(scope).size() > 0)
 			{
+				stack_current += 1;
+				if(max_stack<stack_current)
+				{
+					max_stack = stack_current;
+				}
 				typeStack.push(ERROR);
 				System.out.println(
 					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Returns.get(scope).size() + " variables to save return but received 0.");
@@ -1055,7 +1269,10 @@ public class ScopeVisitor extends Visitor {
 				{
 					if(!Variables.get(scopeFunc).get(level).containsKey(lv.getID().getName()))
 					{
-						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), ERROR);
+						Pair<String, Integer> pair = new Pair(ERROR, Variables.get(scopeFunc).get(level).size());
+						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), pair);
+						tam_local.set(scopeFunc, tam_local.get(scopeFunc)+1);
+						
 					}
 				}
 			}
@@ -1093,6 +1310,12 @@ public class ScopeVisitor extends Visitor {
 			
 			if(e_list!=null)
 			{
+				stack_current += e_list.getList().size();
+				if(max_stack<stack_current)
+				{
+					max_stack = stack_current;
+				}
+
 				if(Params.get(scope).size() == e_list.getList().size())
 				{
 					Boolean have_error = false;
@@ -1168,6 +1391,11 @@ public class ScopeVisitor extends Visitor {
 				return;
 			}
 			typeStack.push(CMD);
+			stack_current += 1;
+			if(max_stack<stack_current)
+			{
+				max_stack = stack_current;
+			}
 		}
 		else
 		{

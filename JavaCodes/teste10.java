@@ -4,45 +4,31 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class teste8 {
+public class teste10 {
 
     Scanner input = new Scanner(System.in);
-    public static List<Object> _fat(Integer _n)
+    public static List<Object> _fibonacci(Integer _n)
     {
-        if((_n == 0)) {
+        if((_n < 1)) {
             List<Object> arr = new ArrayList<Object>(); 
-            arr.add(1); 
+            arr.add(_n); 
             return arr;
         } 
-        List<Object> arr = new ArrayList<Object>(); 
-        arr.add((_n * _fat((_n - 1)).get(0))); 
-        return arr;
-    }
-
-    public static List<Object> _spook(Integer _n)
-    {
         if((_n == 1)) {
             List<Object> arr = new ArrayList<Object>(); 
-            arr.add((2 * _n)); 
-            return arr;
-        } 
-        if((_n == 2)) {
-            List<Object> arr = new ArrayList<Object>(); 
-            arr.add(((2 * _n) + 1)); 
+            arr.add(_n); 
             return arr;
         } 
         List<Object> arr = new ArrayList<Object>(); 
-        arr.add((_n - 1)); 
+        arr.add((_fibonacci((_n - 1)).get(0) + _fibonacci((_n - 2)).get(0))); 
         return arr;
     }
 
     public static void _main()
     {
-        Integer _k;
-        _k = _fat(6).get(0);
-        _k = _spook(2).get(0);
-        System.out.print(_k);
-        System.out.print("\n");
+        Integer _v;
+        _v = _fibonacci(5).get(0);
+        System.out.print(_v);
     }
 
      public static <T> ArrayList<T> initialize(int n, ArrayList<T> a){
