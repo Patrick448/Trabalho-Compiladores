@@ -13,7 +13,7 @@ graph program {
 2--1
 1 [label="ID<numerador>"]
 2--0
-0 [label="Type<Int>"]
+0 [label="Type<Teste>"]
 3--6
 6 [label="Decl"]
 6--5
