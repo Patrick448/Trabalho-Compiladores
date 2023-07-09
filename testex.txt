@@ -1,10 +1,11 @@
-test(a::Int, b::Int):Int,Int
-{
-    return a*b, b/a;
-}
-
 main()
 {
-    test(1,2)<a, c>;
-    print c;
+    iterate(3)
+    {
+        print 0;
+        iterate(2)
+        {
+            print 1;
+        }
+    }
 }
