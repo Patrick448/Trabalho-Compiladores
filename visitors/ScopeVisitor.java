@@ -1343,37 +1343,6 @@ public class ScopeVisitor extends Visitor {
 						typeStack.push(ERROR);
 						return;
 					}
-
-					Expr e = c.getLExp();
-					e.accept(this);
-					String e_type = typeStack.pop();
-					if(!e_type.equals(INT) && !e_type.equals(ERROR))
-					{
-						typeStack.push(ERROR);
-						System.out.println(
-							"Error at line " + c.getLine() + ":" + c.getCol() + ": The functions return position expected a " + INT + " but received a " + e_type + ".");
-						return;
-					}
-					else if(e_type.equals(ERROR))
-					{
-						typeStack.push(ERROR);	
-						return;
-					} 
-					else
-					{
-						Int i_value = (Int)e;
-						int value = i_value.getValue();
-						if(Returns.get(scope).size()>value)
-						{
-							typeStack.push(Returns.get(scope).get(value));
-						}
-						else
-						{
-							System.out.println("Error at line " + c.getLine() + ":" + c.getCol() + ": Attempt to access invalid return.");
-							typeStack.push(ERROR);
-						}
-						return;
-					}
 				}
 				else
 				{
@@ -1390,7 +1359,36 @@ public class ScopeVisitor extends Visitor {
 					"Error at line " + c.getLine() + ":" + c.getCol() + ": The function expected " + Params.get(scope).size() + " parameters but received 0.");
 				return;
 			}
-			typeStack.push(CMD);
+			Expr e = c.getLExp();
+			e.accept(this);
+			String e_type = typeStack.pop();
+			if(!e_type.equals(INT) && !e_type.equals(ERROR))
+			{
+				typeStack.push(ERROR);
+				System.out.println(
+					"Error at line " + c.getLine() + ":" + c.getCol() + ": The functions return position expected a " + INT + " but received a " + e_type + ".");
+				return;
+			}
+			else if(e_type.equals(ERROR))
+			{
+				typeStack.push(ERROR);	
+				return;
+			} 
+			else
+			{
+				Int i_value = (Int)e;
+				int value = i_value.getValue();
+				if(Returns.get(scope).size()>value)
+				{
+					typeStack.push(Returns.get(scope).get(value));
+				}
+				else
+				{
+					System.out.println("Error at line " + c.getLine() + ":" + c.getCol() + ": Attempt to access invalid return.");
+					typeStack.push(ERROR);
+				}
+
+			}
 			stack_current += 1;
 			if(max_stack<stack_current)
 			{
