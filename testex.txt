@@ -33,7 +33,7 @@ main(){
     print a[0];
     t = new Teste;
     t.denominador = 10;
-    -- z = otherFunc()[0];
+    z = otherFunc()[0];
     --t.denominador = otherFunc()[0];
     --yFunc();
     if(1 < 2){
