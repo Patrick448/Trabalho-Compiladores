@@ -86,7 +86,7 @@ string_type() ::= "String"
 
 print(expr) ::= "System.out.print(<expr>);"
 return(expr) ::= "return <expr>;"
-read(lvalue) ::= "read <lvalue>;"
+read(lvalue) ::= "<lavlue> = input.nextLine();"
 
 iterate(expr, cmdlist, unique_id) ::= <<
 int cont<unique_id> =0;
@@ -111,16 +111,17 @@ stmt_list(stmt1, stmt2) ::= <<
 >>
 
 attr(id, expr, type) ::= "<id> = <if(type)>(<type>)<endif><expr>;"
-lvalue(lvalue, expr) ::= "<lvalue><if(expr)>.get(<expr>)<endif>"
+lvalue(lvalue, expr) ::= "<lvalue><if(expr)>[<expr>]<endif>"
 lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
 
 boolean_expr(value) ::= "<value>"
 float_expr(value) ::= "<value>"
 int_expr(value) ::= "<value>"
 
-new_array(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
+new_array2(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
+new_array(type, expr) ::= "new <type>[<expr>]"
 new_object(type) ::= "new <type>()"
-array(type) ::= "ArrayList\<<type>>"
+array(type) ::= "<type>[]"
 
 call(name, args, return) ::= <<
 List\<Object> arr = new ArrayList\<Object>(); 

@@ -1,185 +1,283 @@
 graph program {
-91 [label=Prog]
-91--31
-31 [label=FuncList]
-31--30
-30 [label="Func"]
-30--29
-29 [label="ID<fat>"]
-30--15
-15 [label=CmdList]
-15--14
-14 [label= "If"]
-14--9
-9 [label= "=="]
-9--7
-7 [label="LValue"]
-7--6
-6 [label="ID<n>"]
+141 [label=Prog]
+141--9
+9 [label=DataList]
 9--8
-8 [label="Int<0>"]
-14--13
-13 [label=CmdList]
-13--12
-12 [label="ReturnCMD"]
-12--11
-11 [label=ExprList]
-11--10
-10 [label="Int<1>"]
-15--28
-28 [label="ReturnCMD"]
-28--27
-27 [label=ExprList]
-27--26
-26 [label= "*"]
-26--17
-17 [label="LValue"]
-17--16
-16 [label="ID<n>"]
-26--25
-25 [label= "CallFunction"]
-25--24
-24 [label="ID<fat>"]
-25--22
-22 [label=ExprList]
-22--21
-21 [label= "-"]
-21--20
-20 [label="Int<1>"]
-21--19
-19 [label="LValue"]
-19--18
-18 [label="ID<n>"]
-25--23
-23 [label="Int<0>"]
-30--3
-3 [label="ParamsList"]
+8 [label= "Data"]
+8--7
+7 [label="Type<Teste>"]
+8--3
+3 [label=DeclList]
 3--2
-2 [label="Param"]
+2 [label="Decl"]
 2--1
-1 [label="ID<n>"]
+1 [label="ID<numerador>"]
 2--0
-0 [label="Type<Int>"]
-30--5
-5 [label="TypeList"]
-5--4
+0 [label="Type<Teste>"]
+3--6
+6 [label="Decl"]
+6--5
+5 [label="ID<denominador>"]
+6--4
 4 [label="Type<Int>"]
-31--72
-72 [label="Func"]
-72--71
-71 [label="ID<spook>"]
-72--50
-50 [label=CmdList]
+141--28
+28 [label=FuncList]
+28--27
+27 [label="Func"]
+27--26
+26 [label="ID<func>"]
+27--21
+21 [label=CmdList]
+21--20
+20 [label= "="]
+20--18
+18 [label="LValue"]
+18--17
+17 [label="ID<x>"]
+20--19
+19 [label="Int<2>"]
+21--25
+25 [label="ReturnCMD"]
+25--24
+24 [label=ExprList]
+24--23
+23 [label="LValue"]
+23--22
+22 [label="ID<x>"]
+27--14
+14 [label="ParamsList"]
+14--13
+13 [label="Param"]
+13--12
+12 [label="ID<c>"]
+13--11
+11 [label="Type<Char>"]
+27--16
+16 [label="TypeList"]
+16--15
+15 [label="Type<Int>"]
+28--38
+38 [label="Func"]
+38--37
+37 [label="ID<otherFunc>"]
+38--36
+36 [label=CmdList]
+36--35
+35 [label="ReturnCMD"]
+35--33
+33 [label=ExprList]
+33--32
+32 [label="Int<1>"]
+33--34
+34 [label="Float<0.5>"]
+38--30
+30 [label="TypeList"]
+30--29
+29 [label="Type<Int>"]
+30--31
+31 [label="Type<Float>"]
+28--50
+50 [label="Func"]
 50--49
-49 [label= "If"]
-49--41
-41 [label= "=="]
-41--39
-39 [label="LValue"]
-39--38
-38 [label="ID<n>"]
-41--40
-40 [label="Int<1>"]
-49--48
-48 [label=CmdList]
-48--47
-47 [label="ReturnCMD"]
-47--46
-46 [label=ExprList]
-46--45
-45 [label= "*"]
-45--42
-42 [label="Int<2>"]
+49 [label="ID<yFunc>"]
+50--45
+45 [label=CmdList]
 45--44
-44 [label="LValue"]
+44 [label= "="]
+44--40
+40 [label="LValue"]
+40--39
+39 [label="ID<a>"]
 44--43
-43 [label="ID<n>"]
-50--64
-64 [label= "If"]
-64--54
-54 [label= "=="]
-54--52
-52 [label="LValue"]
+43 [label= "+"]
+43--41
+41 [label="Int<1>"]
+43--42
+42 [label="Int<2>"]
+45--48
+48 [label="Print"]
+48--47
+47 [label="LValue"]
+47--46
+46 [label="ID<a>"]
+28--140
+140 [label="Func"]
+140--139
+139 [label="ID<main>"]
+140--53
+53 [label=CmdList]
+53--52
+52 [label="Print"]
 52--51
-51 [label="ID<n>"]
-54--53
-53 [label="Int<2>"]
-64--63
-63 [label=CmdList]
-63--62
-62 [label="ReturnCMD"]
-62--61
-61 [label=ExprList]
-61--60
-60 [label= "+"]
-60--58
-58 [label= "*"]
-58--55
-55 [label="Int<2>"]
-58--57
-57 [label="LValue"]
+51 [label="Char<a>"]
+53--55
+55 [label="Print"]
+55--54
+54 [label="Bool<true>"]
+53--57
+57 [label="Print"]
 57--56
-56 [label="ID<n>"]
-60--59
-59 [label="Int<1>"]
-50--70
-70 [label="ReturnCMD"]
-70--69
-69 [label=ExprList]
-69--68
-68 [label= "-"]
-68--67
-67 [label="Int<1>"]
-68--66
-66 [label="LValue"]
+56 [label="Int<1>"]
+53--59
+59 [label="Print"]
+59--58
+58 [label="Float<5.55>"]
+53--63
+63 [label="Print"]
+63--62
+62 [label= "+"]
+62--60
+60 [label="Int<1>"]
+62--61
+61 [label="Int<2>"]
+53--67
+67 [label="Print"]
+67--66
+66 [label= "*"]
+66--64
+64 [label="Int<1>"]
 66--65
-65 [label="ID<n>"]
-72--35
-35 [label="ParamsList"]
-35--34
-34 [label="Param"]
-34--33
-33 [label="ID<n>"]
-34--32
-32 [label="Type<Int>"]
-72--37
-37 [label="TypeList"]
-37--36
-36 [label="Type<Int>"]
-31--90
-90 [label="Func"]
-90--89
-89 [label="ID<main>"]
-90--83
-83 [label=CmdList]
-83--82
-82 [label= "="]
-82--74
-74 [label="LValue"]
+65 [label="Int<2>"]
+53--71
+71 [label="Print"]
+71--70
+70 [label= "/"]
+70--68
+68 [label="Int<1>"]
+70--69
+69 [label="Int<2>"]
+53--75
+75 [label="Print"]
+75--74
+74 [label= "-"]
 74--73
-73 [label="ID<k>"]
-82--81
-81 [label= "CallFunction"]
-81--80
-80 [label="ID<spook>"]
-81--76
-76 [label=ExprList]
-76--75
-75 [label="Int<0>"]
-76--77
-77 [label="Int<1>"]
-76--78
-78 [label="Int<2>"]
-81--79
-79 [label="Int<0>"]
-83--86
-86 [label="Print"]
-86--85
-85 [label="LValue"]
-85--84
-84 [label="ID<k>"]
-83--88
+73 [label="Int<2>"]
+74--72
+72 [label="Int<1>"]
+53--80
+80 [label="Print"]
+80--79
+79 [label= "+"]
+79--76
+76 [label="Int<1>"]
+79--78
+78 [label= "-"]
+78--77
+77 [label="Int<2>"]
+53--84
+84 [label="Print"]
+84--83
+83 [label= ">"]
+83--81
+81 [label="Int<1>"]
+83--82
+82 [label="Int<2>"]
+53--88
 88 [label="Print"]
 88--87
-87 [label="Char<\n>"]
+87 [label= "<"]
+87--85
+85 [label="Int<1>"]
+87--86
+86 [label="Int<2>"]
+53--92
+92 [label="Print"]
+92--91
+91 [label= "!="]
+91--89
+89 [label="Int<1>"]
+91--90
+90 [label="Int<2>"]
+53--96
+96 [label="Print"]
+96--95
+95 [label= "=="]
+95--93
+93 [label="Int<1>"]
+95--94
+94 [label="Int<2>"]
+53--101
+101 [label="Print"]
+101--100
+100 [label= "=="]
+100--97
+97 [label="Bool<false>"]
+100--99
+99 [label= "!"]
+99--98
+98 [label="Bool<true>"]
+53--107
+107 [label= "="]
+107--103
+103 [label="LValue"]
+103--102
+102 [label="ID<a>"]
+107--106
+106 [label= "New"]
+106--104
+104 [label="Type<Int>[]"]
+106--105
+105 [label="Int<5>"]
+53--112
+112 [label="Print"]
+112--111
+111 [label="LValue"]
+111--109
+109 [label="LValue"]
+109--108
+108 [label="ID<a>"]
+111--110
+110 [label="Int<0>"]
+53--117
+117 [label= "="]
+117--114
+114 [label="LValue"]
+114--113
+113 [label="ID<t>"]
+117--116
+116 [label= "New"]
+116--115
+115 [label="Type<Teste>"]
+53--123
+123 [label= "="]
+123--121
+121 [label="LValue"]
+121--119
+119 [label="LValue"]
+119--118
+118 [label="ID<t>"]
+121--120
+120 [label="ID<denominador>"]
+123--122
+122 [label="Int<10>"]
+53--133
+133 [label= "If"]
+133--126
+126 [label= "<"]
+126--124
+124 [label="Int<1>"]
+126--125
+125 [label="Int<2>"]
+133--132
+132 [label=CmdList]
+132--131
+131 [label="Print"]
+131--130
+130 [label="LValue"]
+130--128
+128 [label="LValue"]
+128--127
+127 [label="ID<t>"]
+130--129
+129 [label="ID<denominador>"]
+53--138
+138 [label= "Iterate"]
+138--134
+134 [label="Int<5>"]
+138--137
+137 [label=CmdList]
+137--136
+136 [label="Print"]
+136--135
+135 [label="Char<u>"]
 }
