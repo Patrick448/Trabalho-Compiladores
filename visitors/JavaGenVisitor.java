@@ -696,6 +696,7 @@ public class JavaGenVisitor extends Visitor {
 
     public void visit(ReturnCMD r) {
         List<Expr> returns = r.getList().getList();
+        System.out.println(returns);
         if(returns.size() >= 1)
         {
             String s = "List\\<Object> arr = new ArrayList\\<Object>(); \n";
@@ -719,7 +720,7 @@ public class JavaGenVisitor extends Visitor {
     public void visit(CallFunction c) {
         List<ST> argsST = new ArrayList<>();
         List<ST> returnST = new ArrayList<>();
-
+        ST template = groupTemplate.getInstanceOf("call");
         ExprList args = c.getExpList();
         if(args!=null){
             for(Node e: args.getList())
@@ -731,79 +732,82 @@ public class JavaGenVisitor extends Visitor {
 
         LValueList ret = c.getLValueList();
         int j = 0;
-        ST template_r = null;
-        for(LValue r: ret.getList())
+        if(ret!=null)
         {
-            template_r = groupTemplate.getInstanceOf("attrReturn");
-            r.accept(this);
-            template_r.add("name", codeStack.pop());
-            String type = scopeVisitor.getCurrentScope().get(r.getID().getName()).first();
-            String type_t="";
-            if(type.equals("Int"))
+            ST template_r = null;
+            for(LValue r: ret.getList())
             {
-                type_t = "Integer";
-            }
-            else if(type.equals("Float"))
-            {
-                type_t = "Float";
-            }
-            else if(type.equals("Bool"))
-            {
-                type_t = "Boolean";
-            }
-            else if(type.equals("Char"))
-            {
-                type_t = "String";
-            }
-            else if(type.contains("["))
-            {
-                int counter = type.split("\\[]", -1).length - 1;
-                String v_s = "";
-                int i = counter;
-                while(i > 0)
+                template_r = groupTemplate.getInstanceOf("attrReturn");
+                r.accept(this);
+                template_r.add("name", codeStack.pop());
+                String type = scopeVisitor.getCurrentScope().get(r.getID().getName()).first();
+                String type_t="";
+                if(type.equals("Int"))
                 {
-                    v_s = v_s + "Vector\\<";
-                    i=i-1;
+                    type_t = "Integer";
                 }
-                if(type.contains("Int"))
+                else if(type.equals("Float"))
                 {
-                    v_s += "Integer";
+                    type_t = "Float";
                 }
-                else if(type.contains("Float"))
+                else if(type.equals("Bool"))
                 {
-                    v_s += "Float";
-                }
-                else if(type.contains("Bool"))
-                {
-                    v_s += "Boolean";
+                    type_t = "Boolean";
                 }
                 else if(type.equals("Char"))
                 {
-                    v_s += "String";
+                    type_t = "String";
+                }
+                else if(type.contains("["))
+                {
+                    int counter = type.split("\\[]", -1).length - 1;
+                    String v_s = "";
+                    int i = counter;
+                    while(i > 0)
+                    {
+                        v_s = v_s + "Vector\\<";
+                        i=i-1;
+                    }
+                    if(type.contains("Int"))
+                    {
+                        v_s += "Integer";
+                    }
+                    else if(type.contains("Float"))
+                    {
+                        v_s += "Float";
+                    }
+                    else if(type.contains("Bool"))
+                    {
+                        v_s += "Boolean";
+                    }
+                    else if(type.equals("Char"))
+                    {
+                        v_s += "String";
+                    }
+                    else
+                    {
+                        type_t = "_"+type;
+                    }
+                    i = 0;
+                    while(i > 0)
+                    {
+                        v_s = v_s + ">";
+                        i=i-1;
+                    }
+                    type_t = v_s;
                 }
                 else
                 {
                     type_t = "_"+type;
                 }
-                i = 0;
-                while(i > 0)
-                {
-                    v_s = v_s + ">";
-                    i=i-1;
-                }
-                type_t = v_s;
+                template_r.add("type", type_t);
+                template_r.add("expr", j);
+                returnST.add(template_r);
+                j += 1;
             }
-            else
-            {
-                type_t = "_"+type;
-            }
-            template_r.add("type", type_t);
-            template_r.add("expr", j);
-            returnST.add(template_r);
+            template.add("return", returnST);
         }
-        ST template = groupTemplate.getInstanceOf("call");
         template.add("args", argsST);
-        template.add("return", returnST);
         template.add("name", "_" + c.getId().getName());
         codeStack.push(template);
     }

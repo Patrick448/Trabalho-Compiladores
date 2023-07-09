@@ -124,9 +124,9 @@ new_object(type) ::= "new <type>()"
 array(type) ::= "<type>[]"
 
 call(name, args, return) ::= <<
-List\<Object> arr = new ArrayList\<Object>(); 
-arr = <name>(<args; separator=", ">);
-<return; separator="\n">
+<if(return)>List\<Object> arr = new ArrayList\<Object>();<endif>
+<if(return)>arr =<endif><name>(<args; separator=", ">);
+<if(return)><return; separator="\n"><endif>
 >>
 
 callvet(name, args, expr) ::= <<<name>(<args; separator=", ">).get(<expr>)>>

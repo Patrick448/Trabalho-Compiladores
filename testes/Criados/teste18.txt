@@ -1,0 +1,13 @@
+test(a::Int, b::Int):Int,Int
+{
+    return a*b, b/a;
+}
+
+main()
+{
+    a = 2;
+    b = 4;
+    test(a,b)<c,d>;
+    print c;
+    print d;
+}
