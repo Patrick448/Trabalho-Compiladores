@@ -1223,7 +1223,11 @@ public class ScopeVisitor extends Visitor {
 							}
 						}
 						Pair<String, Integer> pair = new Pair(Returns.get(scope).get(j), Variables.get(scopeFunc).get(level).size());
-						Variables.get(scopeFunc).get(level).put(lv.getID().getName(), pair);
+
+						if(lv.isSingleID()){
+							Variables.get(scopeFunc).get(level).put(lv.getID().getName(), pair);
+						}
+
 						tam_local.set(scopeFunc, tam_local.get(scopeFunc)+1);
 						j= j+1;
 					}
