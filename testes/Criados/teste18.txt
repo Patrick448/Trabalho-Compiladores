@@ -1,4 +1,4 @@
-data Teste{numerador :: Int; denominador :: Int;}
+data Teste{numerador :: Bool; denominador :: Int;}
 
 test(a::Int, b::Int):Int,Int
 {
@@ -8,11 +8,11 @@ test(a::Int, b::Int):Int,Int
 main()
 {
     t = new Teste;
-    t.numerador = 3;
+    read t.numerador;
     a = 2;
     b = 4;
     test(a,b)<a, t.denominador>;
-    print t.denominador;
+    print t.numerador;
     print '\n';
     print '\n';
 }

@@ -167,131 +167,10 @@ public class JavaGenVisitor extends Visitor {
 
 
     public void visit(Type t) {
-        ST typeTemplate = null;
-
-        if (t.getName().equals("Int")) {
-            typeTemplate = groupTemplate.getInstanceOf("int_type");
-        } else if (t.getName().equals("Bool")) {
-            typeTemplate = groupTemplate.getInstanceOf("boolean_type");
-        } else if (t.getName().equals("Char")) {
-            typeTemplate = groupTemplate.getInstanceOf("string_type");
-        } else if (t.getName().equals("Float")) {
-            typeTemplate = groupTemplate.getInstanceOf("float_type");
-        } else {
-            typeTemplate = new ST("_" + t.getName());
-        }
+        ST typeTemplate = templateFromTypeStr(t.getFullName());
 
         codeStack.push(typeTemplate);
     }
-
-    /*public void visit2(CmdList c) {
-        scopeVisitor.addLevel();
-        ST template = groupTemplate.getInstanceOf("cmdlist");
-
-        List<Node> cmdlist = c.getList();
-        List<ST> cmdlistST = new ArrayList<>();
-        List<ST> variableslistST = new ArrayList<>();
-
-        Iterator bKeyIterator = scopeVisitor.getCurrentScope().keySet().iterator();
-        String key;
-        String value;
-        HashMap<String, String> difference = new HashMap<String, String>();
-
-        while (bKeyIterator.hasNext()) {
-            key = (String)bKeyIterator.next();
-            if (!scopeVisitor.getCurrentScopeBefore().containsKey(key)) {
-                value = scopeVisitor.getCurrentScope().get(key);
-                difference.put(key, value);
-            }
-        }
-
-        Iterator dKeyIterator = difference.keySet().iterator();
-        while(dKeyIterator.hasNext())
-        {
-            key = (String) dKeyIterator.next();
-            String s = (String) difference.get(key);
-            ST typeTemplate = null;
-
-            if(s.equals("Int"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("int_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.equals("Float"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("float_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.equals("Bool"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("boolean_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.equals("Char"))
-            {
-                typeTemplate = groupTemplate.getInstanceOf("string_type");
-                variableslistST.add(new ST(typeTemplate.render() + " _" + key + ";"));
-            }
-            else if(s.contains("[]"))
-            {
-                int counter = s.split("\\[]", -1).length - 1;
-                String v_s = "";
-                int i = counter;
-                while(i > 0)
-                {
-                    v_s = v_s + "Vector\\<";
-                    i=i-1;
-                }
-                if(s.contains("Int"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("int_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else if(s.contains("Float"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("float_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else if(s.contains("Bool"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("boolean_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else if(s.contains("Char"))
-                {
-                    typeTemplate = groupTemplate.getInstanceOf("string_type");
-                    v_s = v_s+ typeTemplate.render();
-                }
-                else
-                {
-                    int index = s.indexOf('[');
-					String type = s.substring(0, index);
-                    v_s = v_s + " _" + type;
-                }
-                i = counter;
-                while(i > 0)
-                {
-                    v_s = v_s + ">";
-                    i=i-1;
-                }
-                v_s = v_s+ " _" + key + ";";
-                variableslistST.add(new ST(v_s));
-            }
-            else
-            {
-                variableslistST.add(new ST("_" + s + " _" + key + ";"));
-            }
-        }
-        
-        for (Node cmd : cmdlist) {
-            cmd.accept(this);
-            cmdlistST.add(codeStack.pop());
-        }
-        template.add("cmds", cmdlistST);
-        template.add("variables", variableslistST);
-        codeStack.push(template);
-        scopeVisitor.subLevel();
-    }*/
 
     private ST templateFromTypeStr(String type){
         ST typeTemplate=null;
@@ -532,7 +411,7 @@ public class JavaGenVisitor extends Visitor {
 
 
     public void visit(FloatAst a) {
-        codeStack.push(new ST(String.valueOf(a.getValue())));
+        codeStack.push(new ST(String.valueOf(a.getValue())+"f"));
     }
 
 
@@ -667,15 +546,28 @@ public class JavaGenVisitor extends Visitor {
     public void visit(New n) {
         ST template = null;
         n.getType().accept(this);
+        ST dimensionST = codeStack.pop();
+        ST typeST = templateFromTypeStr(n.getType().getName());
+        String dimension = dimensionST.render();
+        int index = dimension.indexOf('[');
+        int size = dimension.length();
+        if(size > index+2)
+        {
+            dimension = dimension.substring(index+2, size);
+        }
+        else{
+            dimension = "";
+        }
 
         if (n.getExpr() != null) {
             template = groupTemplate.getInstanceOf("new_array");
             n.getExpr().accept(this);
+            template.add("dimension", new ST(dimension));
             template.add("expr", codeStack.pop());
-            template.add("type", codeStack.pop());
+            template.add("type", typeST);
         } else {
             template = groupTemplate.getInstanceOf("new_object");
-            template.add("type", codeStack.pop());
+            template.add("type", typeST);
         }
 
         codeStack.push(template);
@@ -690,6 +582,13 @@ public class JavaGenVisitor extends Visitor {
     public void visit(Read i) {
         ST template = groupTemplate.getInstanceOf("read");
         i.getLValue().accept(this);
+        LValue lv = i.getLValue();
+        lv.accept(scopeVisitor);
+        String type = scopeVisitor.getStack().pop();
+        template.add("col", i.getCol());
+        template.add("line", i.getLine());
+        template.add("javaType", templateFromTypeStr(type));
+        template.add("type", type);
         template.add("lvalue", codeStack.pop());
         codeStack.push(template);
     }
@@ -697,7 +596,6 @@ public class JavaGenVisitor extends Visitor {
 
     public void visit(ReturnCMD r) {
         List<Expr> returns = r.getList().getList();
-        System.out.println(returns);
         if(returns.size() >= 1)
         {
             String s = "List\\<Object> arr = new ArrayList\\<Object>(); \n";
@@ -835,6 +733,10 @@ public class JavaGenVisitor extends Visitor {
         template.add("args", argsST);
         template.add("name", "_" + c.getId().getName());
         c.getLExp().accept(this);
+        c.accept(scopeVisitor);
+        String type_string = scopeVisitor.getStack().pop();
+        ST type = templateFromTypeStr(type_string);
+        template.add("type", type);
         template.add("expr", codeStack.pop());
         codeStack.push(template);
     }

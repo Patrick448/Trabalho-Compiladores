@@ -10,15 +10,54 @@ import java.util.Scanner;
 
 public class <name> {
 
-    Scanner input = new Scanner(System.in);
+    public static Scanner input = new Scanner(System.in);
     <funclist>
 
-     public static \<T> ArrayList\<T> initialize(int n, ArrayList\<T> a){
-             for(int j=0; j\<n; j++){
+
+    public static Object read_func (String type, int col, int line)
+    {
+        Object readObject = null;
+        String read = input.nextLine();
+
+        if(type.equals("Bool")){
+            try{
+                readObject = (String)read;
+                if(!readObject.equals("true")&&!readObject.equals("false"))
+                {
+                    System.out.println("Error at line " + line + ":" +  col+ ": Unable to convert read value to "+ type);
+                    System.exit(0);
+                }
+            }catch(Exception e){
+                System.out.println("Error at line " + line + ":" + col + ": Unable to convert read value to "+ type);
+                System.exit(0);
+            }
+
+        }else if(type.equals("Int")){
+            try{
+                readObject = Integer.parseInt(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + line + ":" + col + ": Unable to convert read value to "+ type);
+                System.exit(0);
+            }
+        }else if(type.equals("Float")){
+            try{
+                readObject = Float.parseFloat(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + line + ":" + col + ": Unable to convert read value to "+ type);
+                System.exit(0);
+            }
+        }else{
+            readObject = (String)read.substring(0,1);
+        }
+        return readObject;
+    }
+
+    public static \<T> ArrayList\<T> initialize(int n, ArrayList\<T> a){
+            for(int j=0; j\<n; j++){
                 a.add(null);
             }
             return a;
-        }
+    }
 
     public static void main(String args[]) {
         _main();
@@ -86,7 +125,11 @@ string_type() ::= "String"
 
 print(expr) ::= "System.out.print(<expr>);"
 return(expr) ::= "return <expr>;"
-read(lvalue) ::= "<lavlue> = input.nextLine();"
+
+
+read(lvalue, type, javaType, col, line) ::= <<
+<lvalue> = (<javaType>)read_func("<type>",<col>,<line>);
+>>
 
 iterate(expr, cmdlist, unique_id) ::= <<
 int cont<unique_id> =0;
@@ -119,7 +162,7 @@ float_expr(value) ::= "<value>"
 int_expr(value) ::= "<value>"
 
 new_array2(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
-new_array(type, expr) ::= "new <type>[<expr>]"
+new_array(type, expr, dimension) ::= "new <type>[<expr>]<if(dimension)><dimension><endif>"
 new_object(type) ::= "new <type>()"
 array(type) ::= "<type>[]"
 
@@ -129,7 +172,7 @@ call(name, args, return) ::= <<
 <if(return)><return; separator="\n"><endif>
 >>
 
-callvet(name, args, expr) ::= <<<name>(<args; separator=", ">).get(<expr>)>>
+callvet(name, args, expr, type) ::= <<(<type>)<name>(<args; separator=", ">).get(<expr>)>>
 
 attrReturn(name, expr, type) ::= << <name> = (<type>)arr.get(<expr>);>>
 
