@@ -735,13 +735,16 @@ public class JavaGenVisitor extends Visitor {
         int j = 0;
         if(ret!=null)
         {
+            /*func()<a.campo,b> */
             ST template_r = null;
             for(LValue r: ret.getList())
             {
                 template_r = groupTemplate.getInstanceOf("attrReturn");
                 r.accept(this);
                 template_r.add("name", codeStack.pop());
-                String type = scopeVisitor.getCurrentScope().get(r.getID().getName()).first();
+                r.accept(scopeVisitor);
+                String type = scopeVisitor.getStack().pop();
+                //String type = scopeVisitor.getCurrentScope().get(r.getID().getName()).first();
                 String type_t="";
                 if(type.equals("Int"))
                 {
