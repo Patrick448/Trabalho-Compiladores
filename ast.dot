@@ -1,6 +1,6 @@
 graph program {
-55 [label=Prog]
-55--25
+51 [label=Prog]
+51--25
 25 [label=FuncList]
 25--24
 24 [label="Func"]
@@ -52,11 +52,11 @@ graph program {
 7 [label="Type<Int>"]
 8--9
 9 [label="Type<Int>"]
-25--54
-54 [label="Func"]
-54--53
-53 [label="ID<main>"]
-54--30
+25--50
+50 [label="Func"]
+50--49
+49 [label="ID<main>"]
+50--30
 30 [label=CmdList]
 30--29
 29 [label= "="]
@@ -74,40 +74,32 @@ graph program {
 31 [label="ID<b>"]
 34--33
 33 [label="Int<4>"]
-30--46
-46 [label= "CallFunction"]
-46--45
-45 [label="ID<test>"]
-46--37
-37 [label=ExprList]
-37--36
+30--45
+45 [label= "="]
+45--36
 36 [label="LValue"]
 36--35
-35 [label="ID<a>"]
-37--39
-39 [label="LValue"]
+35 [label="ID<c>"]
+45--44
+44 [label= "CallFunction"]
+44--43
+43 [label="ID<test>"]
+44--39
+39 [label=ExprList]
 39--38
-38 [label="ID<b>"]
-46--42
-42 [label=LValueList]
-42--41
+38 [label="LValue"]
+38--37
+37 [label="ID<a>"]
+39--41
 41 [label="LValue"]
 41--40
-40 [label="ID<c>"]
-42--44
-44 [label="LValue"]
-44--43
-43 [label="ID<d>"]
-30--49
-49 [label="Print"]
-49--48
-48 [label="LValue"]
+40 [label="ID<b>"]
+44--42
+42 [label="Int<1>"]
+30--48
+48 [label="Print"]
 48--47
-47 [label="ID<c>"]
-30--52
-52 [label="Print"]
-52--51
-51 [label="LValue"]
-51--50
-50 [label="ID<d>"]
+47 [label="LValue"]
+47--46
+46 [label="ID<c>"]
 }
