@@ -29,6 +29,7 @@ data(name, declist) ::= <<
 .class public <name>
 .super java/lang/Object
     <declist>
+.end class
 >>
 
 declist(decls) ::=<<
@@ -40,7 +41,7 @@ decl(classname, type, name) ::=<<
 >>
 
 paramslist(params) ::= <<
-<params; separator=", ">
+<params; separator="">
 >>
 
 
@@ -53,13 +54,12 @@ func(returntypes, name, paramslist, cmdlist, stack, decls) ::= <<
     .limit stack <stack>
     .limit locals <decls>
     <cmdlist>
-    return
 .end method
 >>
 
 param(type) ::= "<type>"
 
-multiple_returns() ::= "java/util/ArrayList"
+multiple_returns() ::= "java/util/ArrayList;"
 array_type(type) ::= "[<type>"
 int_type() ::= "I"
 float_type() ::= "F"
@@ -153,15 +153,15 @@ new_array(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
 new_object(type) ::= "new <type>()"
 array(type) ::= "ArrayList\<<type>>"
 
-call(name, args, return) ::= <<
-List\<Object> arr = new ArrayList\<Object>();
-arr = <name>(<args; separator=", ">);
+call(filename, name, args, return, num, params) ::= <<
+<args; separator="\n">
+invokestatic <filename>/<name>(<params; separator="">)java/util/ArrayList;
 <return; separator="\n">
 >>
 
 callvet(name, args, expr) ::= <<<name>(<args; separator=", ">).get(<expr>)>>
 
-attrReturn(name, expr, type) ::= << <name> = (<type>)arr.get(<expr>);>>
+attrReturn(prefix, num) ::= << <prefix>store_<num> >>
 
 mul_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
@@ -199,7 +199,7 @@ sub_uni_expr(prefix, expr) ::= <<
 <prefix>sub
 >>
 
-comparison(unique_id, left_expr, right_expr, name) ::= <<
+comparison(unique_id, name, left_expr, right_expr) ::= <<
 <left_expr>
 <right_expr>
 <name> #THEN<unique_id>

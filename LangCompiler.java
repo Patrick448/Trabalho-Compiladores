@@ -18,13 +18,6 @@ public class LangCompiler {
 
 	public static void writeToFile(String filename, String content) {
 		try {
-			File myObj = new File(filename);
-			if (myObj.createNewFile()) {
-				//System.out.println("File created: " + myObj.getName());
-			} else {
-				//System.out.println("File already exists.");
-			}
-
 			FileWriter myWriter = new FileWriter(filename);
 			myWriter.write(content);
 			myWriter.close();
