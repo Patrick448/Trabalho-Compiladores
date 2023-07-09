@@ -1,11 +1,11 @@
 graph program {
-72 [label=Prog]
-72--9
+82 [label=Prog]
+82--9
 9 [label=DataList]
 9--8
 8 [label= "Data"]
 8--7
-7 [label="Type<Teste1>"]
+7 [label="Type<Teste>"]
 8--3
 3 [label=DeclList]
 3--2
@@ -13,19 +13,19 @@ graph program {
 2--1
 1 [label="ID<numerador>"]
 2--0
-0 [label="Type<Teste>"]
+0 [label="Type<Int>"]
 3--6
 6 [label="Decl"]
 6--5
 5 [label="ID<denominador>"]
 6--4
 4 [label="Type<Int>"]
-72--36
+82--36
 36 [label=FuncList]
 36--35
 35 [label="Func"]
 35--34
-34 [label="ID<test_func>"]
+34 [label="ID<test>"]
 35--33
 33 [label=CmdList]
 33--32
@@ -72,74 +72,94 @@ graph program {
 18 [label="Type<Int>"]
 19--20
 20 [label="Type<Int>"]
-36--71
-71 [label="Func"]
-71--70
-70 [label="ID<main>"]
-71--42
+36--81
+81 [label="Func"]
+81--80
+80 [label="ID<main>"]
+81--42
 42 [label=CmdList]
 42--41
 41 [label= "="]
 41--38
 38 [label="LValue"]
 38--37
-37 [label="ID<test>"]
+37 [label="ID<t>"]
 41--40
 40 [label= "New"]
 40--39
-39 [label="Type<Teste1>"]
-42--46
-46 [label= "="]
+39 [label="Type<Teste>"]
+42--48
+48 [label= "="]
+48--46
+46 [label="LValue"]
 46--44
 44 [label="LValue"]
 44--43
-43 [label="ID<a>"]
+43 [label="ID<t>"]
 46--45
-45 [label="Int<2>"]
-42--50
-50 [label= "="]
-50--48
-48 [label="LValue"]
+45 [label="ID<numerador>"]
 48--47
-47 [label="ID<b>"]
+47 [label="Int<3>"]
+42--52
+52 [label= "="]
+52--50
+50 [label="LValue"]
 50--49
-49 [label="Int<4>"]
-42--66
-66 [label= "CallFunction"]
-66--65
-65 [label="ID<test_func>"]
-66--53
-53 [label=ExprList]
-53--52
-52 [label="LValue"]
+49 [label="ID<a>"]
 52--51
-51 [label="ID<a>"]
-53--55
-55 [label="LValue"]
-55--54
-54 [label="ID<b>"]
-66--60
-60 [label=LValueList]
-60--59
-59 [label="LValue"]
-59--57
-57 [label="LValue"]
-57--56
-56 [label="ID<test>"]
+51 [label="Int<2>"]
+42--56
+56 [label= "="]
+56--54
+54 [label="LValue"]
+54--53
+53 [label="ID<b>"]
+56--55
+55 [label="Int<4>"]
+42--70
+70 [label= "CallFunction"]
+70--69
+69 [label="ID<test>"]
+70--59
+59 [label=ExprList]
 59--58
-58 [label="ID<numerador>"]
-60--64
-64 [label="LValue"]
-64--62
-62 [label="LValue"]
-62--61
-61 [label="ID<test>"]
+58 [label="LValue"]
+58--57
+57 [label="ID<a>"]
+59--61
+61 [label="LValue"]
+61--60
+60 [label="ID<b>"]
+70--64
+64 [label=LValueList]
 64--63
-63 [label="ID<denominador>"]
-42--69
-69 [label="Print"]
-69--68
+63 [label="LValue"]
+63--62
+62 [label="ID<a>"]
+64--68
 68 [label="LValue"]
+68--66
+66 [label="LValue"]
+66--65
+65 [label="ID<t>"]
 68--67
-67 [label="ID<test>"]
+67 [label="ID<denominador>"]
+42--75
+75 [label="Print"]
+75--74
+74 [label="LValue"]
+74--72
+72 [label="LValue"]
+72--71
+71 [label="ID<t>"]
+74--73
+73 [label="ID<denominador>"]
+42--77
+77 [label="Print"]
+77--76
+76 [label="Char<\n>"]
+42--79
+79 [label="Print"]
+79--78
+78 [label="Char<\n>"]
 }

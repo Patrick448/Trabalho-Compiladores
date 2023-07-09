@@ -71,12 +71,12 @@ public class CallFunction extends Expr {
         }
     }
 
-    private void put_returns_value(Stack<HashMap<String,Object>> variables, List<Func> functions, HashMap<String, Data> datas, Stack<List<Object>> returns)
+    private void put_returns_value(Stack<HashMap<String,Object>> variables, Stack<List<Object>> returns, ScopeVisitor v)
     {
         int i=0;
         for(LValue lv : l.getList())
         {
-            variables.peek().put(lv.getID().getName(), returns.peek().get(i));
+            lv.attribute(returns.peek().get(i), variables, v);
             i+=1;
         }
     }
@@ -108,7 +108,7 @@ public class CallFunction extends Expr {
                             f.tryInterpret(variables, functions, datas, returns, v);
                             if(l!=null)
                             {
-                                put_returns_value(variables, functions, datas, returns);
+                                put_returns_value(variables, returns, v);
                                 if(!returns.isEmpty())
                                 {
                                     returns.pop();
@@ -123,7 +123,7 @@ public class CallFunction extends Expr {
                     f.tryInterpret(variables, functions, datas, returns, v);
                     if(l!=null)
                     {
-                        put_returns_value(variables, functions, datas, returns);
+                        put_returns_value(variables, returns, v);
                         if(!returns.isEmpty())
                         {
                             returns.pop();

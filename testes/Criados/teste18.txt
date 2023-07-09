@@ -1,15 +1,18 @@
-data Teste1{numerador :: Int; denominador :: Int;}
+data Teste{numerador :: Int; denominador :: Int;}
 
-test_func(a::Int, b::Int):Int,Int
+test(a::Int, b::Int):Int,Int
 {
     return a*b, b/a;
 }
 
 main()
 {
-    test = new Teste1;
+    t = new Teste;
+    t.numerador = 3;
     a = 2;
     b = 4;
-    test_func(a,b)<test.numerador, test.denominador>;
-    print test;
+    test(a,b)<a, t.denominador>;
+    print t.denominador;
+    print '\n';
+    print '\n';
 }
