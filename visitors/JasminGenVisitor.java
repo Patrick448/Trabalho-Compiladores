@@ -501,7 +501,7 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(Int a) {
-        ST template = groupTemplate.getInstanceOf("push_stack");
+        ST template = groupTemplate.getInstanceOf("int_expr");
         template.add("value", a.getValue());
         codeStack.push(template);
     }
@@ -516,14 +516,14 @@ public class JasminGenVisitor extends Visitor {
 
     public void visit(Bool a) {
         int boolVal = a.getValue() ? 1 : 0;
-        ST template = groupTemplate.getInstanceOf("iconst");
+        ST template = groupTemplate.getInstanceOf("boolean_expr");
         template.add("value", boolVal);
         codeStack.push(template);
     }
 
 
     public void visit(FloatAst a) {
-        ST template = groupTemplate.getInstanceOf("push_stack");
+        ST template = groupTemplate.getInstanceOf("float_expr");
         template.add("value", a.getValue());
         codeStack.push(template);
     }

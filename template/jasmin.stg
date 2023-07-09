@@ -82,10 +82,12 @@ invocateScannerint(num) ::= <<
 invokevirtual java/util/Scanner/nextInt()I
 istore_<num>
 >>
+
 invocateScannerfloat(num) ::= <<
 invokevirtual java/util/Scanner/nextFloat()F"
 fstore_<num>
 >>
+
 invocateScannerLine(num) ::= <<
 invokevirtual java/util/Scanner/nextLine()Ljava/lang/String
 astore_<num>
@@ -104,11 +106,49 @@ aload_<num>
 >>
 
 iterate(expr, cmdlist, unique_id) ::= <<
-int cont<unique_id> =0;
-while(cont<unique_id> \< <expr>){
-    <cmdlist>
-    cont<unique_id>++;
-}
+<expr>
+pop
+iload_0
+iload_0
+istore_1
+
+#WHILE<unique_id>:
+    iload_1
+    ifne #THEN<unique_id>
+    goto #ENDWHILE<unique_id>
+    #THEN<unique_id>:
+        <cmdlist>
+        iload_1
+        iconst_1
+        isub
+        istore_1
+        goto #WHILE<unique_id>
+#ENDWHILE<unique_id>:
+   istore_1
+>>
+
+iterate2(expr, cmdlist, unique_id) ::= <<
+<expr>
+pop
+iload_0
+istore_1
+iload_1
+istore_2
+
+#WHILE<unique_id>:
+    iload_1
+    ifne #THEN<unique_id>
+    goto #ENDWHILE<unique_id>
+    #THEN<unique_id>:
+        <cmdlist>
+        iload_1
+        iconst_1
+        isub
+        istore_1
+        goto #WHILE<unique_id>
+#ENDWHILE<unique_id>:
+    iload_2
+    istore_1
 >>
 
 if(unique_id, expr, thn, els) ::= <<
@@ -133,6 +173,7 @@ attrint(num, expr) ::= <<
 <expr> 
 istore_<num>
 >>
+
 attrfloat(num, expr) ::= <<
 <expr> 
 fstore_<num>
@@ -145,9 +186,23 @@ astore_<num>
 lvalue(lvalue, expr) ::= "<lvalue><if(expr)>.get(<expr>)<endif>"
 lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
 
-boolean_expr(value) ::= "<value>"
-float_expr(value) ::= "<value>"
-int_expr(value) ::= "<value>"
+boolean_expr(value) ::= <<
+iconst_value
+istore_0
+iload_0
+>>
+
+float_expr(value) ::= <<
+ldc <value>
+fstore_0
+fload_0
+>>
+
+int_expr(value) ::= <<
+ldc <value>
+istore_0
+iload_0
+>>
 
 new_array(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
 new_object(type) ::= "new <type>()"
@@ -167,36 +222,48 @@ mul_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
 <right_expr>
 <prefix>mul
+<prefix>store_0
+<prefix>load_0
 >>
 
 div_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
 <right_expr>
 <prefix>div
+<prefix>store_0
+<prefix>load_0
 >>
 
 mod_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
 <right_expr>
 <prefix>rem
+<prefix>store_0
+<prefix>load_0
 >>
 
 add_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
 <right_expr>
 <prefix>add
+<prefix>store_0
+<prefix>load_0
 >>
 
 sub_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
 <right_expr>
 <prefix>sub
+<prefix>store_0
+<prefix>load_0
 >>
 
 sub_uni_expr(prefix, expr) ::= <<
 <prefix>const_0
 <expr>
 <prefix>sub
+<prefix>store_0
+<prefix>load_0
 >>
 
 comparison(unique_id, left_expr, right_expr, name) ::= <<

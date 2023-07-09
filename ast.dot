@@ -1,29 +1,31 @@
 graph program {
-13 [label=Prog]
+14 [label=Prog]
+14--13
+13 [label=FuncList]
 13--12
-12 [label=FuncList]
+12 [label="Func"]
 12--11
-11 [label="Func"]
-11--10
-10 [label="ID<main>"]
-11--6
-6 [label=CmdList]
-6--5
-5 [label= "="]
-5--1
-1 [label="LValue"]
-1--0
-0 [label="ID<a>"]
-5--4
-4 [label= "+"]
-4--2
-2 [label="Int<1>"]
-4--3
-3 [label="Int<2>"]
-6--9
-9 [label="Print"]
-9--8
-8 [label="LValue"]
+11 [label="ID<main>"]
+12--10
+10 [label=CmdList]
+10--9
+9 [label= "Iterate"]
+9--0
+0 [label="Int<3>"]
+9--3
+3 [label=CmdList]
+3--2
+2 [label="Print"]
+2--1
+1 [label="Int<0>"]
+3--8
+8 [label= "Iterate"]
+8--4
+4 [label="Int<2>"]
 8--7
-7 [label="ID<a>"]
+7 [label=CmdList]
+7--6
+6 [label="Print"]
+6--5
+5 [label="Int<1>"]
 }
