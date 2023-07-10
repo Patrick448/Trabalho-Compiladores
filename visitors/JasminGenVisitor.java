@@ -122,7 +122,7 @@ public class JasminGenVisitor extends Visitor {
 
 
         template.add("stack", scopeVisitor.getTamStack(scopeVisitor.getScopeFunc()));
-        template.add("decls", scopeVisitor.getTamLocal(scopeVisitor.getScopeFunc()));
+        template.add("decls", scopeVisitor.getTamLocal(scopeVisitor.getScopeFunc()) + 3);
         template.add("name", "_" + name);
         codeStack.push(template);
 
@@ -470,7 +470,7 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(Int a) {
-        ST template = groupTemplate.getInstanceOf("push_stack");
+        ST template = groupTemplate.getInstanceOf("int_expr");
         template.add("value", a.getValue());
         codeStack.push(template);
     }
@@ -485,14 +485,14 @@ public class JasminGenVisitor extends Visitor {
 
     public void visit(Bool a) {
         int boolVal = a.getValue() ? 1 : 0;
-        ST template = groupTemplate.getInstanceOf("iconst");
+        ST template = groupTemplate.getInstanceOf("boolean_expr");
         template.add("value", boolVal);
         codeStack.push(template);
     }
 
 
     public void visit(FloatAst a) {
-        ST template = groupTemplate.getInstanceOf("push_stack");
+        ST template = groupTemplate.getInstanceOf("float_expr");
         template.add("value", a.getValue());
         codeStack.push(template);
     }
@@ -515,7 +515,6 @@ public class JasminGenVisitor extends Visitor {
     public void visit(If a) {
         ST template = groupTemplate.getInstanceOf("if");
         a.getTeste().accept(this);
-        codeStack.pop();
         template.add("expr", codeStack.pop());
 
         if(a.getThn() != null){
@@ -748,13 +747,16 @@ public class JasminGenVisitor extends Visitor {
         LValueList ret = c.getLValueList();
         int j = 0;
         ST template_r = null;
+        int i =0;
         for(LValue r: ret.getList())
         {
             r.accept(scopeVisitor);
             template_r = groupTemplate.getInstanceOf("attrReturn");
             template_r.add("prefix", getPrefix(scopeVisitor.getStack().pop()));
             template_r.add("num", scopeVisitor.getCurrentScope().get(r.getID().getName()).second());
+            template_r.add("expr", new ST(Integer.toString(i)));
             returnST.add(template_r);
+            i+=1;
         }
         ST template = groupTemplate.getInstanceOf("call");
         template.add("args", argsST);

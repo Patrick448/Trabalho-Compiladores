@@ -88,6 +88,10 @@ public class LangCompiler {
 	public static void main(String args[]) throws Exception {
 
 		if(args.length >=2){
+			if(args.length >=3 && args[2].equals("-v")){
+				System.out.println("\nFile: " + args[0]);
+			}
+			
 			langParser parser = parseFile(args[0]);
 			Node ast = getAST(parser);
 			writeToFile("ast.dot", ast.dotString());
@@ -116,10 +120,6 @@ public class LangCompiler {
 				String outputPath = "JasminCodes/" + fileName + ".j";
 				writeToFile(outputPath, jasminGenVisitor.getGeneratedCode());
 			}
-			else if(args.length >=3 && args[2].equals("-v")){
-				System.out.println("\nFile: " + args[0]);
-			}
-
 		}else{
 			System.out.println("O sistema espera 2 argumetos obrigatorios, sendo:");
 			System.out.println("O 1º: Arquivo a ser executado");

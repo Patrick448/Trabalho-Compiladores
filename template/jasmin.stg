@@ -54,6 +54,7 @@ func(returntypes, name, paramslist, cmdlist, stack, decls) ::= <<
     .limit stack <stack>
     .limit locals <decls>
     <cmdlist>
+    return
 .end method
 >>
 
@@ -95,13 +96,13 @@ astore_<num>
 
 return(expr) ::= "areturn <expr>;"
 
-read(scanner, num) ::= <<
+read(scanner) ::= <<
 new java/util/Scanner
 dup
 getstatic java/lang/System/in Ljava/io/InputStream;
 invokespecial java/util/Scanner/<init>(Ljava/io/InputStream;)V
-astore_<num>
-aload_<num>
+astore_0
+aload_0
 <scanner>
 >>
 
@@ -125,30 +126,6 @@ istore_1
         goto #WHILE<unique_id>
 #ENDWHILE<unique_id>:
    istore_1
->>
-
-iterate2(expr, cmdlist, unique_id) ::= <<
-<expr>
-pop
-iload_0
-istore_1
-iload_1
-istore_2
-
-#WHILE<unique_id>:
-    iload_1
-    ifne #THEN<unique_id>
-    goto #ENDWHILE<unique_id>
-    #THEN<unique_id>:
-        <cmdlist>
-        iload_1
-        iconst_1
-        isub
-        istore_1
-        goto #WHILE<unique_id>
-#ENDWHILE<unique_id>:
-    iload_2
-    istore_1
 >>
 
 if(unique_id, expr, thn, els) ::= <<
@@ -208,9 +185,17 @@ new_array(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
 new_object(type) ::= "new <type>()"
 array(type) ::= "ArrayList\<<type>>"
 
+attrReturn(num, prefix, expr, type) ::= <<
+aload_0 
+iconst_<expr>
+invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;
+<prefix>store_num
+>>
+
 call(filename, name, args, return, params) ::= <<
 <args; separator="\n">
 invokestatic <filename>/<name>(<params; separator="">)java/util/ArrayList;
+astore_0
 <return; separator="\n">
 >>
 
@@ -269,7 +254,7 @@ sub_uni_expr(prefix, expr) ::= <<
 <prefix>load_0
 >>
 
-comparison(unique_id, name, left_expr, right_expr) ::= <<
+comparison(unique_id, left_expr, right_expr, name) ::= <<
 <left_expr>
 <right_expr>
 <name> #THEN<unique_id>
@@ -283,19 +268,19 @@ goto #ELSE<unique_id>
 >>
 
 lt_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, "if_icmplt", left_expr, right_expr)>
+<comparison(unique_id, left_expr, right_expr, "if_icmplt")>
 >>
 
 gt_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, "if_icmplt", left_expr, right_expr)>
+<comparison(unique_id, left_expr, right_expr, "if_icmpgt")>
 >>
 
 equals_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, "if_icmpeq", left_expr, right_expr)>
+<comparison(unique_id, left_expr, right_expr, "if_icmpeq")>
 >>
 
 diff_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, "if_icmpne", left_expr, right_expr)>
+<comparison(unique_id, left_expr, right_expr, "if_icmpne")>
 >>
 
 

@@ -1,31 +1,139 @@
 graph program {
-14 [label=Prog]
+68 [label=Prog]
+68--67
+67 [label=FuncList]
+67--66
+66 [label="Func"]
+66--65
+65 [label="ID<main>"]
+66--15
+15 [label=CmdList]
+15--14
+14 [label="Print"]
 14--13
-13 [label=FuncList]
+13 [label= "-"]
 13--12
-12 [label="Func"]
-12--11
-11 [label="ID<main>"]
+12 [label= "*"]
 12--10
-10 [label=CmdList]
-10--9
-9 [label= "Iterate"]
-9--0
-0 [label="Int<3>"]
-9--3
-3 [label=CmdList]
-3--2
-2 [label="Print"]
-2--1
-1 [label="Int<0>"]
-3--8
-8 [label= "Iterate"]
-8--4
-4 [label="Int<2>"]
+10 [label="Int<5>"]
+12--11
+11 [label="Int<3>"]
+13--9
+9 [label= "+"]
+9--5
+5 [label= "+"]
+5--1
+1 [label= "-"]
+1--0
+0 [label="Int<1>"]
+5--4
+4 [label= "*"]
+4--2
+2 [label="Int<5>"]
+4--3
+3 [label="Int<2>"]
+9--8
+8 [label= "/"]
+8--6
+6 [label="Int<10>"]
 8--7
-7 [label=CmdList]
-7--6
-6 [label="Print"]
-6--5
-5 [label="Int<1>"]
+7 [label="Int<5>"]
+15--19
+19 [label="Print"]
+19--18
+18 [label= "=="]
+18--16
+16 [label="Int<2>"]
+18--17
+17 [label="Int<1>"]
+15--27
+27 [label="Print"]
+27--26
+26 [label= "&&"]
+26--22
+22 [label= "=="]
+22--20
+20 [label="Int<2>"]
+22--21
+21 [label="Int<1>"]
+26--25
+25 [label= "=="]
+25--23
+23 [label="Int<1>"]
+25--24
+24 [label="Int<1>"]
+15--35
+35 [label="Print"]
+35--34
+34 [label= "&&"]
+34--30
+30 [label= "=="]
+30--28
+28 [label="Int<2>"]
+30--29
+29 [label="Int<2>"]
+34--33
+33 [label= "=="]
+33--31
+31 [label="Int<1>"]
+33--32
+32 [label="Int<1>"]
+15--39
+39 [label="Print"]
+39--38
+38 [label= "&&"]
+38--36
+36 [label="Bool<true>"]
+38--37
+37 [label="Bool<true>"]
+15--43
+43 [label="Print"]
+43--42
+42 [label= "&&"]
+42--40
+40 [label="Bool<true>"]
+42--41
+41 [label="Bool<false>"]
+15--48
+48 [label="Print"]
+48--47
+47 [label= "&&"]
+47--44
+44 [label="Bool<true>"]
+47--46
+46 [label= "!"]
+46--45
+45 [label="Bool<false>"]
+15--51
+51 [label="Print"]
+51--50
+50 [label= "!"]
+50--49
+49 [label="Bool<true>"]
+15--54
+54 [label="Print"]
+54--53
+53 [label= "!"]
+53--52
+52 [label="Bool<false>"]
+15--64
+64 [label= "If"]
+64--57
+57 [label= ">"]
+57--55
+55 [label="Int<2>"]
+57--56
+56 [label="Int<2>"]
+64--60
+60 [label=CmdList]
+60--59
+59 [label="Print"]
+59--58
+58 [label="Int<11111>"]
+64--63
+63 [label=CmdList]
+63--62
+62 [label="Print"]
+62--61
+61 [label="Int<22222>"]
 }

@@ -2,7 +2,7 @@ data Teste{t1 :: Int[]; t2 :: Teste; t3:: Int; t4:: Int[];}
 
 main (){
     y = new Teste;
-    func (){
+    func(){
         y.t2 = new Teste;
     }
 }
