@@ -6,6 +6,6 @@ main()
         iterate(2)
         {
             print 1;
-        }
+       }
     }
 }

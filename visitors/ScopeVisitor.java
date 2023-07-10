@@ -135,6 +135,8 @@ public class ScopeVisitor extends Visitor {
 		for (Func func : list) {
 			scope_value = HashMapScope.size();
 			tam_local.add(0);
+			tam_local.add(1);
+			tam_local.add(2);
 			tam_stack.add(0);
 			Integer i = 0;
 			String s_p = "(";

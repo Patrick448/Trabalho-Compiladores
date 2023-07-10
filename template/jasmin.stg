@@ -208,15 +208,18 @@ new_array(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
 new_object(type) ::= "new <type>()"
 array(type) ::= "ArrayList\<<type>>"
 
-call(filename, name, args, return, num, params) ::= <<
+call(filename, name, args, return, params) ::= <<
 <args; separator="\n">
 invokestatic <filename>/<name>(<params; separator="">)java/util/ArrayList;
 <return; separator="\n">
 >>
 
-callvet(name, args, expr) ::= <<<name>(<args; separator=", ">).get(<expr>)>>
-
-attrReturn(prefix, num) ::= << <prefix>store_<num> >>
+callvet(filename, name, args, expr, params) ::= <<
+<args; separator="\n">
+invokestatic <filename>/<name>(<params; separator="">)java/util/ArrayList;
+iconst_<expr>
+invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;
+>>
 
 mul_expr(prefix, left_expr, right_expr) ::= <<
 <left_expr>
@@ -280,19 +283,19 @@ goto #ELSE<unique_id>
 >>
 
 lt_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, left_expr, right_expr, "if_icmplt")>
+<comparison(unique_id, "if_icmplt", left_expr, right_expr)>
 >>
 
 gt_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, left_expr, right_expr, "if_icmpgt")>
+<comparison(unique_id, "if_icmplt", left_expr, right_expr)>
 >>
 
 equals_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, left_expr, right_expr, "if_icmpeq")>
+<comparison(unique_id, "if_icmpeq", left_expr, right_expr)>
 >>
 
 diff_expr(unique_id, left_expr, right_expr) ::= <<
-<comparison(unique_id, left_expr, right_expr, "if_icmpne")>
+<comparison(unique_id, "if_icmpne", left_expr, right_expr)>
 >>
 
 

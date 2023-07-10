@@ -470,7 +470,7 @@ public class JasminGenVisitor extends Visitor {
 
 
     public void visit(Int a) {
-        ST template = groupTemplate.getInstanceOf("int_expr");
+        ST template = groupTemplate.getInstanceOf("push_stack");
         template.add("value", a.getValue());
         codeStack.push(template);
     }
@@ -485,14 +485,14 @@ public class JasminGenVisitor extends Visitor {
 
     public void visit(Bool a) {
         int boolVal = a.getValue() ? 1 : 0;
-        ST template = groupTemplate.getInstanceOf("boolean_expr");
+        ST template = groupTemplate.getInstanceOf("iconst");
         template.add("value", boolVal);
         codeStack.push(template);
     }
 
 
     public void visit(FloatAst a) {
-        ST template = groupTemplate.getInstanceOf("float_expr");
+        ST template = groupTemplate.getInstanceOf("push_stack");
         template.add("value", a.getValue());
         codeStack.push(template);
     }
@@ -515,9 +515,8 @@ public class JasminGenVisitor extends Visitor {
     public void visit(If a) {
         ST template = groupTemplate.getInstanceOf("if");
         a.getTeste().accept(this);
-        ST test = codeStack.pop();
-        System.out.println(test.render());
-        template.add("expr", test);
+        codeStack.pop();
+        template.add("expr", codeStack.pop());
 
         if(a.getThn() != null){
             a.getThn().accept(this);
@@ -770,16 +769,21 @@ public class JasminGenVisitor extends Visitor {
     public void visit(CallFunctionVet c) {
 
         List<ST> argsST = new ArrayList<>();
+        List<ST> paramsST = new ArrayList<>();
 
         ExprList args = c.getExpList();
         for(Node e: args.getList())
         {
             e.accept(this);
             argsST.add(codeStack.pop());
+            e.accept(scopeVisitor);
+            paramsST.add(templateFromTypeStr(scopeVisitor.getStack().pop()));
         }
         ST template = groupTemplate.getInstanceOf("callvet");
         template.add("args", argsST);
+        template.add("params", paramsST);
         template.add("name", "_" + c.getId().getName());
+        template.add("filename", this.fileName);
         c.getLExp().accept(this);
         template.add("expr", codeStack.pop());
         codeStack.push(template);

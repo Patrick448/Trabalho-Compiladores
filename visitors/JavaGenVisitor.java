@@ -24,8 +24,6 @@ public class JavaGenVisitor extends Visitor {
 
     private String generatedCode;
 
-    private boolean is_attr=false;
-
     public JavaGenVisitor(ScopeVisitor scopeVisitor, String filename) {
         this.scopeVisitor = scopeVisitor;
         groupTemplate = new STGroupFile("./template/java.stg");
