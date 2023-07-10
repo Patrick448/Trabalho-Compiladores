@@ -115,6 +115,14 @@ static <type> <name>(<params; separator=", ">)
     <stmt>
 >>
 
+return_add_to_array(expr) ::= "arr.add(<expr>);"
+
+return_cmd(returnslist) ::= <<
+List\<Object> arr = new ArrayList\<Object>();
+<returnslist; separator="\n">
+return arr;
+>>
+
 param(type, id) ::= "<type> <id>"
 multiple_returns() ::= "List\<Object>"
 array_type(type) ::= "<type>[]"

@@ -595,23 +595,18 @@ public class JavaGenVisitor extends Visitor {
 
 
     public void visit(ReturnCMD r) {
-        List<Expr> returns = r.getList().getList();
-        if(returns.size() >= 1)
-        {
-            String s = "List\\<Object> arr = new ArrayList\\<Object>(); \n";
-            int i = 0;
-            for(Expr e: returns)
-            {
-                e.accept(this);
-                s = s + "arr.add(" + codeStack.pop().render() + "); \n";
-            }
-            s = s + "return arr;"; 
-            codeStack.push(new ST(s));
+        ST template = groupTemplate.getInstanceOf("return_cmd");
+        List<ST> returns = new ArrayList<ST>();
+
+        for(Expr e:r.getList().getList()){
+            ST addArrTemplate = groupTemplate.getInstanceOf("return_add_to_array");
+            e.accept(this);
+            addArrTemplate.add("expr", codeStack.pop());
+            returns.add(addArrTemplate);
         }
-        else if(returns.size() == 0)
-        {
-            codeStack.push(new ST("return;"));
-        }
+
+        template.add("returnslist", returns);
+        codeStack.push(template);
 
     }
 
