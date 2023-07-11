@@ -8,17 +8,7 @@ print 333;
 }
 
 main(){
-func2();
-a = 1;
-b = 5+1;
+func()<a,b>;
 print a;
-x= func()[0];
-print x;
-print func()[1];
-iterate(2){
-    print 0;
-    iterate(3){
-        print 1;
-    }
-  }
+
 }

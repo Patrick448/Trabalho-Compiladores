@@ -246,7 +246,7 @@ convert_float(expr) ::= <<
 invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;
 >>
 
-no_not_convert(expr) ::= <<
+do_not_convert(expr) ::= <<
 <expr>
 >>
 
